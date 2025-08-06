@@ -73,42 +73,40 @@
       loginBtn.disabled = true;
       loginBtn.textContent = "Logging in...";
 
+      let emailToLogin = identifier;
+
       try {
-        const usersRef = ref(db, "users");
-        const snapshot = await get(usersRef);
+        // If not an email, treat as username and get email from DB
+        if (!identifier.includes("@")) {
+          const usersRef = ref(db, "users");
+          const snapshot = await get(usersRef);
 
-        if (!snapshot.exists()) {
-          errorMsg.textContent = "❌ No users found in the database.";
-          loginBtn.disabled = false;
-          loginBtn.textContent = "Log In";
-          return;
+          if (!snapshot.exists()) throw new Error("No users found.");
+
+          const users = snapshot.val();
+          const matchedUser = Object.values(users).find(user => user.username === identifier);
+
+          if (!matchedUser) throw new Error("No user found with this username.");
+
+          emailToLogin = matchedUser.email;
         }
 
-        const users = snapshot.val();
-        const match = Object.entries(users).find(([uid, user]) =>
-          user.email === identifier || user.username === identifier
-        );
+        // Login using email
+        await signInWithEmailAndPassword(auth, emailToLogin, password);
+        window.location.href = "dashboard.html";
 
-        if (!match) {
-          errorMsg.textContent = "❌ No such user found.";
-          loginBtn.disabled = false;
-          loginBtn.textContent = "Log In";
-          return;
-        }
-
-        const [uid, userData] = match;
-
-        try {
-          await signInWithEmailAndPassword(auth, userData.email, password);
-          window.location.href = "dashboard.html";
-        } catch (error) {
+      } catch (error) {
+        const code = error.code || "";
+        if (code === "auth/user-not-found") {
+          errorMsg.textContent = "❌ User not found.";
+        } else if (code === "auth/wrong-password") {
           errorMsg.textContent = "❌ Incorrect password.";
-          loginBtn.disabled = false;
-          loginBtn.textContent = "Log In";
+        } else if (code === "auth/invalid-email") {
+          errorMsg.textContent = "❌ Invalid email format.";
+        } else {
+          errorMsg.textContent = "❌ " + (error.message || "Something went wrong.");
         }
 
-      } catch (err) {
-        errorMsg.textContent = "❌ Something went wrong. Please try again.";
         loginBtn.disabled = false;
         loginBtn.textContent = "Log In";
       }
