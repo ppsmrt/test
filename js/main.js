@@ -30,6 +30,23 @@ function stripHTML(html) {
   return div.textContent || div.innerText || "";
 }
 
+// ✅ Format date as relative time (e.g., "2 days ago")
+function formatRelativeTime(dateStr) {
+  const now = new Date();
+  const past = new Date(dateStr);
+  const diffMs = now - past;
+
+  const seconds = Math.floor(diffMs / 1000);
+  const minutes = Math.floor(diffMs / (1000 * 60));
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (seconds < 60) return "just now";
+  if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  return `${days} day${days > 1 ? 's' : ''} ago`;
+}
+
 // ✅ Display posts
 function displayPosts(posts) {
   container.innerHTML = ""; // Clear old posts
@@ -53,7 +70,7 @@ function displayPosts(posts) {
             <p class="text-sm text-gray-600 mb-2">${stripHTML(post.excerpt.rendered).slice(0, 100)}...</p>
             <div class="flex justify-between text-xs text-gray-500 mt-4">
               <span>👤 ${authorName}</span>
-              <span>🗓️ ${new Date(post.date).toLocaleDateString()}</span>
+              <span>🗓️ ${formatRelativeTime(post.date)}</span>
             </div>
           </div>
         </a>
