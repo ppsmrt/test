@@ -25,10 +25,12 @@
     <form id="login-form" class="space-y-4">
       <input type="text" id="identifier" placeholder="Email or Username" required class="w-full p-3 border rounded" />
       <input type="password" id="password" placeholder="Password" required class="w-full p-3 border rounded" />
-      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Log In</button>
+      <button type="submit" id="loginBtn" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Log In</button>
     </form>
 
     <p class="text-center text-sm mt-4">Don't have an account? <a href="signup.html" class="text-blue-600 hover:underline">Sign up</a></p>
+
+    <p id="error-msg" class="text-red-600 text-sm text-center mt-4"></p>
   </main>
 
   <!-- Firebase Login Logic -->
@@ -56,6 +58,18 @@
 
       const identifier = document.getElementById("identifier").value.trim();
       const password = document.getElementById("password").value.trim();
+      const loginBtn = document.getElementById("loginBtn");
+      const errorMsg = document.getElementById("error-msg");
+
+      errorMsg.textContent = "";
+
+      if (!identifier || !password) {
+        errorMsg.textContent = "❌ Please enter both email/username and password.";
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = "Logging in...";
 
       const usersRef = ref(db, "users");
 
@@ -66,7 +80,9 @@
         );
 
         if (!match) {
-          alert("❌ No such user found.");
+          errorMsg.textContent = "❌ No such user found.";
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Log In";
           return;
         }
 
@@ -75,19 +91,13 @@
         try {
           await signInWithEmailAndPassword(auth, userData.email, password);
 
-          // After successful login, check role and redirect
-          const userRef = ref(db, "users/" + uid);
-          onValue(userRef, (snap) => {
-            const user = snap.val();
-            if (user.role === "admin") {
-              window.location.href = "admin.html";
-            } else {
-              window.location.href = "dashboard.html";
-            }
-          }, { onlyOnce: true });
+          // Redirect all roles to dashboard (admin included)
+          window.location.href = "dashboard.html";
 
         } catch (error) {
-          alert("❌ Login failed: " + error.message);
+          errorMsg.textContent = "❌ Login failed: " + error.message;
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Log In";
         }
 
       }, { onlyOnce: true });
