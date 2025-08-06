@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - TamilGeo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- 🔼 Header -->
+  <header class="bg-white shadow p-4 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">TamilGeo Admin</h1>
+      <nav>
+        <a href="index.html" class="text-blue-600 hover:underline mx-2">Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 📋 Admin Content -->
+  <main class="max-w-4xl mx-auto mt-6 p-4">
+    <h2 class="text-2xl font-bold mb-4">📝 Pending Posts</h2>
+    <div id="pending-posts" class="space-y-4"></div>
+  </main>
+
+  <!-- 🧠 Firebase Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da",
+      measurementId: "G-2D45G35PM2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const pendingRef = ref(db, "pending_posts");
+    const publishedRef = ref(db, "posts");
+    const container = document.getElementById("pending-posts");
+
+    onValue(pendingRef, snapshot => {
+      const data = snapshot.val();
+      container.innerHTML = "";
+
+      if (data) {
+        Object.entries(data).forEach(([id, post]) => {
+          const card = document.createElement("div");
+          card.className = "bg-white p-4 rounded shadow";
+
+          card.innerHTML = `
+            <h3 class="text-lg font-semibold mb-1">${post.title}</h3>
+            ${post.image ? `<img src="${post.image}" class="w-full rounded mb-2" />` : ""}
+            <p class="mb-2">${post.content}</p>
+            <div class="flex gap-3">
+              <button class="approve-btn bg-green-600 text-white px-3 py-1 rounded" data-id="${id}">✅ Approve</button>
+              <button class="reject-btn bg-red-500 text-white px-3 py-1 rounded" data-id="${id}">❌ Reject</button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+
+        // Handle buttons
+        document.querySelectorAll(".approve-btn").forEach(btn => {
+          btn.onclick = () => handleApprove(btn.dataset.id, data[btn.dataset.id]);
+        });
+
+        document.querySelectorAll(".reject-btn").forEach(btn => {
+          btn.onclick = () => handleReject(btn.dataset.id);
+        });
+      } else {
+        container.innerHTML = "<p class='text-gray-600'>No pending posts.</p>";
+      }
+    });
+
+    function handleApprove(id, postData) {
+      push(publishedRef, postData).then(() => {
+        remove(ref(db, `pending_posts/${id}`));
+      });
+    }
+
+    function handleReject(id) {
+      remove(ref(db, `pending_posts/${id}`));
+    }
+  </script>
+</body>
+</html>
