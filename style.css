@@ -1,24 +1,3 @@
-.video-container {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* 16:9 ratio */
-  height: 0;
-  overflow: hidden;
-  margin: 1rem 0;
-  border-radius: 8px;
-}
-
-.video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-/* style.css */
-
 /* Global Typography */
 body {
   font-family: 'Segoe UI', sans-serif;
@@ -97,7 +76,7 @@ textarea {
   resize: vertical;
 }
 
-/* Back to Top Button (optional) */
+/* Back to Top Button */
 #backToTop {
   position: fixed;
   bottom: 20px;
@@ -115,4 +94,27 @@ textarea {
 
 #backToTop:hover {
   background-color: #059669;
+}
+
+/* 🔔 Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1f2937; /* Tailwind gray-800 */
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+  font-size: 0.875rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  pointer-events: auto;
 }
