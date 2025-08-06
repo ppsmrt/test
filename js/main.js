@@ -1,56 +1,91 @@
 const blogURL = "https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com";
 const container = document.getElementById("posts-container");
 const searchInput = document.getElementById("searchInput");
+const loadMoreBtn = document.getElementById("loadMoreBtn");
+
+let currentPage = 1;
+const postsPerPage = 6;
+let totalPages = null;
+let isLoading = false;
 
 // ✅ Fetch & display initial posts
-fetch(`${blogURL}/posts`)
-  .then(res => res.json())
-  .then(displayPosts)
-  .catch(err => console.error('Error fetching posts:', err));
+fetchPosts();
 
-// ✅ Search posts as user types
+// ✅ Search functionality
 searchInput?.addEventListener("input", (e) => {
   const query = e.target.value.trim();
+  currentPage = 1;
   if (query.length > 2) {
-    fetch(`${blogURL}/posts?search=${query}`)
+    fetch(`${blogURL}/posts?search=${query}&per_page=${postsPerPage}&page=1`)
       .then(res => res.json())
-      .then(displayPosts)
-      .catch(err => console.error("Search error:", err));
+      .then(posts => {
+        container.innerHTML = "";
+        displayPosts(posts);
+        loadMoreBtn.style.display = "none";
+      });
   } else {
-    fetch(`${blogURL}/posts`)
-      .then(res => res.json())
-      .then(displayPosts);
+    container.innerHTML = "";
+    fetchPosts();
   }
 });
 
-// ✅ Utility to strip HTML from excerpt
+// ✅ Load More functionality
+loadMoreBtn?.addEventListener("click", () => {
+  if (!isLoading) {
+    currentPage++;
+    fetchPosts();
+  }
+});
+
+// ✅ Main fetch function
+function fetchPosts() {
+  isLoading = true;
+  fetch(`${blogURL}/posts?per_page=${postsPerPage}&page=${currentPage}`)
+    .then(res => {
+      totalPages = parseInt(res.headers.get("X-WP-TotalPages"));
+      return res.json();
+    })
+    .then(posts => {
+      displayPosts(posts);
+      isLoading = false;
+
+      // Hide Load More if done
+      if (currentPage >= totalPages) {
+        loadMoreBtn.style.display = "none";
+      } else {
+        loadMoreBtn.style.display = "block";
+      }
+    })
+    .catch(err => console.error("Error fetching posts:", err));
+}
+
+// ✅ Strip HTML utility
 function stripHTML(html) {
   const div = document.createElement("div");
   div.innerHTML = html;
   return div.textContent || div.innerText || "";
 }
 
-// ✅ Format date as relative time (e.g., "2 days ago")
-function formatRelativeTime(dateStr) {
+// ✅ Format time ago
+function timeAgo(dateString) {
   const now = new Date();
-  const past = new Date(dateStr);
-  const diffMs = now - past;
+  const postDate = new Date(dateString);
+  const diff = Math.floor((now - postDate) / 1000);
 
-  const seconds = Math.floor(diffMs / 1000);
-  const minutes = Math.floor(diffMs / (1000 * 60));
-  const hours = Math.floor(diffMs / (1000 * 60 * 60));
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (diff < 60) return "Just now";
+  if (diff < 3600) return `${Math.floor(diff / 60)} mins ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} hrs ago`;
+  if (diff < 604800) return `${Math.floor(diff / 86400)} days ago`;
 
-  if (seconds < 60) return "just now";
-  if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-  if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-  return `${days} day${days > 1 ? 's' : ''} ago`;
+  return postDate.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
 }
 
 // ✅ Display posts
 function displayPosts(posts) {
-  container.innerHTML = ""; // Clear old posts
-
   const bookmarkedIds = JSON.parse(localStorage.getItem("bookmarkedPosts") || "[]");
 
   posts.forEach(post => {
@@ -70,12 +105,10 @@ function displayPosts(posts) {
             <p class="text-sm text-gray-600 mb-2">${stripHTML(post.excerpt.rendered).slice(0, 100)}...</p>
             <div class="flex justify-between text-xs text-gray-500 mt-4">
               <span>👤 ${authorName}</span>
-              <span>🗓️ ${formatRelativeTime(post.date)}</span>
+              <span>🗓️ ${timeAgo(post.date)}</span>
             </div>
           </div>
         </a>
-
-        <!-- 📌 Bookmark Button -->
         <button
           class="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-green-100 transition text-green-600 text-xl bookmark-btn"
           data-id="${post.id}"
