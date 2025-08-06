@@ -44,15 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
       navContent = `
         <div class="flex items-center space-x-4">
           <span class="text-sm font-medium text-gray-800 bg-green-100 px-3 py-1 rounded-full">${name}</span>
-          <button id="logout-btn" class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Sign Out</button>
+          <button id="logout-btn" class="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded">Sign Out</button>
         </div>
       `;
     } else {
       navContent = `
-        <div class="flex space-x-4">
-          <a href="login.html" class="text-sm font-medium text-blue-600 hover:underline">Login</a>
-          <a href="signup.html" class="text-sm font-medium text-blue-600 hover:underline">Sign Up</a>
-        </div>
+        <nav class="flex space-x-4">
+          <a href="login.html" class="text-sm font-medium text-gray-700 hover:text-green-600">Login</a>
+          <a href="signup.html" class="text-sm font-medium text-gray-700 hover:text-green-600">Sign Up</a>
+        </nav>
       `;
     }
 
