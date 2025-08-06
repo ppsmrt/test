@@ -20,7 +20,7 @@
 
   <!-- ✅ Main Content -->
   <main class="max-w-5xl mx-auto p-6">
-    
+
     <!-- 📊 Stats -->
     <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-center">
       <div class="bg-white p-4 rounded shadow">
@@ -44,16 +44,21 @@
     <!-- 📥 Pending Posts -->
     <section class="bg-white p-6 rounded shadow">
       <h2 class="text-xl font-semibold mb-4">Pending Posts</h2>
-      <div id="pending-posts" class="space-y-4">
-        <!-- Posts will be injected here -->
-      </div>
+      <div id="pending-posts" class="space-y-4"></div>
     </section>
+
+    <!-- 👥 Manage Users -->
+    <section class="bg-white p-6 rounded shadow mt-10">
+      <h2 class="text-xl font-semibold mb-4">👥 Manage Users</h2>
+      <div id="user-list" class="space-y-4"></div>
+    </section>
+
   </main>
 
   <!-- 🔌 Firebase Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, onValue, remove, push, set, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -72,12 +77,14 @@
     const approvedRef = ref(db, 'posts');
     const commentsRef = ref(db, 'comments');
     const likesRef = ref(db, 'likes');
+    const usersRef = ref(db, 'users');
 
     const pendingContainer = document.getElementById('pending-posts');
     const approvedCountEl = document.getElementById('approvedCount');
     const pendingCountEl = document.getElementById('pendingCount');
     const commentsCountEl = document.getElementById('commentsCount');
     const likesCountEl = document.getElementById('likesCount');
+    const userListEl = document.getElementById('user-list');
 
     // 🟨 Load Pending Posts
     onValue(pendingRef, snapshot => {
@@ -94,9 +101,7 @@
             <h3 class="text-lg font-bold mb-1">${post.title}</h3>
             <p class="text-sm text-gray-600 mb-2">👤 ${post.author} | 🗓 ${new Date(post.date).toLocaleDateString()}</p>
             <p class="mb-2 text-gray-700">${post.excerpt || 'No excerpt available.'}</p>
-            <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700" data-id="${id}">
-              ✅ Approve
-            </button>
+            <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">✅ Approve</button>
           `;
 
           el.querySelector('button').addEventListener('click', () => {
@@ -138,6 +143,50 @@
       }
       likesCountEl.textContent = totalLikes;
     });
+
+    // 👥 Manage Users
+    onValue(usersRef, snapshot => {
+      const users = snapshot.val();
+      userListEl.innerHTML = '';
+
+      if (users) {
+        Object.entries(users).forEach(([uid, user]) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'p-4 border border-gray-200 rounded flex flex-col md:flex-row md:items-center md:justify-between gap-4';
+
+          wrapper.innerHTML = `
+            <div>
+              <p class="font-semibold">${user.username || 'No Username'}</p>
+              <p class="text-sm text-gray-500">${user.email || 'No Email'}</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <select class="role-dropdown p-1 border rounded text-sm">
+                <option value="reader" ${user.role === 'reader' ? 'selected' : ''}>Reader</option>
+                <option value="editor" ${user.role === 'editor' ? 'selected' : ''}>Editor</option>
+                <option value="manager" ${user.role === 'manager' ? 'selected' : ''}>Manager</option>
+                <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+              </select>
+              <button class="delete-user bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600">❌ Delete</button>
+            </div>
+          `;
+
+          // 🔁 Handle role change
+          wrapper.querySelector('.role-dropdown').addEventListener('change', (e) => {
+            update(ref(db, `users/${uid}`), { role: e.target.value });
+          });
+
+          // ❌ Handle user delete
+          wrapper.querySelector('.delete-user').addEventListener('click', () => {
+            if (confirm(`Are you sure you want to delete ${user.username || 'this user'}?`)) {
+              remove(ref(db, `users/${uid}`));
+            }
+          });
+
+          userListEl.appendChild(wrapper);
+        });
+      }
+    });
+
   </script>
 </body>
 </html>
