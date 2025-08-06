@@ -5,12 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TamilGeo - Post</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase SDKs -->
+  <style>
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- 🔼 Header -->
+  <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
+    <h1 class="text-2xl font-bold text-gray-800">TamilGeo</h1>
+    <nav class="space-x-4">
+      <a href="index.html" class="text-blue-600 hover:underline">Home</a>
+      <a href="about.html" class="text-blue-600 hover:underline">About</a>
+    </nav>
+  </header>
+
+  <!-- 📄 Post Container -->
+  <main class="max-w-3xl mx-auto p-4" id="post-container"></main>
+
+  <!-- 🔝 Back to Top -->
+  <div class="fixed bottom-4 right-4">
+    <button onclick="window.scrollTo({top:0,behavior:'smooth'})"
+      class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition">↑ Top</button>
+  </div>
+
+  <!-- 🔥 Firebase & Post Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set, push, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, onValue, set, push, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
       authDomain: "tamilgeoapp.firebaseapp.com",
@@ -33,7 +59,7 @@
       .then(res => res.json())
       .then(post => {
         const image = post.jetpack_featured_media_url
-          ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-60 object-cover rounded-md mb-4">`
+          ? `<div class="aspect-video mb-4 rounded-md overflow-hidden"><img src="${post.jetpack_featured_media_url}" class="w-full h-full object-cover"></div>`
           : "";
 
         const contentWithResponsiveVideos = post.content.rendered.replace(
@@ -43,16 +69,20 @@
 
         container.innerHTML = `
           <div class="bg-white p-6 rounded-lg shadow">
+            ${image}
             <h2 class="text-2xl font-bold mb-2">${post.title.rendered}</h2>
             <div class="text-sm text-gray-500 mb-4">
-              👤 Author: TamilGeo | 🗓️ ${new Date(post.date).toLocaleDateString()}
+              👤 TamilGeo | 🗓️ ${new Date(post.date).toLocaleDateString()}
             </div>
-            ${image}
             <div class="prose max-w-none mb-6">${contentWithResponsiveVideos}</div>
 
             <div class="mt-4 flex items-center gap-3">
-              <button id="like-btn" class="bg-pink-500 text-white px-3 py-1 rounded hover:bg-pink-600">♥ Like (<span id="like-count">0</span>)</button>
-              <button onclick="sharePost()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">🔗 Share</button>
+              <button id="like-btn" class="bg-pink-500 text-white px-3 py-1 rounded hover:bg-pink-600">
+                ♥ Like (<span id="like-count">0</span>)
+              </button>
+              <button onclick="sharePost('${post.title.rendered}')" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                🔗 Share
+              </button>
             </div>
 
             <div class="mt-6">
@@ -67,10 +97,18 @@
         setupFirebase();
       });
 
-    function sharePost() {
+    function sharePost(title = "") {
       const url = window.location.href;
-      navigator.clipboard.writeText(url);
-      alert("🔗 Post link copied to clipboard!");
+      if (navigator.share) {
+        navigator.share({
+          title: title,
+          text: "Check out this post on TamilGeo!",
+          url: url
+        }).catch(console.error);
+      } else {
+        navigator.clipboard.writeText(url);
+        alert("🔗 Post link copied to clipboard!");
+      }
     }
 
     function setupFirebase() {
@@ -83,12 +121,12 @@
       const likesRef = ref(db, `likes/post_${postId}`);
       const commentsRef = ref(db, `comments/post_${postId}`);
 
-      // Get & show likes
+      // Show likes
       onValue(likesRef, snapshot => {
         likeCountSpan.textContent = snapshot.val() || 0;
       });
 
-      // Like post
+      // Handle like click
       likeBtn.addEventListener("click", () => {
         get(likesRef).then(snapshot => {
           const currentLikes = snapshot.val() || 0;
@@ -117,30 +155,5 @@
       });
     }
   </script>
-
-  <style>
-    .video-container iframe {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
-
-  <!-- Header -->
-  <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
-    <h1 class="text-2xl font-bold text-gray-800">TamilGeo</h1>
-    <nav class="space-x-4">
-      <a href="index.html" class="text-blue-600 hover:underline">Home</a>
-      <a href="about.html" class="text-blue-600 hover:underline">About</a>
-    </nav>
-  </header>
-
-  <!-- Post container -->
-  <main class="max-w-3xl mx-auto p-4" id="post-container"></main>
-
-  <!-- Back to Top -->
-  <div class="fixed bottom-4 right-4">
-    <button onclick="window.scrollTo({top:0,behavior:'smooth'})"
-      class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition">↑ Top</button>
-  </div>
 </body>
 </html>
