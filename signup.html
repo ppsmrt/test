@@ -31,7 +31,7 @@
 
     <p class="text-center text-sm mt-4">Already have an account? <a href="login.html" class="text-blue-600 hover:underline">Log in</a></p>
 
-    <p id="signup-status" class="mt-4 text-center text-green-600 font-medium hidden">✅ Account created!</p>
+    <p id="signup-status" class="mt-4 text-center text-green-600 font-medium hidden">✅ Account created successfully! Redirecting...</p>
   </main>
 
   <!-- ✅ Firebase Logic -->
@@ -60,11 +60,13 @@
       const username = document.getElementById("username").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
+      const statusEl = document.getElementById("signup-status");
 
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const uid = userCredential.user.uid;
 
+        // Save extra details to Realtime Database
         await set(ref(db, "users/" + uid), {
           username,
           email,
@@ -72,7 +74,11 @@
           createdAt: new Date().toISOString()
         });
 
-        document.getElementById("signup-status").classList.remove("hidden");
+        // Show success and redirect
+        statusEl.classList.remove("hidden");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1500);
       } catch (error) {
         alert("Signup failed: " + error.message);
       }
