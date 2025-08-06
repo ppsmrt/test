@@ -57,49 +57,40 @@
       const identifier = document.getElementById("identifier").value.trim();
       const password = document.getElementById("password").value.trim();
 
-      try {
-        // Try logging in directly as email
-        const userCredential = await signInWithEmailAndPassword(auth, identifier, password);
-        const uid = userCredential.user.uid;
+      const usersRef = ref(db, "users");
 
-        // Check role
-        const userRef = ref(db, 'users/' + uid);
-        onValue(userRef, snapshot => {
-          const data = snapshot.val();
-          if (data?.role === 'admin') {
-            window.location.href = 'admin.html';
-          } else {
-            window.location.href = 'dashboard.html';
-          }
-        }, { onlyOnce: true });
+      onValue(usersRef, async (snapshot) => {
+        const users = snapshot.val();
+        const match = Object.entries(users).find(([uid, user]) =>
+          user.email === identifier || user.username === identifier
+        );
 
-      } catch (err) {
-        // Try username-based login
-        const usersRef = ref(db, "users");
-        onValue(usersRef, snapshot => {
-          const users = snapshot.val();
-          const match = Object.entries(users).find(([uid, data]) => data.username === identifier);
+        if (!match) {
+          alert("❌ No such user found.");
+          return;
+        }
 
-          if (match) {
-            const [uid, user] = match;
-            signInWithEmailAndPassword(auth, user.email, password)
-              .then(() => {
-                const userRef = ref(db, 'users/' + uid);
-                onValue(userRef, snap => {
-                  const data = snap.val();
-                  if (data?.role === 'admin') {
-                    window.location.href = 'admin.html';
-                  } else {
-                    window.location.href = 'dashboard.html';
-                  }
-                }, { onlyOnce: true });
-              })
-              .catch(err => alert("Login failed: " + err.message));
-          } else {
-            alert("❌ No such user or wrong password.");
-          }
-        }, { onlyOnce: true });
-      }
+        const [uid, userData] = match;
+
+        try {
+          await signInWithEmailAndPassword(auth, userData.email, password);
+
+          // After successful login, check role and redirect
+          const userRef = ref(db, "users/" + uid);
+          onValue(userRef, (snap) => {
+            const user = snap.val();
+            if (user.role === "admin") {
+              window.location.href = "admin.html";
+            } else {
+              window.location.href = "dashboard.html";
+            }
+          }, { onlyOnce: true });
+
+        } catch (error) {
+          alert("❌ Login failed: " + error.message);
+        }
+
+      }, { onlyOnce: true });
     });
   </script>
 </body>
