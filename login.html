@@ -28,7 +28,9 @@
       <button type="submit" id="loginBtn" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Log In</button>
     </form>
 
-    <p class="text-center text-sm mt-4">Don't have an account? <a href="signup.html" class="text-blue-600 hover:underline">Sign up</a></p>
+    <p class="text-center text-sm mt-4">Don't have an account? 
+      <a href="signup.html" class="text-blue-600 hover:underline">Sign up</a>
+    </p>
 
     <p id="error-msg" class="text-red-600 text-sm text-center mt-4"></p>
   </main>
@@ -37,7 +39,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -71,9 +73,17 @@
       loginBtn.disabled = true;
       loginBtn.textContent = "Logging in...";
 
-      const usersRef = ref(db, "users");
+      try {
+        const usersRef = ref(db, "users");
+        const snapshot = await get(usersRef);
 
-      onValue(usersRef, async (snapshot) => {
+        if (!snapshot.exists()) {
+          errorMsg.textContent = "❌ No users found in the database.";
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Log In";
+          return;
+        }
+
         const users = snapshot.val();
         const match = Object.entries(users).find(([uid, user]) =>
           user.email === identifier || user.username === identifier
@@ -90,17 +100,18 @@
 
         try {
           await signInWithEmailAndPassword(auth, userData.email, password);
-
-          // Redirect all roles to dashboard (admin included)
           window.location.href = "dashboard.html";
-
         } catch (error) {
-          errorMsg.textContent = "❌ Login failed: " + error.message;
+          errorMsg.textContent = "❌ Incorrect password.";
           loginBtn.disabled = false;
           loginBtn.textContent = "Log In";
         }
 
-      }, { onlyOnce: true });
+      } catch (err) {
+        errorMsg.textContent = "❌ Something went wrong. Please try again.";
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Log In";
+      }
     });
   </script>
 </body>
