@@ -34,16 +34,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let navContent = "";
 
     if (user) {
-      // ✅ Get user's name
+      // ✅ Get user's full name (displayName)
       const userRef = ref(db, "users/" + user.uid);
       const snapshot = await get(userRef);
       const userData = snapshot.val();
 
-      const name = userData?.username || "User";
+      const name = userData?.displayName || "User";
 
       navContent = `
         <div class="flex items-center space-x-4">
-          <span class="text-sm font-medium text-gray-800 bg-green-100 px-3 py-1 rounded-full">${name}</span>
+          <a href="dashboard.html" class="text-sm font-medium text-gray-800 bg-green-100 px-3 py-1 rounded-full hover:underline">${name}</a>
           <button id="logout-btn" class="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded">Sign Out</button>
         </div>
       `;
