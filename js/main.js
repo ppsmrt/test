@@ -27,69 +27,82 @@ let totalPages = null;
 let isLoading = false;
 let isLoggedIn = false;
 
-// ✅ Fetch posts immediately regardless of auth state
+// ✅ Fetch posts on load
 fetchPosts();
 
-// ✅ Track auth state
+// ✅ Monitor login status
 onAuthStateChanged(auth, user => {
-  isLoggedIn = !!user;  // Check if the user is logged in
-  container.innerHTML = "";  // Clear previous content
-  currentPage = 1;  // Reset pagination
-  fetchPosts();  // Re-fetch posts to handle login state
+  isLoggedIn = !!user;
+  container.innerHTML = "";
+  currentPage = 1;
+  fetchPosts();
 });
 
 // ✅ Search functionality
 searchInput?.addEventListener("input", (e) => {
   const query = e.target.value.trim();
   currentPage = 1;
+
   if (query.length > 2) {
     fetch(`${blogURL}/posts?search=${query}&per_page=${postsPerPage}&page=1`)
       .then(res => res.json())
       .then(posts => {
         container.innerHTML = "";
-        displayPosts(posts);
+        displayPosts(posts || []);
         loadMoreBtn.style.display = "none";
-      });
+      })
+      .catch(err => console.error("Search Error:", err));
   } else {
     container.innerHTML = "";
     fetchPosts();
   }
 });
 
-// ✅ Load More functionality
+// ✅ Load More
 loadMoreBtn?.addEventListener("click", () => {
-  if (!isLoading) {
+  if (!isLoading && currentPage < totalPages) {
     currentPage++;
     fetchPosts();
   }
 });
 
-// ✅ Fetch posts
+// ✅ Fetch posts from API
 function fetchPosts() {
   isLoading = true;
+
   fetch(`${blogURL}/posts?per_page=${postsPerPage}&page=${currentPage}`)
-    .then(res => {
-      totalPages = parseInt(res.headers.get("X-WP-TotalPages"));
+    .then(async res => {
+      if (!res.ok) {
+        throw new Error(`Failed to fetch posts. Status: ${res.status}`);
+      }
+      totalPages = parseInt(res.headers.get("X-WP-TotalPages")) || 1;
       return res.json();
     })
     .then(posts => {
-      displayPosts(posts);
-      isLoading = false;
+      if (!Array.isArray(posts) || posts.length === 0) {
+        container.innerHTML += `<p class="text-center col-span-full text-gray-500">No posts found.</p>`;
+      } else {
+        displayPosts(posts);
+      }
 
-      // Toggle Load More visibility
       loadMoreBtn.style.display = currentPage >= totalPages ? "none" : "block";
+      isLoading = false;
     })
-    .catch(err => console.error("Error fetching posts:", err));
+    .catch(err => {
+      console.error("Post Fetch Error:", err);
+      container.innerHTML += `<p class="text-red-500">Error loading posts. Try again later.</p>`;
+      isLoading = false;
+    });
 }
 
-// ✅ Strip HTML tags from content
+// ✅ Clean HTML from text
 function stripHTML(html) {
   const div = document.createElement("div");
   div.innerHTML = html;
   return div.textContent || div.innerText || "";
 }
 
-// ✅ Format "time ago" for date
+// ✅ Time formatter
 function timeAgo(dateString) {
   const now = new Date();
   const postDate = new Date(dateString);
@@ -107,17 +120,17 @@ function timeAgo(dateString) {
   });
 }
 
-// ✅ Display posts
+// ✅ Display posts on screen
 function displayPosts(posts) {
   const bookmarkedIds = JSON.parse(localStorage.getItem("bookmarkedPosts") || "[]");
 
   posts.forEach(post => {
-    const isBookmarked = bookmarkedIds.includes(post.id);
-    const authorName = "TamilGeo";
+    if (!post || !post.id || !post.title) return;
 
+    const isBookmarked = bookmarkedIds.includes(post.id);
     const image = post.jetpack_featured_media_url
       ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-40 object-cover rounded-t-md">`
-      : "";
+      : `<div class="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500">No Image</div>`;
 
     const bookmarkBtn = isLoggedIn
       ? `
@@ -127,8 +140,7 @@ function displayPosts(posts) {
           title="${isBookmarked ? 'Remove Bookmark' : 'Add to Bookmarks'}"
         >
           ${isBookmarked ? '✅' : '📌'}
-        </button>
-      `
+        </button>`
       : "";
 
     const postHTML = `
@@ -139,38 +151,39 @@ function displayPosts(posts) {
             <h2 class="text-lg font-bold mb-2">${post.title.rendered}</h2>
             <p class="text-sm text-gray-600 mb-2">${stripHTML(post.excerpt.rendered).slice(0, 100)}...</p>
             <div class="flex justify-between text-xs text-gray-500 mt-4">
-              <span>👤 ${authorName}</span>
+              <span>👤 TamilGeo</span>
               <span>🗓️ ${timeAgo(post.date)}</span>
             </div>
           </div>
         </a>
         ${bookmarkBtn}
-      </div>
-    `;
+      </div>`;
 
     container.innerHTML += postHTML;
   });
 
-  // ✅ Add bookmark click events (only if logged in)
-  if (isLoggedIn) {
-    document.querySelectorAll(".bookmark-btn").forEach(button => {
-      button.addEventListener("click", function (e) {
-        e.preventDefault();
-        const id = parseInt(this.dataset.id);
-        let bookmarks = JSON.parse(localStorage.getItem("bookmarkedPosts") || "[]");
+  if (isLoggedIn) attachBookmarkEvents();
+}
 
-        if (bookmarks.includes(id)) {
-          bookmarks = bookmarks.filter(bid => bid !== id);
-          this.innerText = "📌";
-          this.title = "Add to Bookmarks";
-        } else {
-          bookmarks.push(id);
-          this.innerText = "✅";
-          this.title = "Remove Bookmark";
-        }
+// ✅ Bookmark click handlers
+function attachBookmarkEvents() {
+  document.querySelectorAll(".bookmark-btn").forEach(button => {
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      const id = parseInt(this.dataset.id);
+      let bookmarks = JSON.parse(localStorage.getItem("bookmarkedPosts") || "[]");
 
-        localStorage.setItem("bookmarkedPosts", JSON.stringify(bookmarks));
-      });
+      if (bookmarks.includes(id)) {
+        bookmarks = bookmarks.filter(bid => bid !== id);
+        this.innerText = "📌";
+        this.title = "Add to Bookmarks";
+      } else {
+        bookmarks.push(id);
+        this.innerText = "✅";
+        this.title = "Remove Bookmark";
+      }
+
+      localStorage.setItem("bookmarkedPosts", JSON.stringify(bookmarks));
     });
-  }
+  });
 }
