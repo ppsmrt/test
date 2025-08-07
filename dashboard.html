@@ -14,7 +14,7 @@
   <!-- 🔒 Welcome + Logout -->
   <div class="bg-blue-100 text-blue-800 p-3 flex justify-between items-center px-4">
     <span id="welcome-message">Welcome, </span>
-    <button onclick="logout()" class="text-sm px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Sign Out ✖</button>
+    <button id="logout-btn" class="text-sm px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Sign Out ✖</button>
   </div>
 
   <!-- ✅ Dashboard Main -->
@@ -107,7 +107,65 @@
   <script type="module" src="js/dashboard.js"></script>
 
   <!-- ✅ Universal Header & Footer Loaders -->
-  <script src="/header.js"></script> <!-- ✅ Corrected path -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const sharedHeader = document.getElementById("shared-header");
+    sharedHeader.innerHTML = `
+      <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
+        <h1 class="text-2xl font-bold text-green-600">TamilGeo</h1>
+        <nav class="flex space-x-4">
+          <a href="index.html" class="text-gray-700 hover:text-green-600 font-medium">Home</a>
+          <a href="about.html" class="text-gray-700 hover:text-green-600 font-medium">About</a>
+          <a href="bookmarks.html" class="text-gray-700 hover:text-green-600 font-medium">Bookmarks</a>
+        </nav>
+      </header>
+    `;
+
+    const welcomeMessage = document.getElementById("welcome-message");
+    const adminSection = document.getElementById("admin-section");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userId = user.uid;
+        const userRef = ref(db, `users/${userId}`);
+        const snapshot = await get(userRef);
+
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          const fullName = userData.name || user.email;
+          welcomeMessage.textContent = `Welcome, ${fullName}`;
+          if (userData.role === "admin") {
+            adminSection.classList.remove("hidden");
+          }
+        }
+      } else {
+        window.location.href = "index.html"; // redirect if not logged in
+      }
+    });
+
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
+    });
+  </script>
+
   <script src="js/footer.js"></script>
 </body>
 </html>
