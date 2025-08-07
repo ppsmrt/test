@@ -1,3 +1,21 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+// ✅ Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+  authDomain: "tamilgeoapp.firebaseapp.com",
+  databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+  projectId: "tamilgeoapp",
+  storageBucket: "tamilgeoapp.appspot.com",
+  messagingSenderId: "1092623024431",
+  appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+};
+
+// ✅ Init Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
 const blogURL = "https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com";
 const container = document.getElementById("posts-container");
 const searchInput = document.getElementById("searchInput");
@@ -7,9 +25,15 @@ let currentPage = 1;
 const postsPerPage = 6;
 let totalPages = null;
 let isLoading = false;
+let isLoggedIn = false;
 
-// ✅ Fetch & display initial posts
-fetchPosts();
+// ✅ Track auth state
+onAuthStateChanged(auth, user => {
+  isLoggedIn = !!user;
+  container.innerHTML = "";      // Clear previous content
+  currentPage = 1;               // Reset pagination
+  fetchPosts();                  // Re-render posts with correct bookmark visibility
+});
 
 // ✅ Search functionality
 searchInput?.addEventListener("input", (e) => {
@@ -37,7 +61,7 @@ loadMoreBtn?.addEventListener("click", () => {
   }
 });
 
-// ✅ Main fetch function
+// ✅ Fetch posts
 function fetchPosts() {
   isLoading = true;
   fetch(`${blogURL}/posts?per_page=${postsPerPage}&page=${currentPage}`)
@@ -49,24 +73,20 @@ function fetchPosts() {
       displayPosts(posts);
       isLoading = false;
 
-      // Hide Load More if done
-      if (currentPage >= totalPages) {
-        loadMoreBtn.style.display = "none";
-      } else {
-        loadMoreBtn.style.display = "block";
-      }
+      // Toggle Load More
+      loadMoreBtn.style.display = currentPage >= totalPages ? "none" : "block";
     })
     .catch(err => console.error("Error fetching posts:", err));
 }
 
-// ✅ Strip HTML utility
+// ✅ Strip HTML tags
 function stripHTML(html) {
   const div = document.createElement("div");
   div.innerHTML = html;
   return div.textContent || div.innerText || "";
 }
 
-// ✅ Format time ago
+// ✅ Format "time ago"
 function timeAgo(dateString) {
   const now = new Date();
   const postDate = new Date(dateString);
@@ -96,6 +116,18 @@ function displayPosts(posts) {
       ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-40 object-cover rounded-t-md">`
       : "";
 
+    const bookmarkBtn = isLoggedIn
+      ? `
+        <button
+          class="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-green-100 transition text-green-600 text-xl bookmark-btn"
+          data-id="${post.id}"
+          title="${isBookmarked ? 'Remove Bookmark' : 'Add to Bookmarks'}"
+        >
+          ${isBookmarked ? '✅' : '📌'}
+        </button>
+      `
+      : "";
+
     const postHTML = `
       <div class="relative group">
         <a href="post.html?id=${post.id}" class="block bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition duration-300 transform hover:-translate-y-1 card">
@@ -109,37 +141,33 @@ function displayPosts(posts) {
             </div>
           </div>
         </a>
-        <button
-          class="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-green-100 transition text-green-600 text-xl bookmark-btn"
-          data-id="${post.id}"
-          title="${isBookmarked ? 'Remove Bookmark' : 'Add to Bookmarks'}"
-        >
-          ${isBookmarked ? '✅' : '📌'}
-        </button>
+        ${bookmarkBtn}
       </div>
     `;
 
     container.innerHTML += postHTML;
   });
 
-  // ✅ Bookmark Button Events
-  document.querySelectorAll(".bookmark-btn").forEach(button => {
-    button.addEventListener("click", function (e) {
-      e.preventDefault();
-      const id = parseInt(this.dataset.id);
-      let bookmarks = JSON.parse(localStorage.getItem("bookmarkedPosts") || "[]");
+  // ✅ Bookmark click events (only if logged in)
+  if (isLoggedIn) {
+    document.querySelectorAll(".bookmark-btn").forEach(button => {
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+        const id = parseInt(this.dataset.id);
+        let bookmarks = JSON.parse(localStorage.getItem("bookmarkedPosts") || "[]");
 
-      if (bookmarks.includes(id)) {
-        bookmarks = bookmarks.filter(bid => bid !== id);
-        this.innerText = "📌";
-        this.title = "Add to Bookmarks";
-      } else {
-        bookmarks.push(id);
-        this.innerText = "✅";
-        this.title = "Remove Bookmark";
-      }
+        if (bookmarks.includes(id)) {
+          bookmarks = bookmarks.filter(bid => bid !== id);
+          this.innerText = "📌";
+          this.title = "Add to Bookmarks";
+        } else {
+          bookmarks.push(id);
+          this.innerText = "✅";
+          this.title = "Remove Bookmark";
+        }
 
-      localStorage.setItem("bookmarkedPosts", JSON.stringify(bookmarks));
+        localStorage.setItem("bookmarkedPosts", JSON.stringify(bookmarks));
+      });
     });
-  });
+  }
 }
