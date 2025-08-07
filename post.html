@@ -43,7 +43,7 @@
   <!-- ✅ Firebase & Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set, push, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, onValue, set, push, get, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -136,6 +136,19 @@
       return `${diffDays} days ago`;
     }
 
+    function formatTimestamp(ts) {
+      const date = new Date(ts);
+      return date.toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+      }) + " · " + date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
     function setupFirebase() {
       const likeBtn = document.getElementById("like-btn");
       const likeCountSpan = document.getElementById("like-count");
@@ -161,9 +174,13 @@
         const data = snapshot.val();
         if (data) {
           Object.values(data).forEach(comment => {
+            const time = comment.timestamp ? formatTimestamp(comment.timestamp) : "Just now";
             commentsDiv.innerHTML += `
               <div class="bg-gray-50 p-3 border border-gray-200 rounded">
-                <div class="font-semibold text-sm text-green-700">${comment.name}</div>
+                <div class="flex justify-between items-center text-sm">
+                  <span class="font-semibold text-green-700">${comment.name}</span>
+                  <span class="text-gray-500">${time}</span>
+                </div>
                 <div class="text-sm mt-1 text-gray-800">${comment.message}</div>
               </div>`;
           });
@@ -177,7 +194,12 @@
         const message = document.getElementById("comment-box").value.trim();
 
         if (name && email && message) {
-          push(commentsRef, { name, email, message });
+          push(commentsRef, {
+            name,
+            email,
+            message,
+            timestamp: Date.now()
+          });
           commentForm.reset();
         }
       });
