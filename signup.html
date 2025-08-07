@@ -5,36 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign Up - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    /* Optional: card effect for list items */
+    .rule-card {
+      @apply bg-white border border-blue-200 p-3 rounded shadow-sm hover:shadow-md transition;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
 
   <!-- ✅ Shared Header -->
-  <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
-    <h1 class="text-2xl font-bold text-green-600">TamilGeo</h1>
-    <nav class="flex space-x-4">
-      <a href="index.html" class="text-gray-700 hover:text-green-600 font-medium">Home</a>
-      <a href="about.html" class="text-gray-700 hover:text-green-600 font-medium">About</a>
-      <a href="bookmarks.html" class="text-gray-700 hover:text-green-600 font-medium">Bookmarks</a>
-    </nav>
-  </header>
+  <div id="shared-header"></div>
 
   <!-- ✅ Signup Form and Rules -->
-  <main class="max-w-md mx-auto mt-8 bg-white p-6 rounded shadow space-y-6 flex-grow">
-    
+  <main class="max-w-2xl mx-auto mt-8 bg-white p-6 rounded shadow space-y-8 flex-grow">
+
     <!-- 📜 Rules Section -->
-    <section class="bg-blue-50 border border-blue-200 p-4 rounded space-y-2 text-sm">
-      <h2 class="text-lg font-semibold text-blue-800">📋 TamilGeo Community Guidelines</h2>
-      <ul class="list-disc pl-5 text-blue-700">
-        <li>✅ Be respectful – No hate speech or bullying.</li>
-        <li>🧠 Share only useful, meaningful, and original content.</li>
-        <li>🚫 No spam, promotions, or misleading content.</li>
-        <li>📷 Use real names and clear profile pictures.</li>
-        <li>💬 Keep your language clean and polite.</li>
-        <li>📢 Accept admin/moderator feedback positively.</li>
-        <li>🔐 Don’t post private or personal information.</li>
-        <li>🚨 Report inappropriate content to help the community.</li>
-        <li>⚖️ Admins reserve the right to remove accounts violating rules.</li>
-      </ul>
+    <section class="space-y-4">
+      <h2 class="text-xl font-bold text-blue-800 flex items-center gap-2">
+        <span>📋</span> TamilGeo Community Guidelines
+      </h2>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="rule-card">✅ Be respectful – No hate speech or bullying.</div>
+        <div class="rule-card">🧠 Share only useful, meaningful, and original content.</div>
+        <div class="rule-card">🚫 No spam, promotions, or misleading content.</div>
+        <div class="rule-card">📷 Use real names and clear profile pictures.</div>
+        <div class="rule-card">💬 Keep your language clean and polite.</div>
+        <div class="rule-card">📢 Accept admin/moderator feedback positively.</div>
+        <div class="rule-card">🔐 Don’t post private or personal information.</div>
+        <div class="rule-card">🚨 Report inappropriate content to help the community.</div>
+        <div class="rule-card">⚖️ Admins reserve the right to remove accounts violating rules.</div>
+      </div>
     </section>
 
     <!-- 👤 Signup Form -->
@@ -46,7 +49,7 @@
         <input type="text" id="username" placeholder="Username" required class="w-full p-3 border rounded" />
         <input type="email" id="email" placeholder="Email" required class="w-full p-3 border rounded" />
         <input type="password" id="password" placeholder="Password" required class="w-full p-3 border rounded" />
-        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Sign Up</button>
+        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Sign Up</button>
       </form>
 
       <p class="text-xs text-gray-600 mt-2 text-center">By signing up, you agree to follow our community rules.</p>
@@ -115,7 +118,8 @@
     });
   </script>
 
-  <!-- ✅ Universal Footer Script -->
+  <!-- ✅ Shared Scripts -->
+  <script type="module" src="js/header.js"></script>
   <script src="js/footer.js"></script>
 </body>
 </html>
