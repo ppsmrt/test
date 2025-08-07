@@ -5,7 +5,7 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// ✅ Firebase config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
@@ -19,64 +19,68 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-document.addEventListener("DOMContentLoaded", () => {
-  const placeholder = document.getElementById("shared-header");
-  const currentPath = window.location.pathname;
-  const isHomePage = currentPath.endsWith("index.html") || currentPath === "/" || currentPath === "/test/";
+const placeholder = document.getElementById("shared-header");
+const currentPath = window.location.pathname;
+const isHomePage = currentPath.endsWith("index.html") || currentPath === "/" || currentPath === "/test/";
 
-  onAuthStateChanged(auth, (user) => {
-    let navContent = "";
+onAuthStateChanged(auth, (user) => {
+  let navContent = "";
 
-    if (user) {
-      navContent = `
-        <nav class="flex gap-2 text-sm font-medium">
-          ${!isHomePage ? `
-            <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-              <i class="fa-solid fa-house mr-1"></i> Home
-            </a>` : ""}
-          <a href="dashboard.html" class="px-4 py-1 rounded-full border border-green-600 text-green-600 bg-white hover:bg-green-50 transition">
-            <i class="fa-regular fa-circle-user mr-1"></i> Account
-          </a>
-          <button id="logout-btn" class="px-4 py-1 rounded-full bg-red-600 text-white hover:bg-red-700 transition">
-            <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Sign out
-          </button>
-        </nav>
-      `;
-    } else {
-      navContent = `
-        <nav class="flex gap-2 text-sm font-medium">
-          ${!isHomePage ? `
-            <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-              <i class="fa-solid fa-house mr-1"></i> Home
-            </a>` : ""}
-          <a href="login.html" class="px-4 py-1 rounded-full border border-gray-400 text-gray-700 hover:bg-gray-100 transition">
-            <i class="fa-solid fa-right-to-bracket mr-1"></i> Login
-          </a>
-          <a href="signup.html" class="px-4 py-1 rounded-full border border-gray-400 text-gray-700 hover:bg-gray-100 transition">
-            <i class="fa-solid fa-user-plus mr-1"></i> Sign Up
-          </a>
-        </nav>
-      `;
-    }
-
-    const headerHTML = `
-      <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
-        <a href="index.html" class="text-2xl font-bold text-green-600">TamilGeo</a>
-        ${navContent}
-      </header>
+  if (user) {
+    navContent = `
+      <nav class="flex gap-2 text-sm font-medium">
+        ${!isHomePage ? `
+          <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
+            <i class="fa-solid fa-house mr-1"></i> Home
+          </a>` : ""}
+        <a href="dashboard.html" class="px-4 py-1 rounded-full border border-green-600 text-green-600 bg-white hover:bg-green-50 transition">
+          <i class="fa-regular fa-circle-user mr-1"></i> Account
+        </a>
+        <button id="logout-btn" class="px-4 py-1 rounded-full bg-red-600 text-white hover:bg-red-700 transition">
+          <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Sign out
+        </button>
+      </nav>
     `;
+  } else {
+    navContent = `
+      <nav class="flex gap-2 text-sm font-medium">
+        ${!isHomePage ? `
+          <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
+            <i class="fa-solid fa-house mr-1"></i> Home
+          </a>` : ""}
+        <a href="login.html" class="px-4 py-1 rounded-full border border-gray-400 text-gray-700 hover:bg-gray-100 transition">
+          <i class="fa-solid fa-right-to-bracket mr-1"></i> Login
+        </a>
+        <a href="signup.html" class="px-4 py-1 rounded-full border border-gray-400 text-gray-700 hover:bg-gray-100 transition">
+          <i class="fa-solid fa-user-plus mr-1"></i> Sign Up
+        </a>
+      </nav>
+    `;
+  }
 
-    if (placeholder) {
-      placeholder.innerHTML = headerHTML;
+  const headerHTML = `
+    <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
+      <a href="index.html" class="text-xl sm:text-2xl font-bold text-green-600">TamilGeo</a>
+      ${navContent}
+    </header>
+  `;
 
-      const logoutBtn = document.getElementById("logout-btn");
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-          signOut(auth).then(() => {
+  if (placeholder) {
+    placeholder.innerHTML = headerHTML;
+
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        signOut(auth)
+          .then(() => {
             window.location.href = "index.html";
-          });
-        });
-      }
+          })
+          .catch(err => console.error("Sign out error:", err));
+      });
     }
-  });
+  } else {
+    console.warn("⚠️ shared-header element not found in DOM");
+  }
+}, err => {
+  console.error("🔥 Firebase auth error:", err);
 });
