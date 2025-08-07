@@ -1,5 +1,3 @@
-// 📁 header.js
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getAuth,
@@ -23,43 +21,41 @@ const auth = getAuth(app);
 
 document.addEventListener("DOMContentLoaded", () => {
   const placeholder = document.getElementById("shared-header");
+  const currentPath = window.location.pathname;
+  const isHomePage = currentPath.endsWith("index.html") || currentPath === "/" || currentPath === "/test/";
 
   onAuthStateChanged(auth, (user) => {
     let navContent = "";
 
     if (user) {
       navContent = `
-        <div class="flex items-center gap-3 text-sm font-medium">
-          <!-- Home -->
-          <a href="index.html" class="flex items-center gap-1 text-gray-700 hover:text-green-600">
-            <i class="fa-regular fa-house"></i> Home
+        <nav class="flex gap-2 text-sm font-medium">
+          ${!isHomePage ? `
+            <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
+              <i class="fa-solid fa-house mr-1"></i> Home
+            </a>` : ""}
+          <a href="dashboard.html" class="px-4 py-1 rounded-full border border-green-600 text-green-600 bg-white hover:bg-green-50 transition">
+            <i class="fa-regular fa-circle-user mr-1"></i> Account
           </a>
-
-          <!-- Account -->
-          <a href="dashboard.html" class="flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-200 transition">
-            <i class="fa-regular fa-circle-user"></i> Account
-          </a>
-
-          <!-- Sign Out -->
-          <button id="logout-btn" class="flex items-center gap-1 bg-red-100 text-red-700 px-3 py-1 rounded-full hover:bg-red-200 transition">
-            <i class="fa-solid fa-xmark"></i> Sign out
+          <button id="logout-btn" class="px-4 py-1 rounded-full bg-red-600 text-white hover:bg-red-700 transition">
+            <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Sign out
           </button>
-        </div>
+        </nav>
       `;
     } else {
       navContent = `
-        <div class="flex items-center gap-4 text-sm font-medium">
-          <!-- Home -->
-          <a href="index.html" class="flex items-center gap-1 text-gray-700 hover:text-green-600">
-            <i class="fa-regular fa-house"></i> Home
+        <nav class="flex gap-2 text-sm font-medium">
+          ${!isHomePage ? `
+            <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
+              <i class="fa-solid fa-house mr-1"></i> Home
+            </a>` : ""}
+          <a href="login.html" class="px-4 py-1 rounded-full border border-gray-400 text-gray-700 hover:bg-gray-100 transition">
+            <i class="fa-solid fa-right-to-bracket mr-1"></i> Login
           </a>
-
-          <!-- Login -->
-          <a href="login.html" class="text-gray-700 hover:text-green-600">Login</a>
-
-          <!-- Sign Up -->
-          <a href="signup.html" class="text-gray-700 hover:text-green-600">Sign Up</a>
-        </div>
+          <a href="signup.html" class="px-4 py-1 rounded-full border border-gray-400 text-gray-700 hover:bg-gray-100 transition">
+            <i class="fa-solid fa-user-plus mr-1"></i> Sign Up
+          </a>
+        </nav>
       `;
     }
 
