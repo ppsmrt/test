@@ -60,7 +60,7 @@
     </section>
   </main>
 
-  <!-- ✅ Dynamic Footer will be injected here -->
+  <!-- ✅ Footer -->
   <div id="footer"></div>
 
   <!-- 🔌 Firebase Auth/Profile Logic -->
@@ -100,18 +100,35 @@
       const userRef = ref(db, 'users/' + uid);
 
       get(userRef).then(snapshot => {
-        const data = snapshot.val();
-        const name = data?.name || user.displayName || "User";
-        document.getElementById("welcome-message").textContent = `Welcome, ${name}`;
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const name = data?.name || user.displayName || "User";
+          document.getElementById("welcome-message").textContent = `Welcome, ${name}`;
 
-        if (data?.role === 'admin') {
-          document.getElementById('admin-section').classList.remove('hidden');
-          document.getElementById('user-section').classList.add('hidden');
-          document.getElementById('user-actions').classList.add('hidden');
+          if (data?.role === 'admin') {
+            document.getElementById('admin-section').classList.remove('hidden');
+            document.getElementById('user-section').classList.add('hidden');
+            document.getElementById('user-actions').classList.add('hidden');
+          } else {
+            document.getElementById('name').value = data.name || '';
+            document.getElementById('username').value = data.username || '';
+            document.getElementById('photoURL').value = user.photoURL || '';
+          }
+
         } else {
-          document.getElementById('name').value = data.name || '';
-          document.getElementById('username').value = data.username || '';
-          document.getElementById('photoURL').value = user.photoURL || '';
+          // Create user profile if missing
+          const defaultProfile = {
+            email: user.email || "",
+            name: user.displayName || "Unnamed User",
+            username: user.displayName?.toLowerCase().replace(/\s+/g, '') || "user",
+            photoURL: user.photoURL || "",
+            role: user.email === "ppsmart7@gmail.com" ? "admin" : "reader",
+            createdAt: new Date().toISOString()
+          };
+
+          update(userRef, defaultProfile).then(() => {
+            location.reload();
+          });
         }
       });
 
@@ -135,7 +152,7 @@
     }
   </script>
 
-  <!-- ✅ Load Footer JS -->
+  <!-- ✅ Footer Loader -->
   <script src="js/footer.js"></script>
 </body>
 </html>
