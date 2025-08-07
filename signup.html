@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign Up - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-MC6E5vbeSFRYxuVXWaJjXKQn5SC2eYyEUZ+cfYY4gXavwhC2EeUlDRt7rkKHlf6IikIfZngjRvmhYlZ4m+Oc7Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    /* Optional: card effect for list items */
     .rule-card {
       @apply bg-white border border-blue-200 p-3 rounded shadow-sm hover:shadow-md transition;
     }
@@ -45,11 +44,13 @@
       <h2 class="text-xl font-bold mb-4 text-center">👤 Create an Account</h2>
 
       <form id="signup-form" class="space-y-4">
-        <input type="text" id="name" placeholder="Full Name" required class="w-full p-3 border rounded" />
-        <input type="text" id="username" placeholder="Username" required class="w-full p-3 border rounded" />
-        <input type="email" id="email" placeholder="Email" required class="w-full p-3 border rounded" />
-        <input type="password" id="password" placeholder="Password" required class="w-full p-3 border rounded" />
-        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Sign Up</button>
+        <input type="text" id="name" placeholder="Full Name" required autocomplete="name" class="w-full p-3 border rounded" />
+        <input type="text" id="username" placeholder="Username" required autocomplete="username" class="w-full p-3 border rounded" />
+        <input type="email" id="email" placeholder="Email" required autocomplete="email" class="w-full p-3 border rounded" />
+        <input type="password" id="password" placeholder="Password" required autocomplete="new-password" class="w-full p-3 border rounded" />
+        <button type="submit" id="signup-btn" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">
+          Sign Up
+        </button>
       </form>
 
       <p class="text-xs text-gray-600 mt-2 text-center">By signing up, you agree to follow our community rules.</p>
@@ -85,14 +86,20 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    document.getElementById("signup-form").addEventListener("submit", async (e) => {
+    const signupForm = document.getElementById("signup-form");
+    const signupBtn = document.getElementById("signup-btn");
+    const statusEl = document.getElementById("signup-status");
+
+    signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      signupBtn.disabled = true;
+      signupBtn.innerText = "Signing Up...";
 
       const name = document.getElementById("name").value.trim();
       const username = document.getElementById("username").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
-      const statusEl = document.getElementById("signup-status");
 
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -114,12 +121,15 @@
         }, 1500);
       } catch (error) {
         alert("Signup failed: " + error.message);
+      } finally {
+        signupBtn.disabled = false;
+        signupBtn.innerText = "Sign Up";
       }
     });
   </script>
 
   <!-- ✅ Shared Scripts -->
-  <script type="module" src="js/header.js"></script>
+  <script type="module" src="header.js"></script>
   <script src="js/footer.js"></script>
 </body>
 </html>
