@@ -29,23 +29,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (user) {
       navContent = `
-        <div class="flex items-center space-x-4">
-          <a href="dashboard.html" class="text-sm font-medium text-gray-800 bg-green-100 px-3 py-1 rounded-full hover:underline">Account</a>
-          <button id="logout-btn" class="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded">Sign Out</button>
+        <div class="flex items-center gap-3 text-sm font-medium">
+          <!-- Home -->
+          <a href="index.html" class="flex items-center gap-1 text-gray-700 hover:text-green-600">
+            <i class="fa-regular fa-house"></i> Home
+          </a>
+
+          <!-- Account -->
+          <a href="dashboard.html" class="flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-200 transition">
+            <i class="fa-regular fa-circle-user"></i> Account
+          </a>
+
+          <!-- Sign Out -->
+          <button id="logout-btn" class="flex items-center gap-1 bg-red-100 text-red-700 px-3 py-1 rounded-full hover:bg-red-200 transition">
+            <i class="fa-solid fa-xmark"></i> Sign out
+          </button>
         </div>
       `;
     } else {
       navContent = `
-        <nav class="flex space-x-4">
-          <a href="login.html" class="text-sm font-medium text-gray-700 hover:text-green-600">Login</a>
-          <a href="signup.html" class="text-sm font-medium text-gray-700 hover:text-green-600">Sign Up</a>
-        </nav>
+        <div class="flex items-center gap-4 text-sm font-medium">
+          <!-- Home -->
+          <a href="index.html" class="flex items-center gap-1 text-gray-700 hover:text-green-600">
+            <i class="fa-regular fa-house"></i> Home
+          </a>
+
+          <!-- Login -->
+          <a href="login.html" class="text-gray-700 hover:text-green-600">Login</a>
+
+          <!-- Sign Up -->
+          <a href="signup.html" class="text-gray-700 hover:text-green-600">Sign Up</a>
+        </div>
       `;
     }
 
     const headerHTML = `
       <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
-        <h1 class="text-2xl font-bold text-green-600">TamilGeo</h1>
+        <a href="index.html" class="text-2xl font-bold text-green-600">TamilGeo</a>
         ${navContent}
       </header>
     `;
