@@ -132,16 +132,15 @@ function displayPosts(posts) {
       ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-40 object-cover rounded-t-md">`
       : `<div class="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500">No Image</div>`;
 
-    const bookmarkBtn = isLoggedIn
-      ? `
-        <button
-          class="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-green-100 transition text-green-600 text-xl bookmark-btn"
-          data-id="${post.id}"
-          title="${isBookmarked ? 'Remove Bookmark' : 'Add to Bookmarks'}"
-        >
-          ${isBookmarked ? '✅' : '📌'}
-        </button>`
-      : "";
+    const bookmarkBtn = `
+      <button
+        class="absolute top-2 right-2 rounded-full p-2 shadow-md transition text-xl bookmark-btn ${isLoggedIn ? 'bg-white hover:bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}"
+        data-id="${post.id}"
+        title="${isLoggedIn ? (isBookmarked ? 'Remove Bookmark' : 'Add to Bookmarks') : 'Login to Bookmark'}"
+        ${isLoggedIn ? "" : "disabled"}
+      >
+        ${isBookmarked ? '✅' : '📌'}
+      </button>`;
 
     const postHTML = `
       <div class="relative group">
