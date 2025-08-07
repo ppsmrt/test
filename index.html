@@ -8,7 +8,7 @@
   <!-- ✅ Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- ✅ Font Awesome 6.5.2 (Latest via CDN) -->
+  <!-- ✅ Font Awesome 6.5.2 -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -50,39 +50,9 @@
   <!-- ✅ Universal Footer Placeholder -->
   <footer id="footer" class="mt-auto"></footer>
 
-  <!-- ✅ Firebase Auth to Toggle Bookmark Icon -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-      authDomain: "tamilgeoapp.firebaseapp.com",
-      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-      projectId: "tamilgeoapp",
-      storageBucket: "tamilgeoapp.appspot.com",
-      messagingSenderId: "1092623024431",
-      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, user => {
-      const bookmarks = document.querySelectorAll('.bookmark-icon');
-      bookmarks.forEach(icon => {
-        if (user) {
-          icon.classList.remove('hidden');
-        } else {
-          icon.classList.add('hidden');
-        }
-      });
-    });
-  </script>
-
   <!-- ✅ Scripts -->
   <script type="module" src="header.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/footer.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/footer.js"></script>
 </body>
 </html>
