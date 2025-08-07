@@ -31,13 +31,13 @@ onAuthStateChanged(auth, (user) => {
       <nav class="flex gap-2 text-sm font-medium">
         ${!isHomePage ? `
           <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-            <i class="fa-solid fa-house mr-1"></i> Home
+            Home
           </a>` : ""}
         <a href="dashboard.html" class="px-4 py-1 rounded-full border border-green-600 text-green-600 bg-white hover:bg-green-50 transition">
-          <i class="fa-regular fa-circle-user mr-1"></i> Account
+          Account
         </a>
         <button id="logout-btn" class="px-4 py-1 rounded-full bg-red-600 text-white hover:bg-red-700 transition">
-          <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Sign out
+          Sign out
         </button>
       </nav>
     `;
@@ -46,13 +46,13 @@ onAuthStateChanged(auth, (user) => {
       <nav class="flex gap-2 text-sm font-medium">
         ${!isHomePage ? `
           <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-            <i class="fa-solid fa-house mr-1"></i> Home
+            Home
           </a>` : ""}
         <a href="login.html" class="px-4 py-1 rounded-full border border-gray-400 text-gray-700 hover:bg-gray-100 transition">
-          <i class="fa-solid fa-right-to-bracket mr-1"></i> Login
+          Login
         </a>
         <a href="signup.html" class="px-4 py-1 rounded-full border border-gray-400 text-gray-700 hover:bg-gray-100 transition">
-          <i class="fa-solid fa-user-plus mr-1"></i> Sign Up
+          Sign Up
         </a>
       </nav>
     `;
