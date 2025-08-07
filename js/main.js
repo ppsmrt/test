@@ -27,12 +27,15 @@ let totalPages = null;
 let isLoading = false;
 let isLoggedIn = false;
 
+// ✅ Fetch posts immediately regardless of auth state
+fetchPosts();
+
 // ✅ Track auth state
 onAuthStateChanged(auth, user => {
-  isLoggedIn = !!user;
-  container.innerHTML = "";      // Clear previous content
-  currentPage = 1;               // Reset pagination
-  fetchPosts();                  // Re-render posts with correct bookmark visibility
+  isLoggedIn = !!user;  // Check if the user is logged in
+  container.innerHTML = "";  // Clear previous content
+  currentPage = 1;  // Reset pagination
+  fetchPosts();  // Re-fetch posts to handle login state
 });
 
 // ✅ Search functionality
@@ -73,20 +76,20 @@ function fetchPosts() {
       displayPosts(posts);
       isLoading = false;
 
-      // Toggle Load More
+      // Toggle Load More visibility
       loadMoreBtn.style.display = currentPage >= totalPages ? "none" : "block";
     })
     .catch(err => console.error("Error fetching posts:", err));
 }
 
-// ✅ Strip HTML tags
+// ✅ Strip HTML tags from content
 function stripHTML(html) {
   const div = document.createElement("div");
   div.innerHTML = html;
   return div.textContent || div.innerText || "";
 }
 
-// ✅ Format "time ago"
+// ✅ Format "time ago" for date
 function timeAgo(dateString) {
   const now = new Date();
   const postDate = new Date(dateString);
@@ -148,7 +151,7 @@ function displayPosts(posts) {
     container.innerHTML += postHTML;
   });
 
-  // ✅ Bookmark click events (only if logged in)
+  // ✅ Add bookmark click events (only if logged in)
   if (isLoggedIn) {
     document.querySelectorAll(".bookmark-btn").forEach(button => {
       button.addEventListener("click", function (e) {
