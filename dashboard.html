@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
   <!-- ✅ Shared Universal Header -->
   <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
     <h1 class="text-2xl font-bold text-green-600">TamilGeo</h1>
@@ -77,7 +78,8 @@
       getDatabase,
       ref,
       get,
-      update
+      update,
+      set
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
@@ -94,56 +96,61 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, async (user) => {
       if (!user) return window.location.href = "login.html";
+
       const uid = user.uid;
       const userRef = ref(db, 'users/' + uid);
 
-      get(userRef).then(snapshot => {
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          const name = data?.name || user.displayName || "User";
-          document.getElementById("welcome-message").textContent = `Welcome, ${name}`;
+      const snapshot = await get(userRef);
+      let userData = snapshot.val();
 
-          if (data?.role === 'admin') {
-            document.getElementById('admin-section').classList.remove('hidden');
-            document.getElementById('user-section').classList.add('hidden');
-            document.getElementById('user-actions').classList.add('hidden');
-          } else {
-            document.getElementById('name').value = data.name || '';
-            document.getElementById('username').value = data.username || '';
-            document.getElementById('photoURL').value = user.photoURL || '';
-          }
+      // First time login: Create profile
+      if (!userData) {
+        const isAdmin = user.email === "ppsmart7@gmail.com";
+        userData = {
+          email: user.email || "",
+          name: user.displayName || "Unnamed User",
+          username: (user.displayName || "user").toLowerCase().replace(/\s+/g, ''),
+          photoURL: user.photoURL || "",
+          role: isAdmin ? "admin" : "reader",
+          createdAt: new Date().toISOString()
+        };
+        await set(userRef, userData);
+      }
 
-        } else {
-          // Create user profile if missing
-          const defaultProfile = {
-            email: user.email || "",
-            name: user.displayName || "Unnamed User",
-            username: user.displayName?.toLowerCase().replace(/\s+/g, '') || "user",
-            photoURL: user.photoURL || "",
-            role: user.email === "ppsmart7@gmail.com" ? "admin" : "reader",
-            createdAt: new Date().toISOString()
-          };
+      // Update UI
+      const name = userData.name || user.displayName || "User";
+      document.getElementById("welcome-message").textContent = `Welcome, ${name}`;
 
-          update(userRef, defaultProfile).then(() => {
-            location.reload();
-          });
-        }
-      });
+      if (userData.role === "admin") {
+        document.getElementById("admin-section").classList.remove("hidden");
+        document.getElementById("user-section").classList.add("hidden");
+        document.getElementById("user-actions").classList.add("hidden");
+      } else {
+        document.getElementById("name").value = userData.name || "";
+        document.getElementById("username").value = userData.username || "";
+        document.getElementById("photoURL").value = userData.photoURL || "";
+      }
 
-      document.getElementById('profile-form').addEventListener('submit', e => {
+      // Form submission
+      const form = document.getElementById("profile-form");
+      form?.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const name = document.getElementById('name').value;
-        const username = document.getElementById('username').value;
-        const photoURL = document.getElementById('photoURL').value;
-        const newPassword = document.getElementById('newPassword').value;
 
-        updateProfile(user, { displayName: name, photoURL }).then(() => {
-          update(ref(db, 'users/' + user.uid), { name, username, photoURL });
-          if (newPassword) updatePassword(user, newPassword);
-          alert('✅ Profile updated!');
-        });
+        const name = document.getElementById("name").value;
+        const username = document.getElementById("username").value;
+        const photoURL = document.getElementById("photoURL").value;
+        const newPassword = document.getElementById("newPassword").value;
+
+        await updateProfile(user, { displayName: name, photoURL });
+        await update(userRef, { name, username, photoURL });
+
+        if (newPassword) {
+          await updatePassword(user, newPassword);
+        }
+
+        alert("✅ Profile updated!");
       });
     });
 
