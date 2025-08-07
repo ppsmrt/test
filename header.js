@@ -6,11 +6,6 @@ import {
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getDatabase,
-  ref,
-  get
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 // ✅ Firebase config
 const firebaseConfig = {
@@ -25,25 +20,17 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getDatabase(app);
 
 document.addEventListener("DOMContentLoaded", () => {
   const placeholder = document.getElementById("shared-header");
 
-  onAuthStateChanged(auth, async (user) => {
+  onAuthStateChanged(auth, (user) => {
     let navContent = "";
 
     if (user) {
-      // ✅ Get user's full name (displayName)
-      const userRef = ref(db, "users/" + user.uid);
-      const snapshot = await get(userRef);
-      const userData = snapshot.val();
-
-      const name = userData?.displayName || "User";
-
       navContent = `
         <div class="flex items-center space-x-4">
-          <a href="dashboard.html" class="text-sm font-medium text-gray-800 bg-green-100 px-3 py-1 rounded-full hover:underline">${name}</a>
+          <a href="dashboard.html" class="text-sm font-medium text-gray-800 bg-green-100 px-3 py-1 rounded-full hover:underline">Account</a>
           <button id="logout-btn" class="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded">Sign Out</button>
         </div>
       `;
