@@ -23,6 +23,7 @@
     <h2 class="text-xl font-bold mb-4 text-center">👤 Create an Account</h2>
 
     <form id="signup-form" class="space-y-4">
+      <input type="text" id="name" placeholder="Full Name" required class="w-full p-3 border rounded" />
       <input type="text" id="username" placeholder="Username" required class="w-full p-3 border rounded" />
       <input type="email" id="email" placeholder="Email" required class="w-full p-3 border rounded" />
       <input type="password" id="password" placeholder="Password" required class="w-full p-3 border rounded" />
@@ -37,7 +38,7 @@
   <!-- ✅ Firebase Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
@@ -57,6 +58,7 @@
     document.getElementById("signup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      const name = document.getElementById("name").value.trim();
       const username = document.getElementById("username").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
@@ -64,17 +66,22 @@
 
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const uid = userCredential.user.uid;
+        const user = userCredential.user;
 
-        // Save extra details to Realtime Database
-        await set(ref(db, "users/" + uid), {
+        // ✅ Set displayName for the auth profile
+        await updateProfile(user, {
+          displayName: name
+        });
+
+        // ✅ Save user info in Realtime Database
+        await set(ref(db, "users/" + user.uid), {
+          name,
           username,
           email,
           role: "reader",
           createdAt: new Date().toISOString()
         });
 
-        // Show success and redirect
         statusEl.classList.remove("hidden");
         setTimeout(() => {
           window.location.href = "login.html";
