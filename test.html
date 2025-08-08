@@ -6,16 +6,16 @@
   <title>User Dashboard - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Smooth Fade-In Animation */
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(10px); }
+    /* Premium Fade-in-Up Animation */
+    @keyframes premiumFadeUp {
+      0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
     }
-    .fade-in {
-      animation: fadeIn 0.6s ease-out forwards;
+    .premium-fade {
+      animation: premiumFadeUp 0.6s ease-out forwards;
     }
 
-    /* Hand Waving Animation */
+    /* Hand Wave */
     @keyframes wave {
       0% { transform: rotate(0deg); }
       10% { transform: rotate(14deg); }
@@ -32,7 +32,7 @@
       animation: wave 2s infinite;
     }
 
-    /* Premium Card Styling */
+    /* Card Styling */
     .card-style {
       @apply bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center border border-gray-100 h-full flex flex-col justify-center;
     }
@@ -46,13 +46,13 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
-  <!-- ✅ Shared Header -->
+  <!-- Shared Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-7xl mx-auto px-4 py-8 space-y-10 fade-in">
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-10 premium-fade">
 
-    <!-- ===== WELCOME SECTION ===== -->
-    <section class="flex items-center gap-4 bg-white shadow-md rounded-xl p-5 border border-gray-100">
+    <!-- Welcome Section -->
+    <section class="flex items-center gap-4 bg-white shadow-md rounded-xl p-5 border border-gray-100 premium-fade">
       <div class="text-4xl animate-wave">👋</div>
       <div>
         <h1 id="welcomeMessage" class="text-xl sm:text-2xl font-bold text-gray-800">Hai, Loading...</h1>
@@ -60,8 +60,8 @@
       </div>
     </section>
 
-    <!-- ===== DASHBOARD CARDS ===== -->
-    <div class="grid grid-cols-2 gap-6">
+    <!-- Dashboard Cards -->
+    <div class="grid grid-cols-2 gap-6 premium-fade">
       <div class="card-style">
         <p class="card-label">Published Posts</p>
         <h2 id="publishedCount" class="card-number text-blue-600">0</h2>
@@ -104,8 +104,8 @@
       </div>
     </div>
 
-    <!-- ===== FULL-WIDTH PROFILE DETAILS ===== -->
-    <div class="bg-white w-full rounded-xl shadow-lg p-8 border border-gray-100 fade-in">
+    <!-- Profile Details -->
+    <div class="bg-white w-full rounded-xl shadow-lg p-8 border border-gray-100 premium-fade">
       <h2 class="text-2xl font-bold mb-8 text-gray-800 border-b pb-3">Profile Details</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="flex flex-col">
@@ -217,10 +217,10 @@
   });
 </script>
 
-<!-- ✅ Universal Header Loader -->
+<!-- Universal Header -->
 <script type="module" src="header.js"></script>
 
-<!-- ✅ Footer -->
+<!-- Footer -->
 <footer id="footer" class="mt-auto"></footer>
 <script type="module" src="js/footer.js"></script>
 
