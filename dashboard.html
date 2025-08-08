@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard - Admin Panel</title>
+  <title>Admin Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .fade-in { animation: fadeIn 0.5s ease-in-out; }
@@ -15,45 +15,73 @@
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-7xl mx-auto p-6 flex-grow fade-in">
-    <h1 class="text-3xl font-bold mb-6">📊 Admin Dashboard</h1>
+  <main class="max-w-7xl mx-auto p-6 flex-grow fade-in space-y-10">
 
-    <!-- 📌 Admin Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <div class="bg-white shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold mb-2">Total Users</h2>
-        <p id="totalUsers" class="text-2xl font-bold">0</p>
+    <!-- 📊 Stats Section -->
+    <section>
+      <h2 class="text-2xl font-bold mb-4">Website Stats</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Total Users</p>
+          <h3 id="totalUsers" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Total Posts</p>
+          <h3 id="totalPosts" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Pending Posts</p>
+          <h3 id="pendingPosts" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Managers & Editors</p>
+          <h3 id="managersEditors" class="text-3xl font-bold mt-2">0</h3>
+        </div>
       </div>
-      <div class="bg-white shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold mb-2">Total Posts</h2>
-        <p id="totalPosts" class="text-2xl font-bold">0</p>
-      </div>
-      <div class="bg-white shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold mb-2">Pending Approvals</h2>
-        <p id="pendingApprovals" class="text-2xl font-bold">0</p>
-      </div>
-    </div>
+    </section>
 
-    <!-- 📌 Admin Controls -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4">Manage Content</h2>
-      <div class="space-y-4">
-        <button id="managePosts" class="bg-blue-600 text-white px-4 py-2 rounded">Manage Posts</button>
-        <button id="manageUsers" class="bg-green-600 text-white px-4 py-2 rounded">Manage Users</button>
+    <!-- 👥 Manage Users Section -->
+    <section>
+      <h2 class="text-2xl font-bold mb-4">Manage Users</h2>
+      <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="p-3 text-sm font-semibold text-gray-600">Name</th>
+              <th class="p-3 text-sm font-semibold text-gray-600">Username</th>
+              <th class="p-3 text-sm font-semibold text-gray-600">Email</th>
+              <th class="p-3 text-sm font-semibold text-gray-600">Role</th>
+              <th class="p-3 text-sm font-semibold text-gray-600">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTable" class="divide-y divide-gray-200"></tbody>
+        </table>
       </div>
-    </div>
+    </section>
 
-    <!-- 📌 Recent Posts (Admin View) -->
-    <div class="bg-white shadow rounded-lg p-6">
-      <h2 class="text-xl font-semibold mb-4">Recent Posts</h2>
-      <ul id="recentPosts" class="space-y-2"></ul>
-    </div>
+    <!-- 📝 Pending Posts Section -->
+    <section>
+      <h2 class="text-2xl font-bold mb-4">Pending Posts</h2>
+      <div id="pendingPostsList" class="grid gap-4"></div>
+    </section>
+
   </main>
 
+  <!-- Modal for Viewing Full Post -->
+  <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6">
+      <h3 id="modalTitle" class="text-xl font-bold mb-2"></h3>
+      <p id="modalContent" class="text-gray-700 whitespace-pre-wrap"></p>
+      <div class="mt-4 flex justify-end space-x-2">
+        <button onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Firebase + Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -66,43 +94,111 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getDatabase(app);
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        alert("Please log in to view this dashboard.");
-        window.location.href = "/login.html";
-        return;
-      }
+    // Stats loading
+    async function loadStats() {
+      const usersSnap = await get(ref(db, "users"));
+      const postsSnap = await get(ref(db, "posts"));
 
-      try {
-        const userSnap = await get(ref(db, "users/" + user.uid));
-        if (!userSnap.exists() || userSnap.val().role !== "admin") {
-          alert("Access denied. Admins only.");
-          window.location.href = "/";
-          return;
-        }
-
-        const usersSnap = await get(ref(db, "users"));
-        document.getElementById("totalUsers").textContent = usersSnap.size || Object.keys(usersSnap.val() || {}).length;
-
-        const postsSnap = await get(ref(db, "posts"));
-        document.getElementById("totalPosts").textContent = postsSnap.size || Object.keys(postsSnap.val() || {}).length;
-
-        let pendingCount = 0;
-        let recentHTML = "";
-        postsSnap.forEach(post => {
-          if (post.val().status === "pending") pendingCount++;
-          recentHTML += `<li class="border-b pb-2">${post.val().title}</li>`;
+      if (usersSnap.exists()) {
+        let userCount = 0;
+        let managersEditorsCount = 0;
+        usersSnap.forEach(user => {
+          const role = user.val().role || "user";
+          if (role !== "admin") userCount++;
+          if (role === "manager" || role === "editor") managersEditorsCount++;
         });
-        document.getElementById("pendingApprovals").textContent = pendingCount;
-        document.getElementById("recentPosts").innerHTML = recentHTML || "<li>No posts available</li>";
-
-      } catch (err) {
-        console.error(err);
+        document.getElementById("totalUsers").textContent = userCount;
+        document.getElementById("managersEditors").textContent = managersEditorsCount;
       }
-    });
+
+      if (postsSnap.exists()) {
+        let totalPosts = 0;
+        let pendingPosts = 0;
+        postsSnap.forEach(post => {
+          totalPosts++;
+          if (post.val().status === "pending") pendingPosts++;
+        });
+        document.getElementById("totalPosts").textContent = totalPosts;
+        document.getElementById("pendingPosts").textContent = pendingPosts;
+      }
+    }
+
+    // Manage Users loading
+    async function loadUsers() {
+      const snap = await get(ref(db, "users"));
+      if (snap.exists()) {
+        const tbody = document.getElementById("userTable");
+        tbody.innerHTML = "";
+        snap.forEach(user => {
+          const data = user.val();
+          if (data.role === "admin") return; // skip admins
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="p-3">${data.name || "No Name"}</td>
+            <td class="p-3">@${data.username || ""}</td>
+            <td class="p-3">${data.email || ""}</td>
+            <td class="p-3 capitalize">${data.role || "user"}</td>
+            <td class="p-3">
+              <select data-id="${user.key}" class="roleSelect border rounded p-1">
+                <option value="user" ${data.role==="user"?"selected":""}>User</option>
+                <option value="editor" ${data.role==="editor"?"selected":""}>Editor</option>
+                <option value="manager" ${data.role==="manager"?"selected":""}>Manager</option>
+              </select>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        document.querySelectorAll(".roleSelect").forEach(sel => {
+          sel.addEventListener("change", async (e) => {
+            const uid = e.target.dataset.id;
+            const newRole = e.target.value;
+            await update(ref(db, "users/" + uid), { role: newRole });
+            alert("Role updated successfully");
+          });
+        });
+      }
+    }
+
+    // Pending posts loading
+    async function loadPendingPosts() {
+      const snap = await get(ref(db, "posts"));
+      if (snap.exists()) {
+        const container = document.getElementById("pendingPostsList");
+        container.innerHTML = "";
+        snap.forEach(post => {
+          const data = post.val();
+          if (data.status === "pending") {
+            const card = document.createElement("div");
+            card.className = "bg-white shadow rounded-lg p-4 hover:shadow-lg transition cursor-pointer";
+            card.innerHTML = `
+              <h4 class="font-bold text-lg">${data.title || "Untitled"}</h4>
+              <p class="text-gray-600 text-sm truncate">${data.content || ""}</p>
+              <p class="text-xs text-gray-500 mt-1">By: ${data.authorName || "Unknown"}</p>
+            `;
+            card.addEventListener("click", () => {
+              document.getElementById("modalTitle").textContent = data.title || "Untitled";
+              document.getElementById("modalContent").textContent = data.content || "";
+              document.getElementById("postModal").classList.remove("hidden");
+              document.getElementById("postModal").classList.add("flex");
+            });
+            container.appendChild(card);
+          }
+        });
+      }
+    }
+
+    // Close modal
+    window.closeModal = function() {
+      document.getElementById("postModal").classList.add("hidden");
+      document.getElementById("postModal").classList.remove("flex");
+    };
+
+    loadStats();
+    loadUsers();
+    loadPendingPosts();
   </script>
 
   <!-- ✅ Universal Header Loader -->
