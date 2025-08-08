@@ -6,93 +6,93 @@
   <title>User Dashboard - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-10">
 
     <!-- ===== TOP 4 DASHBOARD CARDS ===== -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 text-center">
+    <div class="grid grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100">
         <p class="text-gray-500">Published Posts</p>
         <h2 id="publishedCount" class="text-3xl font-bold text-blue-600">0</h2>
       </div>
-      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 text-center">
+      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100">
         <p class="text-gray-500">Pending Posts</p>
         <h2 id="pendingCount" class="text-3xl font-bold text-yellow-600">0</h2>
       </div>
-      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 text-center">
+      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100">
         <p class="text-gray-500">Likes Given</p>
         <h2 id="likesGiven" class="text-3xl font-bold text-green-600">0</h2>
       </div>
-      <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 text-center">
+      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100">
         <p class="text-gray-500">Comments Given</p>
         <h2 id="commentsGiven" class="text-3xl font-bold text-purple-600">0</h2>
       </div>
     </div>
 
     <!-- ===== SMALL STATS CARDS (6) ===== -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <div class="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+    <div class="grid grid-cols-2 gap-6">
+      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100">
         <p class="text-gray-500">Likes Received</p>
         <h3 id="likesReceived" class="text-2xl font-bold text-green-700">0</h3>
       </div>
-      <div class="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100">
         <p class="text-gray-500">Comments Received</p>
         <h3 id="commentsReceived" class="text-2xl font-bold text-purple-700">0</h3>
       </div>
-      <div class="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100">
         <p class="text-gray-500">Followers</p>
         <h3 class="text-2xl font-bold text-indigo-700">0</h3>
       </div>
-      <div class="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100">
         <p class="text-gray-500">Following</p>
         <h3 class="text-2xl font-bold text-indigo-500">0</h3>
       </div>
-      <div class="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100">
         <p class="text-gray-500">Saved Posts</p>
         <h3 class="text-2xl font-bold text-pink-700">0</h3>
       </div>
-      <div class="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100">
         <p class="text-gray-500">Reports Made</p>
         <h3 class="text-2xl font-bold text-red-700">0</h3>
       </div>
     </div>
 
-    <!-- ===== FULL-WIDTH PROFILE SECTION ===== -->
-    <section class="bg-white rounded-2xl shadow-xl p-8">
-      <h2 class="text-3xl font-bold mb-8 text-gray-800 border-b pb-4">Profile Details</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div>
-          <p class="text-gray-500">Name</p>
-          <p id="profileName" class="text-lg font-semibold text-gray-800">Loading...</p>
+    <!-- ===== FULL-WIDTH PROFILE DETAILS ===== -->
+    <div class="bg-white w-full rounded-xl shadow-lg p-8 border border-gray-100">
+      <h2 class="text-2xl font-bold mb-8 text-gray-800 border-b pb-3">Profile Details</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col">
+          <span class="text-gray-500">Name</span>
+          <span id="profileName" class="text-lg font-semibold text-gray-700">Loading...</span>
         </div>
-        <div>
-          <p class="text-gray-500">Username</p>
-          <p id="profileUsername" class="text-lg font-semibold text-gray-800">Loading...</p>
+        <div class="flex flex-col">
+          <span class="text-gray-500">Username</span>
+          <span id="profileUsername" class="text-lg font-semibold text-gray-700">Loading...</span>
         </div>
-        <div>
-          <p class="text-gray-500">Status</p>
-          <p id="profileRole" class="text-lg font-semibold text-gray-800">Loading...</p>
+        <div class="flex flex-col">
+          <span class="text-gray-500">Status</span>
+          <span id="profileRole" class="text-lg font-semibold text-gray-700">Loading...</span>
         </div>
-        <div>
-          <p class="text-gray-500">Account Created On</p>
-          <p id="accountCreated" class="text-lg font-semibold text-gray-800">Loading...</p>
+        <div class="flex flex-col">
+          <span class="text-gray-500">Account Created On</span>
+          <span id="accountCreated" class="text-lg font-semibold text-gray-700">Loading...</span>
         </div>
-        <div>
-          <p class="text-gray-500">Posts Published</p>
-          <p id="postCount" class="text-lg font-semibold text-gray-800">Loading...</p>
+        <div class="flex flex-col">
+          <span class="text-gray-500">Posts Published</span>
+          <span id="postCount" class="text-lg font-semibold text-gray-700">Loading...</span>
         </div>
       </div>
       <div class="mt-8 text-right">
         <a href="/test/account.html" 
-           class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition shadow-md">
+           class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition shadow">
           Edit Profile
         </a>
       </div>
-    </section>
+    </div>
 
   </main>
 
