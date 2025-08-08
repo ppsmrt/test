@@ -8,7 +8,7 @@
   <style>
     /* Fade-in-Up Animation */
     @keyframes premiumFadeUp {
-      0% { opacity: 0; transform: translateY(20px); }
+      0% { opacity: 0; transform: translateY(15px); }
       100% { opacity: 1; transform: translateY(0); }
     }
     .premium-fade {
@@ -32,28 +32,42 @@
       animation: wave 2s infinite;
     }
 
-    /* Glassmorphism Card */
+    /* Glassmorphism Card (Higher contrast) */
     .glass-card {
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.35);
       border-radius: 1rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       padding: 1.5rem;
       text-align: center;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .glass-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
     }
     .card-label {
-      @apply text-gray-700 text-sm font-medium;
+      @apply text-gray-800 text-sm font-medium;
     }
     .card-number {
       @apply text-3xl font-bold mt-1 text-gray-900;
     }
+
+    /* Role Badge Colors */
+    .badge {
+      display: inline-block;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: white;
+    }
+    .badge-silver { background: linear-gradient(135deg, #C0C0C0, #A9A9A9); }
+    .badge-copper { background: linear-gradient(135deg, #B87333, #A0522D); }
+    .badge-gold { background: linear-gradient(135deg, #FFD700, #FFA500); }
+    .badge-diamond { background: linear-gradient(135deg, #b9f2ff, #e0ffff); color: #333; }
   </style>
 </head>
 <body class="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 min-h-screen flex flex-col">
@@ -72,7 +86,7 @@
       </div>
     </section>
 
-    <!-- Dashboard Cards -->
+    <!-- Dashboard Cards (2 per row) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 premium-fade">
       <div class="glass-card">
         <p class="card-label">Published Posts</p>
@@ -123,6 +137,7 @@
         <div>
           <span class="text-gray-500">Name</span>
           <span id="profileName" class="block text-lg font-semibold text-gray-700">Loading...</span>
+          <p id="profileBio" class="text-gray-500 text-sm mt-1 italic">Loading bio...</p>
         </div>
         <div>
           <span class="text-gray-500">Username</span>
@@ -130,7 +145,7 @@
         </div>
         <div>
           <span class="text-gray-500">Status</span>
-          <span id="profileRole" class="block text-lg font-semibold text-gray-700">Loading...</span>
+          <span id="profileRole" class="badge badge-silver">User</span>
         </div>
         <div>
           <span class="text-gray-500">Account Created On</span>
@@ -138,7 +153,7 @@
         </div>
         <div>
           <span class="text-gray-500">Posts Published</span>
-          <span id="postCount" class="block text-lg font-semibold text-gray-700">Loading...</span>
+          <span id="postCount" class="block text-lg font-semibold text-gray-700">0</span>
         </div>
       </div>
       <div class="mt-8 text-right">
@@ -182,13 +197,24 @@
     const displayName = userData.displayName || user.displayName || "No Name";
     const username = userData.username || displayName.replace(/\s+/g, "").toLowerCase();
     const role = userData.role || "user";
+    const bio = userData.bio || "No bio provided yet.";
     const createdDate = user.metadata?.creationTime 
         ? new Date(user.metadata.creationTime).toLocaleDateString()
         : "Unknown";
 
     document.getElementById("profileName").textContent = displayName;
     document.getElementById("profileUsername").textContent = "@" + username;
-    document.getElementById("profileRole").textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    document.getElementById("profileBio").textContent = bio;
+
+    // Role badge color
+    const roleEl = document.getElementById("profileRole");
+    roleEl.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    roleEl.className = "badge " + 
+      (role === "user" ? "badge-silver" :
+       role === "editor" ? "badge-copper" :
+       role === "manager" ? "badge-gold" :
+       role === "admin" ? "badge-diamond" : "badge-silver");
+
     document.getElementById("accountCreated").textContent = createdDate;
 
     const hours = new Date().getHours();
