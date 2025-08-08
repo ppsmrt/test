@@ -20,7 +20,7 @@
     <!-- 📊 Stats Section -->
     <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Website Stats</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <div class="bg-white shadow rounded-lg p-6 text-center">
           <p class="text-sm text-gray-500">Total Users</p>
           <h3 id="totalUsers" class="text-3xl font-bold mt-2">0</h3>
@@ -44,14 +44,11 @@
     <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Manage Users</h2>
       <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
-        <table class="w-full min-w-[600px] text-left border-collapse">
+        <table class="w-full min-w-[400px] text-left border-collapse">
           <thead>
             <tr class="bg-gray-50">
               <th class="p-3 text-sm font-semibold text-gray-600">Name</th>
-              <th class="p-3 text-sm font-semibold text-gray-600">Username</th>
-              <th class="p-3 text-sm font-semibold text-gray-600">Email</th>
               <th class="p-3 text-sm font-semibold text-gray-600">Role</th>
-              <th class="p-3 text-sm font-semibold text-gray-600">Actions</th>
             </tr>
           </thead>
           <tbody id="userTable" class="divide-y divide-gray-200"></tbody>
@@ -62,17 +59,19 @@
     <!-- 📝 Pending Posts Section -->
     <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Pending Posts</h2>
-      <div id="pendingPostsList" class="grid gap-4"></div>
+      <div id="pendingPostsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
   </main>
 
   <!-- Modal for Viewing Full Post -->
   <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 px-4">
-    <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6">
+    <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6 overflow-y-auto max-h-[90vh]">
       <h3 id="modalTitle" class="text-xl font-bold mb-2"></h3>
-      <p id="modalContent" class="text-gray-700 whitespace-pre-wrap"></p>
+      <p id="modalContent" class="text-gray-700 whitespace-pre-wrap mb-4"></p>
       <div class="mt-4 flex justify-end space-x-2">
+        <button onclick="approvePost()" class="px-4 py-2 bg-green-500 text-white rounded">Approve</button>
+        <button onclick="rejectPost()" class="px-4 py-2 bg-red-500 text-white rounded">Reject</button>
         <button onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded">Close</button>
       </div>
     </div>
@@ -81,7 +80,7 @@
   <!-- ✅ Firebase + Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, get, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -95,6 +94,8 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+
+    let currentPostId = null;
 
     async function loadStats() {
       const usersSnap = await get(ref(db, "users"));
@@ -129,15 +130,16 @@
       if (snap.exists()) {
         const tbody = document.getElementById("userTable");
         tbody.innerHTML = "";
+        const addedUsers = new Set();
         snap.forEach(user => {
           const data = user.val();
           if (data.role === "admin") return;
+          if (addedUsers.has(user.key)) return; // prevent duplicates
+          addedUsers.add(user.key);
+
           const row = document.createElement("tr");
           row.innerHTML = `
             <td class="p-3">${data.name || "No Name"}</td>
-            <td class="p-3">@${data.username || ""}</td>
-            <td class="p-3">${data.email || ""}</td>
-            <td class="p-3 capitalize">${data.role || "user"}</td>
             <td class="p-3">
               <select data-id="${user.key}" class="roleSelect border rounded p-1">
                 <option value="user" ${data.role==="user"?"selected":""}>User</option>
@@ -176,6 +178,7 @@
               <p class="text-xs text-gray-500 mt-1">By: ${data.authorName || "Unknown"}</p>
             `;
             card.addEventListener("click", () => {
+              currentPostId = post.key;
               document.getElementById("modalTitle").textContent = data.title || "Untitled";
               document.getElementById("modalContent").textContent = data.content || "";
               document.getElementById("postModal").classList.remove("hidden");
@@ -190,6 +193,26 @@
     window.closeModal = function() {
       document.getElementById("postModal").classList.add("hidden");
       document.getElementById("postModal").classList.remove("flex");
+    };
+
+    window.approvePost = async function() {
+      if (currentPostId) {
+        await update(ref(db, "posts/" + currentPostId), { status: "approved" });
+        closeModal();
+        loadStats();
+        loadPendingPosts();
+        alert("Post approved successfully");
+      }
+    };
+
+    window.rejectPost = async function() {
+      if (currentPostId) {
+        await remove(ref(db, "posts/" + currentPostId));
+        closeModal();
+        loadStats();
+        loadPendingPosts();
+        alert("Post rejected and removed");
+      }
     };
 
     loadStats();
