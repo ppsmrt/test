@@ -167,7 +167,7 @@
     let greeting = "Good Morning";
     if (hours >= 12 && hours < 18) greeting = "Good Afternoon";
     else if (hours >= 18) greeting = "Good Evening";
-    welcomeMessage.textContent = `👋 Hai ${displayName}, ${greeting} and Welcome!`;
+    welcomeMessage.textContent = `Hai ${displayName}, ${greeting} and Welcome!`;
 
     // Published posts
     const postsQuery = query(ref(db, "posts"), orderByChild("uid"), equalTo(user.uid));
