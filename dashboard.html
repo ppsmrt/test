@@ -1,106 +1,231 @@
-<!DOCTYPE html>
-<html lang="ta">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard - TamilGeo</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+<!DOCTYPE html>  <html lang="ta">  
+  <head>  
+    <meta charset="UTF-8" />  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+    <title>Dashboard - TamilGeo</title>  
+    <script src="https://cdn.tailwindcss.com"></script>  
+  </head>  
+  <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">  <!-- ✅ Universal Header -->  
+<div id="shared-header"></div>  
 
-  <!-- ✅ Shared Header -->
-  <div id="shared-header"></div>
+<!-- 🔒 Welcome -->  
+<div class="bg-blue-100 text-blue-800 p-3 px-4">  
+  <span id="welcome-message">Welcome, </span>  
+</div>  
 
-  <!-- 🛠 Admin Pending Posts -->
-  <main class="max-w-6xl mx-auto p-6 flex-grow">
-    <h1 class="text-3xl font-bold mb-6">🛠 Pending Posts for Approval</h1>
-    <div id="pending-container" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
-  </main>
+<!-- ✅ Dashboard Main -->  
+<main class="w-full max-w-screen-xl mx-auto mt-6 p-4 flex-grow">  
 
-  <!-- 🔥 Firebase Admin Approval Logic -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { 
-      getDatabase, ref, onValue, set, remove 
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-    import { 
-      getAuth, onAuthStateChanged 
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  <!-- 🛠 Admin Panel -->  
+  <section id="admin-section" class="hidden space-y-8">  
+    <h2 class="text-2xl font-bold text-green-700">🛠 Admin Panel</h2>  
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-      authDomain: "tamilgeoapp.firebaseapp.com",
-      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-      projectId: "tamilgeoapp",
-      storageBucket: "tamilgeoapp.appspot.com",
-      messagingSenderId: "1092623024431",
-      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-    };
+    <!-- 📊 Analytics -->  
+    <div class="bg-white shadow rounded-lg p-6">  
+      <h3 class="text-xl font-semibold text-indigo-700 mb-4">📊 App Analytics</h3>  
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">  
+        <div class="bg-indigo-100 text-indigo-800 p-4 rounded flex flex-col items-center">  
+          <span class="text-3xl font-bold" id="analytics-approved">0</span>  
+          <span class="mt-1 text-sm">Approved Posts</span>  
+        </div>  
+        <div class="bg-yellow-100 text-yellow-800 p-4 rounded flex flex-col items-center">  
+          <span class="text-3xl font-bold" id="analytics-pending">0</span>  
+          <span class="mt-1 text-sm">Pending Posts</span>  
+        </div>  
+        <div class="bg-green-100 text-green-800 p-4 rounded flex flex-col items-center">  
+          <span class="text-3xl font-bold" id="analytics-comments">0</span>  
+          <span class="mt-1 text-sm">Total Comments</span>  
+        </div>  
+        <div class="bg-pink-100 text-pink-800 p-4 rounded flex flex-col items-center">  
+          <span class="text-3xl font-bold" id="analytics-likes">0</span>  
+          <span class="mt-1 text-sm">Total Likes</span>  
+        </div>  
+      </div>  
+    </div>  
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
+    <!-- ✅ Pending Posts Section -->  
+    <section class="bg-white p-6 rounded shadow">  
+      <h2 class="text-xl font-semibold mb-4">Pending Posts</h2>  
+      <div id="pending-posts" class="space-y-4"></div>  
+    </section>  
 
-    const pendingRef = ref(db, 'pendingPosts');
-    const container = document.getElementById('pending-container');
+    <!-- 👥 Manage Users -->  
+    <section class="bg-white p-6 rounded shadow mt-10">  
+      <h2 class="text-xl font-semibold mb-4">👥 Manage Users</h2>  
+      <div id="user-list" class="space-y-4"></div>  
+    </section>  
+  </section>  
 
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        alert("You must be logged in as admin to view this page.");
-        window.location.href = "/login.html";
-      } else {
-        // Load pending posts for admin
-        onValue(pendingRef, (snapshot) => {
-          container.innerHTML = "";
-          snapshot.forEach(childSnapshot => {
-            const key = childSnapshot.key;
-            const post = childSnapshot.val();
+    
+  <!-- ⚡ Quick Actions -->  
+  <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">  
+    <h2 class="text-xl font-semibold mb-4">⚡ Quick Actions</h2>  
+    <div class="grid sm:grid-cols-2 gap-4">  
+      <a href="submit.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">✍️ Submit a Post</a>  
+      <a href="bookmarks.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔖 View Bookmarks</a>  
+      <a href="contact.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📬 Contact Admin</a>  
+      <a href="donate.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">💖 Donate Me</a>  
+    </div>  
+  </section>
 
-            container.innerHTML += `
-              <div class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
-                ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover"/>` : ""}
-                <div class="p-4 flex flex-col flex-grow">
-                  <h2 class="text-xl font-bold mb-2">${post.title}</h2>
-                  <p class="text-gray-700 text-sm mb-4 flex-grow">
-                    ${post.excerpt ? post.excerpt : (post.content ? post.content.substring(0, 120) + "..." : "")}
-                  </p>
-                  <p class="text-xs text-gray-500 mt-auto">By ${post.author || "Unknown"}</p>
-                  <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 mt-4 rounded"
-                    onclick="approvePost('${key}')">✅ Approve</button>
-                </div>
-              </div>
-            `;
-          });
-        });
-      }
-    });
+<!-- 📄 Site Related Pages -->  <section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-10">  
+    <h2 class="text-xl font-semibold mb-4">📄 Important Links</h2>  
+    <div class="grid sm:grid-cols-2 gap-4">  
+      <a href="about.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">ℹ️ About Website</a>  
+      <a href="privacy.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔐 Privacy Policy</a>  
+      <a href="terms.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📜 Terms and Conditions</a>  
+    </div>  
+  </section>
 
-    // Approve Post Function
-    window.approvePost = (postId) => {
-      const postRef = ref(db, `pendingPosts/${postId}`);
-      onValue(postRef, (snapshot) => {
-        if (snapshot.exists()) {
-          const postData = snapshot.val();
-          const approvedPostRef = ref(db, `posts/${postId}`);
-          
-          set(approvedPostRef, {
-            ...postData,
-            date: Date.now(), // Set approval time
-          }).then(() => {
-            remove(postRef); // Remove from pending
-            alert("Post approved!");
-          });
-        }
-      }, { onlyOnce: true });
-    };
-  </script>
+<!-- 👤 User Profile -->  <section id="user-section" class="bg-white shadow rounded-lg p-6 mt-10">  
+    <h2 class="text-xl font-semibold mb-4">👤 Your Profile</h2>  
+    <form id="profile-form" class="space-y-4">  
+      <input type="text" id="name" placeholder="Your Name" class="w-full p-3 border rounded" required />  
+      <input type="text" id="username" placeholder="Username" class="w-full p-3 border rounded" disabled />  
+      <input type="url" id="photoURL" placeholder="Profile Picture URL" class="w-full p-3 border rounded" />  
+      <input type="password" id="newPassword" placeholder="Change Password" class="w-full p-3 border rounded" />  
+      <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">📂 Save Changes</button>  
+    </form>  
+  </section>  
+</main>
 
-  <!-- ✅ Universal Header Loader -->
-  <script type="module" src="header.js"></script>
+<!-- 📄 Dashboard Info -->  <div class="bg-gray-50 text-gray-500 text-sm text-center py-4 mt-10 border-t border-gray-200">  
+  <p class="mb-1">TamilGeo Version: <span class="font-medium">2.0</span></p>  
+  <p class="mb-1">Built & Managed By: <span class="font-medium">Inteksoft</span></p>  
+  <p class="mb-1">Dashboard Version: <span class="font-medium">2.0</span></p>  
+  <p class="mb-1">User UI Experience: <span class="font-medium">Enhanced</span></p>  
+  <p>Auto: <span class="font-medium">Yes</span></p>  
+</div>  <!-- ✅ Footer -->  
+<div id="footer"></div>  
 
-  <!-- ✅ Footer Loader -->
-  <footer id="footer" class="mt-auto"></footer>
-  <script type="module" src="js/footer.js"></script>
+<!-- 🔌 Firebase Logic -->  
+<script type="module">  
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";  
+  import { getDatabase, ref, onValue, off, update, remove, get, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";  
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";  
 
-</body>
+  const firebaseConfig = {  
+    apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",  
+    authDomain: "tamilgeoapp.firebaseapp.com",  
+    databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",  
+    projectId: "tamilgeoapp",  
+    storageBucket: "tamilgeoapp.appspot.com",  
+    messagingSenderId: "1092623024431",  
+    appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"  
+  };  
+
+  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);  
+  const auth = getAuth(app);  
+  const db = getDatabase(app);  
+
+  const adminSection = document.getElementById("admin-section");  
+  const userListEl = document.getElementById("user-list");  
+  const welcomeMsg = document.getElementById("welcome-message");  
+  const pendingContainer = document.getElementById('pending-posts');  
+
+  let usersRef = ref(db, "users");  
+
+  onAuthStateChanged(auth, async (authUser) => {  
+    if (!authUser) {  
+      window.location.href = "login.html";  
+      return;  
+    }  
+
+    welcomeMsg.textContent = `Welcome, ${authUser.displayName || authUser.email}`;  
+
+    const roleSnap = await get(ref(db, `users/${authUser.uid}/role`));  
+    const role = roleSnap.val();  
+
+    if (role === "admin" || role === "manager") {  
+      adminSection.classList.remove("hidden");  
+      loadUsers();  
+      loadPendingPosts();  
+    }  
+  });  
+
+  function loadUsers() {  
+    off(usersRef);  
+    onValue(usersRef, (snapshot) => {  
+      const users = snapshot.val();  
+      userListEl.innerHTML = '';  
+      if (users) {  
+        const seenEmails = new Set();  
+        Object.entries(users).forEach(([uid, userData]) => {  
+          const emailKey = (userData.email || '').toLowerCase();  
+          if (seenEmails.has(emailKey)) return; // 🚫 Skip duplicate  
+          seenEmails.add(emailKey);  
+
+          const wrapper = document.createElement('div');  
+          wrapper.className = 'p-4 border border-gray-200 rounded flex flex-col md:flex-row md:items-center md:justify-between gap-4';  
+          wrapper.innerHTML = `  
+            <div>  
+              <p class="font-semibold">${userData.displayName || userData.username || 'No Name'}</p>  
+              <p class="text-sm text-gray-500">${userData.email || 'No Email'}</p>  
+            </div>  
+            <div class="flex items-center gap-4">  
+              <select class="role-dropdown p-1 border rounded text-sm">  
+                <option value="reader" ${userData.role === 'reader' ? 'selected' : ''}>Reader</option>  
+                <option value="editor" ${userData.role === 'editor' ? 'selected' : ''}>Editor</option>  
+                <option value="manager" ${userData.role === 'manager' ? 'selected' : ''}>Manager</option>  
+                <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>Admin</option>  
+              </select>  
+              <button class="delete-user bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600">❌ Delete</button>  
+            </div>  
+          `;  
+          wrapper.querySelector('.role-dropdown').addEventListener('change', (e) => {  
+            update(ref(db, `users/${uid}`), { role: e.target.value });  
+          });  
+          wrapper.querySelector('.delete-user').addEventListener('click', () => {  
+            if (confirm(`Are you sure you want to delete ${userData.displayName || userData.username || 'this user'}?`)) {  
+              remove(ref(db, `users/${uid}`));  
+            }  
+          });  
+          userListEl.appendChild(wrapper);  
+        });  
+      }  
+    });  
+  }  
+
+  function loadPendingPosts() {  
+    const pendingRef = ref(db, 'pendingPosts');  
+    const approvedRef = ref(db, 'posts');  
+    onValue(pendingRef, snapshot => {  
+      const data = snapshot.val();  
+      pendingContainer.innerHTML = '';  
+      if (data) {  
+        Object.entries(data).forEach(([id, post]) => {  
+          const el = document.createElement('div');  
+          el.className = 'p-4 border border-gray-200 rounded';  
+          el.innerHTML = `  
+            <h3 class="text-lg font-bold mb-1">${post.title}</h3>  
+            <p class="text-sm text-gray-600 mb-2">👤 ${post.author} | 🗓 ${new Date(post.date).toLocaleDateString()}</p>  
+            <p class="mb-2 text-gray-700">${post.excerpt || 'No excerpt available.'}</p>  
+            <div class="flex gap-2">  
+              <button class="approve-btn bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">✅ Approve</button>  
+              <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">❌ Delete</button>  
+            </div>  
+          `;  
+          el.querySelector('.approve-btn').addEventListener('click', () => {  
+            push(approvedRef, post);  
+            remove(ref(db, `pendingPosts/${id}`));  
+          });  
+          el.querySelector('.delete-btn').addEventListener('click', () => {  
+            if (confirm(`Are you sure you want to delete "${post.title}"?`)) {  
+              remove(ref(db, `pendingPosts/${id}`));  
+            }  
+          });  
+          pendingContainer.appendChild(el);  
+        });  
+      } else {  
+        pendingContainer.innerHTML = `<p class="text-gray-500">No pending posts found.</p>`;  
+      }  
+    });  
+  }  
+</script>  
+
+<!-- ✅ Universal Header Loader -->  
+<script type="module" src="header.js"></script>  
+<script src="js/footer.js"></script>
+
+  </body>  
 </html>
