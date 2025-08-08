@@ -11,59 +11,6 @@
   <!-- ✅ Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
-  <!-- ✅ Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-    import { getDatabase, push, ref, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
-
-    // 🔹 Your Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-      authDomain: "tamilgeoapp.firebaseapp.com",
-      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-      projectId: "tamilgeoapp",
-      storageBucket: "tamilgeoapp.appspot.com",
-      messagingSenderId: "1092623024431",
-      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-    };
-
-    // ✅ Init Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const form = document.getElementById("contactForm");
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const name = form.name.value.trim();
-        const email = form.email.value.trim();
-        const message = form.message.value.trim();
-
-        if (!name || !email || !message) {
-          alert("Please fill in all fields.");
-          return;
-        }
-
-        try {
-          await push(ref(db, "contactMessages"), {
-            name,
-            email,
-            message,
-            timestamp: serverTimestamp()
-          });
-
-          alert("✅ Message sent successfully!");
-          form.reset();
-        } catch (err) {
-          console.error(err);
-          alert("❌ Failed to send message. Please try again.");
-        }
-      });
-    });
-  </script>
-
   <style>
     .fade-in {
       animation: fadeIn 0.5s ease-in-out;
@@ -81,45 +28,37 @@
 
   <!-- Main Content -->
   <main class="flex-grow flex items-center justify-center px-4 pt-6 sm:pt-12">
-    <div class="max-w-2xl w-full bg-white shadow-md rounded-xl p-6 sm:p-10 fade-in">
+    <div class="max-w-xl w-full bg-white shadow-md rounded-xl p-6 sm:p-10 fade-in text-center">
 
-      <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-center text-green-700">
-        📩 Contact Admin
+      <!-- Profile Picture -->
+      <img src="https://via.placeholder.com/120" alt="Admin Profile"
+           class="w-28 h-28 rounded-full mx-auto border-4 border-green-500 shadow-md">
+
+      <!-- Name & Role -->
+      <h2 class="text-2xl sm:text-3xl font-bold mt-4 text-green-700">
+        TamilGeo Admin
       </h2>
+      <p class="text-gray-600">Developer & Maintainer — Inteksoft Solutions</p>
 
-      <p class="text-center text-gray-600 mb-6">
-        Have a question, feedback, or issue? We're here to help!
-      </p>
+      <!-- Divider -->
+      <div class="my-6 border-t border-gray-300"></div>
 
-      <form id="contactForm" class="space-y-5">
-        <div>
-          <label class="block text-sm font-medium mb-1">Name</label>
-          <input type="text" name="name" placeholder="Your name" required
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"/>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-1">Email</label>
-          <input type="email" name="email" placeholder="you@example.com" required
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"/>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-1">Message</label>
-          <textarea name="message" placeholder="Write your message..." rows="4" required
-            class="w-full px-4 py-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-green-500 focus:outline-none"></textarea>
-        </div>
-
-        <button type="submit"
-          class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-md transition flex items-center justify-center gap-2">
-          <i class="fas fa-paper-plane"></i>
-          Send Message
-        </button>
-      </form>
-
-      <div class="mt-6 text-center text-sm text-gray-500">
-        We'll respond within 24 hours during working days.
+      <!-- Contact Info -->
+      <div class="space-y-3 text-gray-700">
+        <p><i class="fas fa-envelope text-green-600 mr-2"></i> support@tamilgeo.com</p>
+        <p><i class="fas fa-phone text-green-600 mr-2"></i> +91 98765 43210</p>
+        <p><i class="fas fa-map-marker-alt text-green-600 mr-2"></i> Chennai, Tamil Nadu</p>
       </div>
+
+      <!-- Social Links -->
+      <div class="mt-6 flex justify-center space-x-5">
+        <a href="https://facebook.com" target="_blank" class="text-blue-600 hover:scale-110 transition"><i class="fab fa-facebook fa-2x"></i></a>
+        <a href="https://twitter.com" target="_blank" class="text-sky-500 hover:scale-110 transition"><i class="fab fa-twitter fa-2x"></i></a>
+        <a href="https://instagram.com" target="_blank" class="text-pink-500 hover:scale-110 transition"><i class="fab fa-instagram fa-2x"></i></a>
+        <a href="https://linkedin.com" target="_blank" class="text-blue-700 hover:scale-110 transition"><i class="fab fa-linkedin fa-2x"></i></a>
+        <a href="https://github.com" target="_blank" class="text-gray-800 hover:scale-110 transition"><i class="fab fa-github fa-2x"></i></a>
+      </div>
+
     </div>
   </main>
 
