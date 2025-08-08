@@ -70,7 +70,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -135,12 +135,23 @@
           emailToLogin = matchedUser.email;
         }
 
-        await signInWithEmailAndPassword(auth, emailToLogin, password);
+        const userCredential = await signInWithEmailAndPassword(auth, emailToLogin, password);
+        const userId = userCredential.user.uid;
+
+        // Fetch role from database
+        const roleSnap = await get(child(ref(db), `users/${userId}/role`));
+        const role = roleSnap.exists() ? roleSnap.val().toLowerCase() : "user";
+
         loginCard.classList.add("bounce");
+
         setTimeout(() => {
-          window.location.href = "dashboard.html";
+          if (role === "admin" || role === "manager") {
+            window.location.href = "dashboard.html";
+          } else {
+            window.location.href = "account.html";
+          }
         }, 400);
-        
+
       } catch (error) {
         const code = error.code || "";
         if (code === "auth/user-not-found") {
