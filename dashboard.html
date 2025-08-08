@@ -20,7 +20,8 @@
     <!-- 📊 Stats Section -->
     <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Website Stats</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+      <!-- ✅ Always 2 per row even on mobile -->
+      <div class="grid grid-cols-2 gap-6 w-full">
         <div class="bg-white shadow rounded-lg p-6 text-center">
           <p class="text-sm text-gray-500">Total Users</p>
           <h3 id="totalUsers" class="text-3xl font-bold mt-2">0</h3>
@@ -118,7 +119,9 @@
         let pendingPosts = 0;
         postsSnap.forEach(post => {
           totalPosts++;
-          if (post.val().status === "pending") pendingPosts++;
+          if (post.val().status && post.val().status.toLowerCase() === "pending") {
+            pendingPosts++;
+          }
         });
         document.getElementById("totalPosts").textContent = totalPosts;
         document.getElementById("pendingPosts").textContent = pendingPosts;
@@ -134,7 +137,7 @@
         snap.forEach(user => {
           const data = user.val();
           if (data.role === "admin") return;
-          if (addedUsers.has(user.key)) return; // prevent duplicates
+          if (addedUsers.has(user.key)) return;
           addedUsers.add(user.key);
 
           const row = document.createElement("tr");
@@ -169,7 +172,7 @@
         container.innerHTML = "";
         snap.forEach(post => {
           const data = post.val();
-          if (data.status === "pending") {
+          if (data.status && data.status.toLowerCase() === "pending") {
             const card = document.createElement("div");
             card.className = "bg-white shadow rounded-lg p-4 hover:shadow-lg transition cursor-pointer";
             card.innerHTML = `
