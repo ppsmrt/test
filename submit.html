@@ -14,10 +14,29 @@
   <main class="max-w-3xl mx-auto p-6 flex-grow">
     <h1 class="text-3xl font-bold mb-6">✍ Submit a Post</h1>
 
+    <!-- 📜 General Rules -->
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">
+      <h2 class="text-lg font-semibold mb-2">📌 Rules to be Followed</h2>
+      <ul class="list-disc pl-6 space-y-1 text-gray-700 text-sm">
+        <li>Posts must be original and relevant to the community.</li>
+        <li>No offensive, abusive, or misleading content.</li>
+        <li>Posts can be edited or deleted during review by the admin.</li>
+        <li>Ensure the content is factually accurate before submitting.</li>
+        <li>Respect copyright laws when using text or images.</li>
+      </ul>
+    </div>
+
     <form id="postForm" class="bg-white p-6 rounded shadow">
       <input type="text" id="title" placeholder="Post Title" class="w-full p-2 border rounded mb-4" required>
       <textarea id="content" placeholder="Post Content" class="w-full p-2 border rounded mb-4" rows="6" required></textarea>
       <input type="url" id="image" placeholder="Image URL (optional)" class="w-full p-2 border rounded mb-4">
+
+      <!-- ✅ Accept Rules Checkbox -->
+      <label class="flex items-center mb-4 text-sm text-gray-700">
+        <input type="checkbox" id="acceptRules" class="mr-2" required>
+        I have read and agree to the above rules.
+      </label>
+
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
     </form>
   </main>
@@ -56,9 +75,15 @@
         const title = document.getElementById("title").value.trim();
         const content = document.getElementById("content").value.trim();
         const image = document.getElementById("image").value.trim();
+        const acceptRules = document.getElementById("acceptRules").checked;
 
         if (!title || !content) {
           alert("Please fill in all required fields.");
+          return;
+        }
+
+        if (!acceptRules) {
+          alert("You must agree to the rules before submitting.");
           return;
         }
 
