@@ -6,13 +6,13 @@
   <title>User Dashboard - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Premium Fade-in-Up Animation */
-    @keyframes premiumFadeUp {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
+    /* Smooth Fade-In Animation */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     }
-    .premium-fade {
-      animation: premiumFadeUp 0.6s ease-out forwards;
+    .fade-in {
+      animation: fadeIn 0.5s ease-in forwards;
     }
 
     /* Hand Wave */
@@ -32,22 +32,28 @@
       animation: wave 2s infinite;
     }
 
-    /* Role Badge Colors */
-    .badge-silver { background: linear-gradient(135deg, #c0c0c0, #e0e0e0); color: #333; }
-    .badge-copper { background: linear-gradient(135deg, #b87333, #d27d46); color: #fff; }
-    .badge-gold { background: linear-gradient(135deg, #ffd700, #ffcc33); color: #333; }
-    .badge-diamond { background: linear-gradient(135deg, #b9f2ff, #6dd5fa); color: #004d66; }
+    /* Role Badges */
+    .badge {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin-left: 6px;
+    }
+    .badge.silver { background: silver; }
+    .badge.copper { background: #b87333; }
+    .badge.gold { background: gold; }
+    .badge.diamond {
+      background: linear-gradient(135deg, #b9f2ff, #00ffff);
+      border: 1px solid #00ced1;
+    }
 
     /* Card Styling */
     .card-style {
       @apply bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center border border-gray-100 h-full flex flex-col justify-center;
     }
-    .card-label {
-      @apply text-gray-500 text-base;
-    }
-    .card-number {
-      @apply text-3xl font-bold mt-1;
-    }
+    .card-label { @apply text-gray-500 text-base; }
+    .card-number { @apply text-3xl font-bold mt-1; }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
@@ -55,10 +61,10 @@
   <!-- Shared Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-7xl mx-auto px-4 py-8 space-y-10 premium-fade">
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-10 fade-in">
 
     <!-- Welcome Section -->
-    <section class="flex items-center gap-4 bg-white shadow-md rounded-xl p-5 border border-gray-100">
+    <section class="flex items-center gap-4 bg-white shadow-md rounded-xl p-5 border border-gray-100 fade-in">
       <div class="text-4xl animate-wave">👋</div>
       <div>
         <h1 id="welcomeMessage" class="text-xl sm:text-2xl font-bold text-gray-800">Hai, Loading...</h1>
@@ -66,17 +72,8 @@
       </div>
     </section>
 
-    <!-- Profile Section -->
-    <section class="bg-white rounded-xl shadow-lg p-8 border border-gray-100 flex flex-col items-center text-center premium-fade">
-      <img id="profileImage" src="https://via.placeholder.com/120" alt="Profile" class="w-28 h-28 rounded-full border-4 border-gray-200 shadow-md object-cover">
-      <h2 id="profileName" class="mt-4 text-2xl font-bold text-gray-800">Loading...</h2>
-      <p id="profileUsername" class="text-gray-500">@username</p>
-      <span id="roleBadge" class="mt-2 px-4 py-1 rounded-full text-sm font-semibold">Role</span>
-      <p id="profileBio" class="mt-3 text-gray-600 max-w-md">This is your bio. You can update it from your profile settings.</p>
-    </section>
-
-    <!-- Dashboard Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 premium-fade">
+    <!-- Dashboard Cards (2 per row on mobile) -->
+    <div class="grid grid-cols-2 gap-6 fade-in">
       <div class="card-style">
         <p class="card-label">Published Posts</p>
         <h2 id="publishedCount" class="card-number text-blue-600">0</h2>
@@ -120,20 +117,19 @@
     </div>
 
     <!-- Profile Details -->
-    <div class="bg-white w-full rounded-xl shadow-lg p-8 border border-gray-100 premium-fade">
+    <div class="bg-white w-full rounded-xl shadow-lg p-8 border border-gray-100 fade-in">
       <h2 class="text-2xl font-bold mb-8 text-gray-800 border-b pb-3">Profile Details</h2>
+      <div class="flex flex-col items-center text-center mb-6">
+        <h3 id="profileName" class="text-lg font-semibold text-gray-700 flex items-center gap-1">
+          Loading...
+        </h3>
+        <span id="profileUsername" class="text-gray-500 text-sm">@username</span>
+        <p id="profileBio" class="mt-2 text-gray-600 text-sm italic">No bio available</p>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="flex flex-col">
-          <span class="text-gray-500">Name</span>
-          <span id="detailName" class="text-lg font-semibold text-gray-700">Loading...</span>
-        </div>
-        <div class="flex flex-col">
-          <span class="text-gray-500">Username</span>
-          <span id="detailUsername" class="text-lg font-semibold text-gray-700">Loading...</span>
-        </div>
-        <div class="flex flex-col">
           <span class="text-gray-500">Status</span>
-          <span id="detailRole" class="text-lg font-semibold text-gray-700">Loading...</span>
+          <span id="profileRole" class="text-lg font-semibold text-gray-700 flex items-center">Loading...</span>
         </div>
         <div class="flex flex-col">
           <span class="text-gray-500">Account Created On</span>
@@ -173,15 +169,12 @@
   const auth = getAuth(app);
   const db = getDatabase(app);
 
-  const welcomeMessage = document.getElementById("welcomeMessage");
   const profileName = document.getElementById("profileName");
   const profileUsername = document.getElementById("profileUsername");
-  const profileRole = document.getElementById("detailRole");
+  const profileRole = document.getElementById("profileRole");
+  const profileBio = document.getElementById("profileBio");
   const accountCreated = document.getElementById("accountCreated");
   const postCount = document.getElementById("postCount");
-  const profileImage = document.getElementById("profileImage");
-  const profileBio = document.getElementById("profileBio");
-  const roleBadge = document.getElementById("roleBadge");
 
   const publishedCount = document.getElementById("publishedCount");
   const pendingCount = document.getElementById("pendingCount");
@@ -190,17 +183,16 @@
   const likesReceived = document.getElementById("likesReceived");
   const commentsReceived = document.getElementById("commentsReceived");
 
-  const detailName = document.getElementById("detailName");
-  const detailUsername = document.getElementById("detailUsername");
+  const welcomeMessage = document.getElementById("welcomeMessage");
 
-  function setRoleBadge(role) {
-    let badgeClass = "badge-silver";
-    let badgeText = "User";
-    if (role === "editor") { badgeClass = "badge-copper"; badgeText = "Editor"; }
-    else if (role === "manager") { badgeClass = "badge-gold"; badgeText = "Manager"; }
-    else if (role === "admin") { badgeClass = "badge-diamond"; badgeText = "Admin"; }
-    roleBadge.className = `${badgeClass} mt-2 px-4 py-1 rounded-full text-sm font-semibold`;
-    roleBadge.textContent = badgeText;
+  function getBadge(role) {
+    switch (role.toLowerCase()) {
+      case "user": return '<span class="badge silver"></span>';
+      case "editor": return '<span class="badge copper"></span>';
+      case "manager": return '<span class="badge gold"></span>';
+      case "admin": return '<span class="badge diamond"></span>';
+      default: return '';
+    }
   }
 
   onAuthStateChanged(auth, async (user) => {
@@ -216,22 +208,16 @@
     const displayName = userData.displayName || user.displayName || "No Name";
     const username = userData.username || displayName.replace(/\s+/g, "").toLowerCase();
     const role = userData.role || "user";
-    const bio = userData.bio || "No bio added yet.";
-    const photoURL = userData.photoURL || user.photoURL || "https://via.placeholder.com/120";
-
+    const bio = userData.bio || "No bio available";
     const createdDate = user.metadata?.creationTime 
         ? new Date(user.metadata.creationTime).toLocaleDateString()
         : "Unknown";
 
-    profileName.textContent = displayName;
-    detailName.textContent = displayName;
+    profileName.innerHTML = `${displayName} ${getBadge(role)}`;
     profileUsername.textContent = "@" + username;
-    detailUsername.textContent = "@" + username;
-    profileRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
-    accountCreated.textContent = createdDate;
-    profileImage.src = photoURL;
+    profileRole.innerHTML = role.charAt(0).toUpperCase() + role.slice(1) + " " + getBadge(role);
     profileBio.textContent = bio;
-    setRoleBadge(role);
+    accountCreated.textContent = createdDate;
 
     const hours = new Date().getHours();
     let greeting = "Good Morning";
