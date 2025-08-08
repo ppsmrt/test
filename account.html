@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account - TamilGeo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
+
+  <main class="max-w-3xl mx-auto p-6 flex-grow">
+    <h1 class="text-3xl font-bold mb-6">👤 My Account</h1>
+
+    <!-- 📌 Profile Card -->
+    <div id="profileCard" class="bg-white shadow rounded-lg p-6 flex items-center space-x-4 mb-6">
+      <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
+      <div>
+        <h2 id="displayName" class="text-xl font-semibold">Loading...</h2>
+        <p id="username" class="text-gray-600 text-sm">Loading...</p>
+      </div>
+    </div>
+
+    <!-- 📌 Edit Account Form -->
+    <form id="accountForm" class="bg-white p-6 rounded shadow">
+      <!-- Name -->
+      <label class="block mb-2 text-sm font-medium text-gray-700">Account Name</label>
+      <input type="text" id="name" class="w-full p-2 border rounded mb-4" required>
+
+      <!-- Username (Read Only) -->
+      <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
+      <input type="text" id="usernameField" class="w-full p-2 border rounded mb-1 bg-gray-100" readonly>
+      <p class="text-xs text-gray-500 mb-4">Username cannot be changed. Contact admin for changes.</p>
+
+      <!-- Profile Picture Upload (Future) -->
+      <label class="block mb-1 text-sm font-medium text-gray-700">Profile Picture</label>
+      <input type="file" disabled class="w-full p-2 border rounded mb-1 bg-gray-100 cursor-not-allowed">
+      <p class="text-xs text-gray-500 mb-4">Profile picture upload will be available in the future.</p>
+
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
+    </form>
+
+    <!-- 📅 Account Created Date -->
+    <p id="accountCreated" class="text-xs text-gray-500 mt-4"></p>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const profilePic = document.getElementById("profilePic");
+    const displayNameEl = document.getElementById("displayName");
+    const usernameEl = document.getElementById("username");
+    const nameInput = document.getElementById("name");
+    const usernameField = document.getElementById("usernameField");
+    const accountCreatedEl = document.getElementById("accountCreated");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("Please log in to view your account.");
+        window.location.href = "/login.html";
+        return;
+      }
+
+      try {
+        const snap = await get(ref(db, "users/" + user.uid));
+        if (snap.exists()) {
+          const data = snap.val();
+          profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
+          displayNameEl.textContent = data.name || "No Name";
+          usernameEl.textContent = "@" + (data.username || "unknown");
+          nameInput.value = data.name || "";
+          usernameField.value = data.username || "";
+          accountCreatedEl.textContent = "Account created on: " + new Date(data.createdAt || user.metadata.creationTime).toLocaleDateString();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    document.getElementById("accountForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const updatedName = nameInput.value.trim();
+      if (!updatedName) {
+        alert("Name cannot be empty.");
+        return;
+      }
+
+      try {
+        await update(ref(db, "users/" + user.uid), { name: updatedName });
+        await updateProfile(user, { displayName: updatedName });
+        alert("✅ Account updated successfully!");
+      } catch (err) {
+        console.error(err);
+        alert("❌ Failed to update account.");
+      }
+    });
+  </script>
+
+  <!-- ✅ Universal Header Loader -->
+  <script type="module" src="header.js"></script>
+
+  <!-- ✅ Footer -->
+  <footer id="footer" class="mt-auto"></footer>
+  <script type="module" src="js/footer.js"></script>
+</body>
+</html>
