@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Approved Posts - TamilGeo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
+
+  <!-- 📜 Approved Posts -->
+  <main class="max-w-6xl mx-auto p-6 flex-grow">
+    <h1 class="text-3xl font-bold mb-6">✅ Approved Posts</h1>
+    <div id="posts-container" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+  </main>
+
+  <!-- 🔥 Fetch Approved Posts from Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const postsRef = ref(db, 'posts'); // ✅ Approved posts stored here
+    const container = document.getElementById('posts-container');
+
+    onValue(postsRef, (snapshot) => {
+      container.innerHTML = "";
+      snapshot.forEach(childSnapshot => {
+        const post = childSnapshot.val();
+        if (post.status === "approved") {
+          container.innerHTML += `
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+              ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover"/>` : ""}
+              <div class="p-4">
+                <h2 class="text-xl font-bold mb-2">${post.title}</h2>
+                <p class="text-gray-700 text-sm mb-2">${post.excerpt || post.content.substring(0,100) + "..."}</p>
+                <p class="text-xs text-gray-500">By ${post.author} • ${new Date(post.date).toLocaleDateString()}</p>
+              </div>
+            </div>
+          `;
+        }
+      });
+    });
+  </script>
+
+  <!-- ✅ Universal Header Loader -->
+  <script type="module" src="header.js"></script>
+
+  <!-- ✅ Footer Loader -->
+  <footer id="footer" class="mt-auto"></footer>
+  <script type="module" src="js/footer.js"></script>
+
+</body>
+</html>
