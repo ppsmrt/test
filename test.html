@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Account - TamilGeo</title>
+  <title>User Dashboard - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
@@ -11,41 +11,90 @@
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <!-- Profile Details Card -->
-  <div class="max-w-lg mx-auto mt-10 bg-white rounded-xl shadow-lg p-6">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800">My Profile</h2>
-    
-    <div class="space-y-4">
-      <div class="flex justify-between border-b pb-2">
-        <span class="font-semibold text-gray-700">Name:</span>
-        <span id="profileName" class="text-gray-600">Loading...</span>
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- ===== TOP 4 DASHBOARD CARDS ===== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <p class="text-gray-500">Published Posts</p>
+        <h2 id="publishedCount" class="text-3xl font-bold text-blue-600">0</h2>
       </div>
-      <div class="flex justify-between border-b pb-2">
-        <span class="font-semibold text-gray-700">Username:</span>
-        <span id="profileUsername" class="text-gray-600">Loading...</span>
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <p class="text-gray-500">Pending Posts</p>
+        <h2 id="pendingCount" class="text-3xl font-bold text-yellow-600">0</h2>
       </div>
-      <div class="flex justify-between border-b pb-2">
-        <span class="font-semibold text-gray-700">Status:</span>
-        <span id="profileRole" class="text-gray-600">Loading...</span>
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <p class="text-gray-500">Likes Given</p>
+        <h2 id="likesGiven" class="text-3xl font-bold text-green-600">0</h2>
       </div>
-      <div class="flex justify-between border-b pb-2">
-        <span class="font-semibold text-gray-700">Account Created On:</span>
-        <span id="accountCreated" class="text-gray-600">Loading...</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="font-semibold text-gray-700">Posts Published:</span>
-        <span id="postCount" class="text-gray-600">Loading...</span>
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <p class="text-gray-500">Comments Given</p>
+        <h2 id="commentsGiven" class="text-3xl font-bold text-purple-600">0</h2>
       </div>
     </div>
 
-    <!-- Edit Profile Button -->
-    <div class="mt-6 text-center">
-      <a href="/test/account.html" 
-         class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition shadow">
-        Edit Profile
-      </a>
+    <!-- ===== SMALL STATS CARDS (6) ===== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white p-5 rounded-lg shadow">
+        <p class="text-gray-500">Likes Received</p>
+        <h3 id="likesReceived" class="text-2xl font-bold text-green-700">0</h3>
+      </div>
+      <div class="bg-white p-5 rounded-lg shadow">
+        <p class="text-gray-500">Comments Received</p>
+        <h3 id="commentsReceived" class="text-2xl font-bold text-purple-700">0</h3>
+      </div>
+      <div class="bg-white p-5 rounded-lg shadow">
+        <p class="text-gray-500">Followers</p>
+        <h3 class="text-2xl font-bold text-indigo-700">0</h3>
+      </div>
+      <div class="bg-white p-5 rounded-lg shadow">
+        <p class="text-gray-500">Following</p>
+        <h3 class="text-2xl font-bold text-indigo-500">0</h3>
+      </div>
+      <div class="bg-white p-5 rounded-lg shadow">
+        <p class="text-gray-500">Saved Posts</p>
+        <h3 class="text-2xl font-bold text-pink-700">0</h3>
+      </div>
+      <div class="bg-white p-5 rounded-lg shadow">
+        <p class="text-gray-500">Reports Made</p>
+        <h3 class="text-2xl font-bold text-red-700">0</h3>
+      </div>
     </div>
-  </div>
+
+    <!-- ===== PROFILE DETAILS ===== -->
+    <div class="max-w-lg bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">My Profile</h2>
+      <div class="space-y-4">
+        <div class="flex justify-between border-b pb-2">
+          <span class="font-semibold text-gray-700">Name:</span>
+          <span id="profileName" class="text-gray-600">Loading...</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="font-semibold text-gray-700">Username:</span>
+          <span id="profileUsername" class="text-gray-600">Loading...</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="font-semibold text-gray-700">Status:</span>
+          <span id="profileRole" class="text-gray-600">Loading...</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="font-semibold text-gray-700">Account Created On:</span>
+          <span id="accountCreated" class="text-gray-600">Loading...</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="font-semibold text-gray-700">Posts Published:</span>
+          <span id="postCount" class="text-gray-600">Loading...</span>
+        </div>
+      </div>
+      <div class="mt-6 text-center">
+        <a href="/test/account.html" 
+           class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition shadow">
+          Edit Profile
+        </a>
+      </div>
+    </div>
+
+  </main>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -72,13 +121,21 @@
   const accountCreated = document.getElementById("accountCreated");
   const postCount = document.getElementById("postCount");
 
+  // Dashboard Elements
+  const publishedCount = document.getElementById("publishedCount");
+  const pendingCount = document.getElementById("pendingCount");
+  const likesGiven = document.getElementById("likesGiven");
+  const commentsGiven = document.getElementById("commentsGiven");
+  const likesReceived = document.getElementById("likesReceived");
+  const commentsReceived = document.getElementById("commentsReceived");
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = "/login.html";
       return;
     }
 
-    // Fetch user data
+    // Fetch user profile
     const userRef = ref(db, "users/" + user.uid);
     const snap = await get(userRef);
     const userData = snap.exists() ? snap.val() : {};
@@ -95,10 +152,23 @@
     profileRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
     accountCreated.textContent = createdDate;
 
-    // Fetch number of posts by this user
+    // Published posts
     const postsQuery = query(ref(db, "posts"), orderByChild("uid"), equalTo(user.uid));
     const postsSnap = await get(postsQuery);
-    postCount.textContent = postsSnap.exists() ? Object.keys(postsSnap.val()).length : 0;
+    const totalPublished = postsSnap.exists() ? Object.keys(postsSnap.val()).length : 0;
+    publishedCount.textContent = totalPublished;
+    postCount.textContent = totalPublished;
+
+    // Pending posts
+    const pendingQuery = query(ref(db, "pendingPosts"), orderByChild("uid"), equalTo(user.uid));
+    const pendingSnap = await get(pendingQuery);
+    pendingCount.textContent = pendingSnap.exists() ? Object.keys(pendingSnap.val()).length : 0;
+
+    // Example placeholders for likes & comments data
+    likesGiven.textContent = userData.likesGiven || 0;
+    commentsGiven.textContent = userData.commentsGiven || 0;
+    likesReceived.textContent = userData.likesReceived || 0;
+    commentsReceived.textContent = userData.commentsReceived || 0;
   });
 </script>
 
