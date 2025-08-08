@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Admin Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -15,12 +15,12 @@
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-7xl mx-auto p-6 flex-grow fade-in space-y-10">
+  <main class="max-w-7xl mx-auto p-6 flex-grow fade-in space-y-10 w-full">
 
     <!-- 📊 Stats Section -->
-    <section>
+    <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Website Stats</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
         <div class="bg-white shadow rounded-lg p-6 text-center">
           <p class="text-sm text-gray-500">Total Users</p>
           <h3 id="totalUsers" class="text-3xl font-bold mt-2">0</h3>
@@ -41,10 +41,10 @@
     </section>
 
     <!-- 👥 Manage Users Section -->
-    <section>
+    <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Manage Users</h2>
       <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+        <table class="w-full min-w-[600px] text-left border-collapse">
           <thead>
             <tr class="bg-gray-50">
               <th class="p-3 text-sm font-semibold text-gray-600">Name</th>
@@ -60,7 +60,7 @@
     </section>
 
     <!-- 📝 Pending Posts Section -->
-    <section>
+    <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Pending Posts</h2>
       <div id="pendingPostsList" class="grid gap-4"></div>
     </section>
@@ -68,7 +68,7 @@
   </main>
 
   <!-- Modal for Viewing Full Post -->
-  <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 px-4">
     <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6">
       <h3 id="modalTitle" class="text-xl font-bold mb-2"></h3>
       <p id="modalContent" class="text-gray-700 whitespace-pre-wrap"></p>
@@ -96,7 +96,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Stats loading
     async function loadStats() {
       const usersSnap = await get(ref(db, "users"));
       const postsSnap = await get(ref(db, "posts"));
@@ -125,7 +124,6 @@
       }
     }
 
-    // Manage Users loading
     async function loadUsers() {
       const snap = await get(ref(db, "users"));
       if (snap.exists()) {
@@ -133,7 +131,7 @@
         tbody.innerHTML = "";
         snap.forEach(user => {
           const data = user.val();
-          if (data.role === "admin") return; // skip admins
+          if (data.role === "admin") return;
           const row = document.createElement("tr");
           row.innerHTML = `
             <td class="p-3">${data.name || "No Name"}</td>
@@ -162,7 +160,6 @@
       }
     }
 
-    // Pending posts loading
     async function loadPendingPosts() {
       const snap = await get(ref(db, "posts"));
       if (snap.exists()) {
@@ -190,7 +187,6 @@
       }
     }
 
-    // Close modal
     window.closeModal = function() {
       document.getElementById("postModal").classList.add("hidden");
       document.getElementById("postModal").classList.remove("flex");
