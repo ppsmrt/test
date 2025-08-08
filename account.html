@@ -32,6 +32,7 @@
         </div>
       </div>
       <p id="accountCreated" class="text-xs text-gray-500 mt-3"></p>
+      <p id="lastLogin" class="text-xs text-gray-500"></p>
       <p id="postCount" class="text-xs text-gray-500"></p>
     </div>
 
@@ -48,6 +49,12 @@
         <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
         <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly>
         <p class="text-xs text-gray-500">Username cannot be changed. Contact admin for changes.</p>
+      </div>
+
+      <!-- Email (Read Only) -->
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Registered Email</label>
+        <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly>
       </div>
 
       <!-- Bio -->
@@ -70,7 +77,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, get, update, child } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -94,7 +101,9 @@
     const nameInput = document.getElementById("name");
     const bioField = document.getElementById("bioField");
     const usernameField = document.getElementById("usernameField");
+    const emailField = document.getElementById("emailField");
     const accountCreatedEl = document.getElementById("accountCreated");
+    const lastLoginEl = document.getElementById("lastLogin");
     const postCountEl = document.getElementById("postCount");
 
     function setRoleBadge(role) {
@@ -105,7 +114,7 @@
           break;
         case "editor":
           roleBadge.textContent = "Editor";
-          roleBadge.className = "px-2 py-1 text-xs rounded-full text-white bg-orange-600";
+          roleBadge.className = "px-2 py-1 text-xs rounded-full text-white bg-orange-700";
           break;
         case "manager":
           roleBadge.textContent = "Manager";
@@ -113,7 +122,7 @@
           break;
         case "admin":
           roleBadge.textContent = "Admin";
-          roleBadge.className = "px-2 py-1 text-xs rounded-full text-white bg-blue-700";
+          roleBadge.className = "px-2 py-1 text-xs rounded-full text-white bg-blue-900";
           break;
         default:
           roleBadge.textContent = "User";
@@ -139,7 +148,9 @@
           nameInput.value = data.name || "";
           bioField.value = data.bio || "";
           usernameField.value = data.username || "";
+          emailField.value = user.email || "";
           accountCreatedEl.textContent = "Account created on: " + new Date(data.createdAt || user.metadata.creationTime).toLocaleDateString();
+          lastLoginEl.textContent = "Last login: " + new Date(user.metadata.lastSignInTime).toLocaleString();
           setRoleBadge(data.role || "user");
 
           // Count published posts
