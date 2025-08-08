@@ -149,7 +149,12 @@
           const users = snapshot.val();
           userListEl.innerHTML = '';
           if (users) {
+            const seenEmails = new Set();
             Object.entries(users).forEach(([uid, userData]) => {
+              const emailKey = (userData.email || '').toLowerCase();
+              if (seenEmails.has(emailKey)) return; // 🚫 Skip duplicate
+              seenEmails.add(emailKey);
+
               const wrapper = document.createElement('div');
               wrapper.className = 'p-4 border border-gray-200 rounded flex flex-col md:flex-row md:items-center md:justify-between gap-4';
               wrapper.innerHTML = `
