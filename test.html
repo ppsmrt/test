@@ -6,16 +6,16 @@
   <title>User Dashboard - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Smooth Fade-In Animation */
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
+    /* Fade-in-Up Animation */
+    @keyframes premiumFadeUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
-    .fade-in {
-      animation: fadeIn 0.5s ease-in forwards;
+    .premium-fade {
+      animation: premiumFadeUp 0.6s ease-out forwards;
     }
 
-    /* Hand Wave */
+    /* Wave Emoji */
     @keyframes wave {
       0% { transform: rotate(0deg); }
       10% { transform: rotate(14deg); }
@@ -32,39 +32,39 @@
       animation: wave 2s infinite;
     }
 
-    /* Role Badges */
-    .badge {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      margin-left: 6px;
+    /* Glassmorphism Card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .badge.silver { background: silver; }
-    .badge.copper { background: #b87333; }
-    .badge.gold { background: gold; }
-    .badge.diamond {
-      background: linear-gradient(135deg, #b9f2ff, #00ffff);
-      border: 1px solid #00ced1;
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     }
-
-    /* Card Styling */
-    .card-style {
-      @apply bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center border border-gray-100 h-full flex flex-col justify-center;
+    .card-label {
+      @apply text-gray-700 text-sm font-medium;
     }
-    .card-label { @apply text-gray-500 text-base; }
-    .card-number { @apply text-3xl font-bold mt-1; }
+    .card-number {
+      @apply text-3xl font-bold mt-1 text-gray-900;
+    }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 min-h-screen flex flex-col">
 
-  <!-- Shared Header -->
+  <!-- Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-7xl mx-auto px-4 py-8 space-y-10 fade-in">
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-10 premium-fade">
 
-    <!-- Welcome Section -->
-    <section class="flex items-center gap-4 bg-white shadow-md rounded-xl p-5 border border-gray-100 fade-in">
+    <!-- Welcome -->
+    <section class="flex items-center gap-4 bg-white shadow-md rounded-xl p-5 border border-gray-100 premium-fade">
       <div class="text-4xl animate-wave">👋</div>
       <div>
         <h1 id="welcomeMessage" class="text-xl sm:text-2xl font-bold text-gray-800">Hai, Loading...</h1>
@@ -72,77 +72,77 @@
       </div>
     </section>
 
-    <!-- Dashboard Cards (2 per row on mobile) -->
-    <div class="grid grid-cols-2 gap-6 fade-in">
-      <div class="card-style">
+    <!-- Dashboard Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 premium-fade">
+      <div class="glass-card">
         <p class="card-label">Published Posts</p>
-        <h2 id="publishedCount" class="card-number text-blue-600">0</h2>
+        <h2 id="publishedCount" class="card-number">0</h2>
       </div>
-      <div class="card-style">
+      <div class="glass-card">
         <p class="card-label">Pending Posts</p>
-        <h2 id="pendingCount" class="card-number text-yellow-600">0</h2>
+        <h2 id="pendingCount" class="card-number">0</h2>
       </div>
-      <div class="card-style">
+      <div class="glass-card">
         <p class="card-label">Likes Given</p>
-        <h2 id="likesGiven" class="card-number text-green-600">0</h2>
+        <h2 id="likesGiven" class="card-number">0</h2>
       </div>
-      <div class="card-style">
+      <div class="glass-card">
         <p class="card-label">Comments Given</p>
-        <h2 id="commentsGiven" class="card-number text-purple-600">0</h2>
+        <h2 id="commentsGiven" class="card-number">0</h2>
       </div>
-      <div class="card-style">
+      <div class="glass-card">
         <p class="card-label">Likes Received</p>
-        <h2 id="likesReceived" class="card-number text-green-700">0</h2>
+        <h2 id="likesReceived" class="card-number">0</h2>
       </div>
-      <div class="card-style">
+      <div class="glass-card">
         <p class="card-label">Comments Received</p>
-        <h2 id="commentsReceived" class="card-number text-purple-700">0</h2>
+        <h2 id="commentsReceived" class="card-number">0</h2>
       </div>
-      <div class="card-style">
+      <div class="glass-card">
         <p class="card-label">Followers</p>
-        <h2 class="card-number text-indigo-700">0</h2>
+        <h2 class="card-number">0</h2>
       </div>
-      <div class="card-style">
+      <div class="glass-card">
         <p class="card-label">Following</p>
-        <h2 class="card-number text-indigo-500">0</h2>
+        <h2 class="card-number">0</h2>
       </div>
-      <div class="card-style">
+      <div class="glass-card">
         <p class="card-label">Saved Posts</p>
-        <h2 class="card-number text-pink-700">0</h2>
+        <h2 class="card-number">0</h2>
       </div>
-      <div class="card-style">
+      <div class="glass-card">
         <p class="card-label">Reports Made</p>
-        <h2 class="card-number text-red-700">0</h2>
+        <h2 class="card-number">0</h2>
       </div>
     </div>
 
-    <!-- Profile Details -->
-    <div class="bg-white w-full rounded-xl shadow-lg p-8 border border-gray-100 fade-in">
+    <!-- Profile -->
+    <div class="bg-white w-full rounded-xl shadow-lg p-8 border border-gray-100 premium-fade">
       <h2 class="text-2xl font-bold mb-8 text-gray-800 border-b pb-3">Profile Details</h2>
-      <div class="flex flex-col items-center text-center mb-6">
-        <h3 id="profileName" class="text-lg font-semibold text-gray-700 flex items-center gap-1">
-          Loading...
-        </h3>
-        <span id="profileUsername" class="text-gray-500 text-sm">@username</span>
-        <p id="profileBio" class="mt-2 text-gray-600 text-sm italic">No bio available</p>
-      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="flex flex-col">
+        <div>
+          <span class="text-gray-500">Name</span>
+          <span id="profileName" class="block text-lg font-semibold text-gray-700">Loading...</span>
+        </div>
+        <div>
+          <span class="text-gray-500">Username</span>
+          <span id="profileUsername" class="block text-lg font-semibold text-gray-700">Loading...</span>
+        </div>
+        <div>
           <span class="text-gray-500">Status</span>
-          <span id="profileRole" class="text-lg font-semibold text-gray-700 flex items-center">Loading...</span>
+          <span id="profileRole" class="block text-lg font-semibold text-gray-700">Loading...</span>
         </div>
-        <div class="flex flex-col">
+        <div>
           <span class="text-gray-500">Account Created On</span>
-          <span id="accountCreated" class="text-lg font-semibold text-gray-700">Loading...</span>
+          <span id="accountCreated" class="block text-lg font-semibold text-gray-700">Loading...</span>
         </div>
-        <div class="flex flex-col">
+        <div>
           <span class="text-gray-500">Posts Published</span>
-          <span id="postCount" class="text-lg font-semibold text-gray-700">Loading...</span>
+          <span id="postCount" class="block text-lg font-semibold text-gray-700">Loading...</span>
         </div>
       </div>
       <div class="mt-8 text-right">
-        <a href="/test/account.html" 
-           class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition shadow">
+        <a href="/test/account.html" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition shadow">
           Edit Profile
         </a>
       </div>
@@ -169,32 +169,6 @@
   const auth = getAuth(app);
   const db = getDatabase(app);
 
-  const profileName = document.getElementById("profileName");
-  const profileUsername = document.getElementById("profileUsername");
-  const profileRole = document.getElementById("profileRole");
-  const profileBio = document.getElementById("profileBio");
-  const accountCreated = document.getElementById("accountCreated");
-  const postCount = document.getElementById("postCount");
-
-  const publishedCount = document.getElementById("publishedCount");
-  const pendingCount = document.getElementById("pendingCount");
-  const likesGiven = document.getElementById("likesGiven");
-  const commentsGiven = document.getElementById("commentsGiven");
-  const likesReceived = document.getElementById("likesReceived");
-  const commentsReceived = document.getElementById("commentsReceived");
-
-  const welcomeMessage = document.getElementById("welcomeMessage");
-
-  function getBadge(role) {
-    switch (role.toLowerCase()) {
-      case "user": return '<span class="badge silver"></span>';
-      case "editor": return '<span class="badge copper"></span>';
-      case "manager": return '<span class="badge gold"></span>';
-      case "admin": return '<span class="badge diamond"></span>';
-      default: return '';
-    }
-  }
-
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = "/login.html";
@@ -208,44 +182,40 @@
     const displayName = userData.displayName || user.displayName || "No Name";
     const username = userData.username || displayName.replace(/\s+/g, "").toLowerCase();
     const role = userData.role || "user";
-    const bio = userData.bio || "No bio available";
     const createdDate = user.metadata?.creationTime 
         ? new Date(user.metadata.creationTime).toLocaleDateString()
         : "Unknown";
 
-    profileName.innerHTML = `${displayName} ${getBadge(role)}`;
-    profileUsername.textContent = "@" + username;
-    profileRole.innerHTML = role.charAt(0).toUpperCase() + role.slice(1) + " " + getBadge(role);
-    profileBio.textContent = bio;
-    accountCreated.textContent = createdDate;
+    document.getElementById("profileName").textContent = displayName;
+    document.getElementById("profileUsername").textContent = "@" + username;
+    document.getElementById("profileRole").textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    document.getElementById("accountCreated").textContent = createdDate;
 
     const hours = new Date().getHours();
     let greeting = "Good Morning";
     if (hours >= 12 && hours < 18) greeting = "Good Afternoon";
     else if (hours >= 18) greeting = "Good Evening";
-    welcomeMessage.textContent = `Hai ${displayName}, ${greeting} and Welcome!`;
+    document.getElementById("welcomeMessage").textContent = `Hai ${displayName}, ${greeting} and Welcome!`;
 
     const postsQuery = query(ref(db, "posts"), orderByChild("uid"), equalTo(user.uid));
     const postsSnap = await get(postsQuery);
     const totalPublished = postsSnap.exists() ? Object.keys(postsSnap.val()).length : 0;
-    publishedCount.textContent = totalPublished;
-    postCount.textContent = totalPublished;
+    document.getElementById("publishedCount").textContent = totalPublished;
+    document.getElementById("postCount").textContent = totalPublished;
 
     const pendingQuery = query(ref(db, "pendingPosts"), orderByChild("uid"), equalTo(user.uid));
     const pendingSnap = await get(pendingQuery);
-    pendingCount.textContent = pendingSnap.exists() ? Object.keys(pendingSnap.val()).length : 0;
+    document.getElementById("pendingCount").textContent = pendingSnap.exists() ? Object.keys(pendingSnap.val()).length : 0;
 
-    likesGiven.textContent = userData.likesGiven || 0;
-    commentsGiven.textContent = userData.commentsGiven || 0;
-    likesReceived.textContent = userData.likesReceived || 0;
-    commentsReceived.textContent = userData.commentsReceived || 0;
+    document.getElementById("likesGiven").textContent = userData.likesGiven || 0;
+    document.getElementById("commentsGiven").textContent = userData.commentsGiven || 0;
+    document.getElementById("likesReceived").textContent = userData.likesReceived || 0;
+    document.getElementById("commentsReceived").textContent = userData.commentsReceived || 0;
   });
 </script>
 
-<!-- Universal Header -->
+<!-- Header/Footer -->
 <script type="module" src="header.js"></script>
-
-<!-- Footer -->
 <footer id="footer" class="mt-auto"></footer>
 <script type="module" src="js/footer.js"></script>
 
