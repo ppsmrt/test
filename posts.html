@@ -35,26 +35,36 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const postsRef = ref(db, 'posts'); // ✅ Approved posts stored here
+    const postsRef = ref(db, 'posts');
     const container = document.getElementById('posts-container');
 
     onValue(postsRef, (snapshot) => {
-      container.innerHTML = "";
+      let postsArray = [];
+
       snapshot.forEach(childSnapshot => {
         const post = childSnapshot.val();
         if (post.status === "approved") {
-          container.innerHTML += `
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-              ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover"/>` : ""}
-              <div class="p-4">
-                <h2 class="text-xl font-bold mb-2">${post.title}</h2>
-                <p class="text-gray-700 text-sm mb-2">${post.excerpt || post.content.substring(0,100) + "..."}</p>
-                <p class="text-xs text-gray-500">By ${post.author} • ${new Date(post.date).toLocaleDateString()}</p>
-              </div>
-            </div>
-          `;
+          postsArray.push(post);
         }
       });
+
+      // Sort newest first
+      postsArray.sort((a, b) => b.date - a.date);
+
+      container.innerHTML = postsArray.map(post => `
+        <div class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
+          ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover"/>` : ""}
+          <div class="p-4 flex flex-col flex-grow">
+            <h2 class="text-xl font-bold mb-2">${post.title}</h2>
+            <p class="text-gray-700 text-sm mb-4 flex-grow">
+              ${post.excerpt ? post.excerpt : (post.content ? post.content.substring(0, 120) + "..." : "")}
+            </p>
+            <p class="text-xs text-gray-500 mt-auto">
+              By ${post.author || "Unknown"} • ${new Date(post.date).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      `).join('');
     });
   </script>
 
