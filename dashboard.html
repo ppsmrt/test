@@ -268,6 +268,29 @@ setInterval(() => {
   loadPendingPosts();
 }, 30000);
 
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const auth = getAuth();
+const db = getDatabase();
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const userRef = ref(db, "users/" + user.uid);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+      if (userData.role !== "admin") {
+        window.location.href = "account.html";
+      }
+    } else {
+      window.location.href = "account.html";
+    }
+  } else {
+    window.location.href = "login.html";
+  }
+});
+
   </script>
 
   <!-- ✅ Universal Header Loader -->
