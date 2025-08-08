@@ -1,35 +1,56 @@
-<!-- Profile Card -->
-<div class="max-w-sm mx-auto mt-8 bg-white rounded-2xl shadow-lg p-6 text-center">
-  <!-- Avatar -->
-  <div class="relative mx-auto w-24 h-24">
-    <img src="https://via.placeholder.com/150"
-         alt="Profile Picture"
-         class="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account - TamilGeo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
+
+  <!-- Profile Details Card -->
+  <div class="max-w-lg mx-auto mt-10 bg-white rounded-xl shadow-lg p-6">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">My Profile</h2>
+    
+    <div class="space-y-4">
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-700">Name:</span>
+        <span id="profileName" class="text-gray-600">Loading...</span>
+      </div>
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-700">Username:</span>
+        <span id="profileUsername" class="text-gray-600">Loading...</span>
+      </div>
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-700">Status:</span>
+        <span id="profileRole" class="text-gray-600">Loading...</span>
+      </div>
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-700">Account Created On:</span>
+        <span id="accountCreated" class="text-gray-600">Loading...</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="font-semibold text-gray-700">Posts Published:</span>
+        <span id="postCount" class="text-gray-600">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Edit Profile Button -->
+    <div class="mt-6 text-center">
+      <a href="/test/account.html" 
+         class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition shadow">
+        Edit Profile
+      </a>
+    </div>
   </div>
-
-  <!-- User Info -->
-  <h2 id="profileName" class="mt-4 text-2xl font-bold text-gray-800">Loading...</h2>
-  <p id="profileUsername" class="text-gray-500 text-sm">@loading</p>
-
-  <!-- Role Badge -->
-  <span id="profileRole"
-        class="inline-block mt-3 px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-    Loading...
-  </span>
-
-  <!-- Edit Profile Button -->
-  <div class="mt-6">
-    <a href="/test/account.html"
-       class="inline-block bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition">
-      Edit Profile
-    </a>
-  </div>
-</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -48,13 +69,8 @@
   const profileName = document.getElementById("profileName");
   const profileUsername = document.getElementById("profileUsername");
   const profileRole = document.getElementById("profileRole");
-
-  const roleColors = {
-    admin: "bg-red-100 text-red-800",
-    manager: "bg-purple-100 text-purple-800",
-    editor: "bg-green-100 text-green-800",
-    user: "bg-blue-100 text-blue-800"
-  };
+  const accountCreated = document.getElementById("accountCreated");
+  const postCount = document.getElementById("postCount");
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -62,18 +78,36 @@
       return;
     }
 
+    // Fetch user data
     const userRef = ref(db, "users/" + user.uid);
     const snap = await get(userRef);
     const userData = snap.exists() ? snap.val() : {};
 
     const displayName = userData.displayName || user.displayName || "No Name";
-    const role = (userData.role || "user").toLowerCase();
+    const username = userData.username || displayName.replace(/\s+/g, "").toLowerCase();
+    const role = userData.role || "user";
+    const createdDate = user.metadata?.creationTime 
+        ? new Date(user.metadata.creationTime).toLocaleDateString()
+        : "Unknown";
 
     profileName.textContent = displayName;
-    profileUsername.textContent = "@" + (displayName.replace(/\s+/g, "").toLowerCase());
+    profileUsername.textContent = "@" + username;
     profileRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    accountCreated.textContent = createdDate;
 
-    // Apply role color
-    profileRole.className = `inline-block mt-3 px-3 py-1 text-xs font-semibold rounded-full ${roleColors[role] || roleColors.user}`;
+    // Fetch number of posts by this user
+    const postsQuery = query(ref(db, "posts"), orderByChild("uid"), equalTo(user.uid));
+    const postsSnap = await get(postsQuery);
+    postCount.textContent = postsSnap.exists() ? Object.keys(postsSnap.val()).length : 0;
   });
 </script>
+
+<!-- ✅ Universal Header Loader -->
+<script type="module" src="header.js"></script>
+
+<!-- ✅ Footer -->
+<footer id="footer" class="mt-auto"></footer>
+<script type="module" src="js/footer.js"></script>
+
+</body>
+</html>
