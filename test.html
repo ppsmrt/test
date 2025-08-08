@@ -11,107 +11,73 @@
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-2xl mx-auto p-6 flex-grow">
-    <h1 class="text-3xl font-bold mb-6">👤 My Account</h1>
-
-    <!-- Profile Card -->
-    <div id="profileCard" class="bg-white p-6 rounded shadow mb-4 text-center">
-      <div class="w-24 h-24 mx-auto rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xl font-bold">
-        <span id="profileInitial">?</span>
-      </div>
-      <h2 id="profileName" class="text-xl font-semibold mt-3">Loading...</h2>
-      <p id="profileUsername" class="text-gray-500 text-sm"></p>
-      <p id="accountCreated" class="text-gray-400 text-xs mt-2"></p>
+ <!-- Profile Card -->
+<div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
+  <div class="flex items-center space-x-4">
+    <!-- Avatar -->
+    <img src="https://via.placeholder.com/80" 
+         alt="Profile Picture" 
+         class="w-20 h-20 rounded-full border">
+    <div>
+      <h2 id="profileName" class="text-xl font-bold">Loading...</h2>
+      <p id="profileUsername" class="text-gray-500 text-sm">Loading...</p>
+      <span id="profileRole" class="inline-block mt-1 px-2 py-1 text-xs font-semibold rounded bg-blue-100 text-blue-800">
+        Loading...
+      </span>
     </div>
+  </div>
 
-    <!-- Edit Form -->
-    <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4">
-      <div>
-        <label class="block text-sm font-medium mb-1">Account Name</label>
-        <input type="text" id="accountName" class="w-full p-2 border rounded" required>
-      </div>
+  <!-- Edit Button -->
+  <div class="mt-6">
+    <a href="/account.html" 
+       class="block text-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Edit Profile
+    </a>
+  </div>
+</div>
 
-      <div>
-        <label class="block text-sm font-medium mb-1">Username (Display)</label>
-        <input type="text" id="username" class="w-full p-2 border rounded bg-gray-100" disabled>
-        <p class="text-xs text-gray-500 mt-1">To edit your username, please contact the admin.</p>
-      </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-      <div>
-        <label class="block text-sm font-medium mb-1">Profile Picture</label>
-        <input type="file" class="w-full p-2 border rounded bg-gray-50 cursor-not-allowed" disabled>
-        <p class="text-xs text-gray-500 mt-1">Profile picture upload coming soon.</p>
-      </div>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+    authDomain: "tamilgeoapp.firebaseapp.com",
+    databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+    projectId: "tamilgeoapp",
+    storageBucket: "tamilgeoapp.appspot.com",
+    messagingSenderId: "1092623024431",
+    appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+  };
 
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
-    </form>
-  </main>
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  const profileName = document.getElementById("profileName");
+  const profileUsername = document.getElementById("profileUsername");
+  const profileRole = document.getElementById("profileRole");
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-      authDomain: "tamilgeoapp.firebaseapp.com",
-      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-      projectId: "tamilgeoapp",
-      storageBucket: "tamilgeoapp.appspot.com",
-      messagingSenderId: "1092623024431",
-      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-    };
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = "/login.html";
+      return;
+    }
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    // Fetch user role & name from database
+    const userRef = ref(db, "users/" + user.uid);
+    const snap = await get(userRef);
+    const userData = snap.exists() ? snap.val() : {};
 
-    const profileInitial = document.getElementById("profileInitial");
-    const profileName = document.getElementById("profileName");
-    const profileUsername = document.getElementById("profileUsername");
-    const accountCreated = document.getElementById("accountCreated");
+    const displayName = userData.displayName || user.displayName || "No Name";
+    const role = userData.role || "user";
 
-    const accountNameInput = document.getElementById("accountName");
-    const usernameInput = document.getElementById("username");
-    const accountForm = document.getElementById("accountForm");
-
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        alert("Please log in to view your account.");
-        window.location.href = "/login.html";
-        return;
-      }
-
-      // Fill profile data
-      profileInitial.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : "?";
-      profileName.textContent = user.displayName || "No Name";
-      profileUsername.textContent = user.email;
-      accountCreated.textContent = "Account created on: " + new Date(user.metadata.creationTime).toLocaleDateString();
-
-      // Fill form
-      accountNameInput.value = user.displayName || "";
-      usernameInput.value = user.email;
-    });
-
-    accountForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const newName = accountNameInput.value.trim();
-      if (!newName) {
-        alert("Name cannot be empty.");
-        return;
-      }
-
-      updateProfile(user, { displayName: newName }).then(() => {
-        alert("✅ Account updated successfully!");
-        profileName.textContent = newName;
-        profileInitial.textContent = newName.charAt(0).toUpperCase();
-      }).catch((err) => {
-        console.error(err);
-        alert("❌ Error updating account.");
-      });
-    });
-  </script>
+    profileName.textContent = displayName;
+    profileUsername.textContent = "@" + (displayName.replace(/\s+/g, "").toLowerCase());
+    profileRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+  });
+</script>
 
   <!-- ✅ Universal Header Loader -->
   <script type="module" src="header.js"></script>
