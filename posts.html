@@ -43,9 +43,8 @@
 
       snapshot.forEach(childSnapshot => {
         const post = childSnapshot.val();
-        if (post.status === "approved") {
-          postsArray.push(post);
-        }
+        // ✅ No status check — all posts in /posts are considered approved
+        postsArray.push(post);
       });
 
       // Sort newest first
