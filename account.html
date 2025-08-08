@@ -31,6 +31,23 @@
   <div id="shared-header"></div>
 
   <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
+
+<!-- 📢 Notification Toast -->
+<div id="notificationToast" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-yellow-200 text-black px-6 py-3 rounded-lg shadow-lg z-50">
+  <span id="notificationText"></span>
+  <button id="closeToast" class="ml-4 text-red-600 font-bold">&times;</button>
+</div>
+
+<!-- 📢 Notification Popup -->
+<div id="notificationPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+    <h2 class="text-lg font-bold mb-4">New Notification</h2>
+    <p id="popupMessage" class="mb-4"></p>
+    <div class="flex justify-end space-x-2">
+      <button id="closePopup" class="bg-gray-300 px-4 py-2 rounded">Close</button>
+    </div>
+  </div>
+</div>
     
     <!-- 👋 Welcome Section -->
     <div class="bg-white shadow rounded-lg p-6 mb-6 flex items-center space-x-4">
@@ -345,6 +362,42 @@
         alert("❌ Failed to update account.");
       }
     });
+
+import { getDatabase, ref, onValue, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const db = getDatabase();
+const notificationsRef = query(ref(db, "notifications"), limitToLast(1));
+
+onValue(notificationsRef, (snapshot) => {
+  snapshot.forEach(child => {
+    const data = child.val();
+    if (!data) return;
+
+    // Show toast
+    document.getElementById("notificationText").textContent = data.message;
+    document.getElementById("notificationToast").classList.remove("hidden");
+
+    // Show popup only if not shown today
+    const lastShown = localStorage.getItem("lastNotificationShown");
+    const today = new Date().toDateString();
+
+    if (lastShown !== today) {
+      document.getElementById("popupMessage").textContent = data.message;
+      document.getElementById("notificationPopup").classList.remove("hidden");
+      localStorage.setItem("lastNotificationShown", today);
+    }
+  });
+});
+
+// Close toast
+document.getElementById("closeToast").addEventListener("click", () => {
+  document.getElementById("notificationToast").classList.add("hidden");
+});
+
+// Close popup
+document.getElementById("closePopup").addEventListener("click", () => {
+  document.getElementById("notificationPopup").classList.add("hidden");
+});
   </script>
 
   <!-- ✅ Universal Header Loader -->
