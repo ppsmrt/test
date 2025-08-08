@@ -6,56 +6,27 @@
   <title>Submit Post - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <!-- 📝 Submit Form -->
-  <main class="max-w-3xl mx-auto mt-10 bg-white p-6 rounded shadow flex-grow">
-    <h1 class="text-2xl font-bold mb-6 text-center">📝 Submit a New Post</h1>
+  <main class="max-w-3xl mx-auto p-6 flex-grow">
+    <h1 class="text-3xl font-bold mb-6">✍ Submit a Post</h1>
 
-    <form id="submit-form" class="space-y-4">
-      <input type="text" id="title" placeholder="Post Title" required
-             class="w-full p-3 border border-gray-300 rounded" />
-
-      <textarea id="content" placeholder="Post Content" rows="10" required
-                class="w-full p-3 border border-gray-300 rounded"></textarea>
-
-      <input type="text" id="category" placeholder="Category (e.g. Geography)" 
-             class="w-full p-3 border border-gray-300 rounded" />
-
-      <input type="text" id="tags" placeholder="Tags (comma separated)" 
-             class="w-full p-3 border border-gray-300 rounded" />
-
-      <input type="url" id="image" placeholder="Featured Image URL"
-             class="w-full p-3 border border-gray-300 rounded" />
-
-      <input type="text" id="author" placeholder="Author Name" required
-             class="w-full p-3 border border-gray-300 rounded" />
-
-      <textarea id="excerpt" placeholder="Short Description (optional)" rows="3"
-                class="w-full p-3 border border-gray-300 rounded"></textarea>
-
-      <select id="language" class="w-full p-3 border border-gray-300 rounded">
-        <option value="ta">Tamil</option>
-        <option value="en">English</option>
-      </select>
-
-      <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-        🚀 Submit Post
-      </button>
+    <form id="postForm" class="bg-white p-6 rounded shadow">
+      <input type="text" id="title" placeholder="Post Title" class="w-full p-2 border rounded mb-4" required>
+      <textarea id="content" placeholder="Post Content" class="w-full p-2 border rounded mb-4" rows="6" required></textarea>
+      <input type="url" id="image" placeholder="Image URL (optional)" class="w-full p-2 border rounded mb-4">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
     </form>
-
-    <div id="status" class="mt-4 text-green-600 font-medium hidden">✅ Post submitted for review!</div>
   </main>
 
-  <!-- 🔥 Firebase Submission Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-    // ✅ Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
       authDomain: "tamilgeoapp.firebaseapp.com",
@@ -67,42 +38,56 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getDatabase(app);
-    const pendingRef = ref(db, 'pendingPosts');
 
-    document.getElementById('submit-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    const postForm = document.getElementById("postForm");
 
-      const postData = {
-        title: document.getElementById('title').value,
-        content: document.getElementById('content').value,
-        category: document.getElementById('category').value,
-        tags: document.getElementById('tags').value,
-        image: document.getElementById('image').value,
-        author: document.getElementById('author').value,
-        excerpt: document.getElementById('excerpt').value,
-        language: document.getElementById('language').value,
-        date: new Date().toISOString(),
-        status: 'pending'
-      };
-
-      try {
-        await push(pendingRef, postData);
-        document.getElementById('submit-form').reset();
-        document.getElementById('status').classList.remove('hidden');
-      } catch (error) {
-        alert('❌ Error submitting post. Please try again.');
-        console.error(error);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        alert("Please log in to submit a post.");
+        window.location.href = "/login.html";
+        return;
       }
+
+      postForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById("title").value.trim();
+        const content = document.getElementById("content").value.trim();
+        const image = document.getElementById("image").value.trim();
+
+        if (!title || !content) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
+        const postId = push(ref(db, "pendingPosts")).key;
+        const postData = {
+          title,
+          content,
+          image: image || null,
+          author: user.displayName || user.email,
+          date: Date.now(),
+          status: "pending"
+        };
+
+        set(ref(db, "pendingPosts/" + postId), postData).then(() => {
+          alert("✅ Post submitted for approval!");
+          postForm.reset();
+        }).catch(err => {
+          console.error(err);
+          alert("❌ Error submitting post.");
+        });
+      });
     });
   </script>
 
   <!-- ✅ Universal Header Loader -->
   <script type="module" src="header.js"></script>
 
-  <!-- ✅ Footer Loader -->
+  <!-- ✅ Footer -->
   <footer id="footer" class="mt-auto"></footer>
   <script type="module" src="js/footer.js"></script>
-
 </body>
 </html>
