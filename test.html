@@ -23,6 +23,24 @@
       <p class="text-gray-600">Here’s a quick overview of your account and activity.</p>
     </div>
 
+<!-- 👤 Profile Card -->
+    <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
+      <div class="flex items-center space-x-4">
+        <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
+        <div>
+          <div class="flex items-center space-x-2">
+            <h2 id="displayName" class="text-xl font-semibold">Loading...</h2>
+            <span id="roleBadge" class="px-2 py-1 text-xs rounded-full text-white">Role</span>
+          </div>
+          <p id="username" class="text-gray-600 text-sm">Loading...</p>
+          <p id="bio" class="text-gray-500 text-sm italic mt-1">Loading bio...</p>
+        </div>
+      </div>
+      <p id="accountCreated" class="text-xs text-gray-500 mt-3"></p>
+      <p id="lastLogin" class="text-xs text-gray-500"></p>
+      <p id="postCount" class="text-xs text-gray-500"></p>
+    </div>
+
     <!-- 📊 Dashboard Stat Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
       <div class="bg-white p-6 rounded-lg shadow text-center">
@@ -43,23 +61,25 @@
       </div>
     </div>
 
-    <!-- 👤 Profile Card -->
-    <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
-      <div class="flex items-center space-x-4">
-        <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
-        <div>
-          <div class="flex items-center space-x-2">
-            <h2 id="displayName" class="text-xl font-semibold">Loading...</h2>
-            <span id="roleBadge" class="px-2 py-1 text-xs rounded-full text-white">Role</span>
-          </div>
-          <p id="username" class="text-gray-600 text-sm">Loading...</p>
-          <p id="bio" class="text-gray-500 text-sm italic mt-1">Loading bio...</p>
-        </div>
-      </div>
-      <p id="accountCreated" class="text-xs text-gray-500 mt-3"></p>
-      <p id="lastLogin" class="text-xs text-gray-500"></p>
-      <p id="postCount" class="text-xs text-gray-500"></p>
-    </div>
+<!-- ⚡ Quick Actions -->  
+  <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">  
+    <h2 class="text-xl font-semibold mb-4">⚡ Quick Actions</h2>  
+    <div class="grid sm:grid-cols-2 gap-4">  
+      <a href="submit.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">✍️ Submit a Post</a>  
+      <a href="bookmarks.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔖 View Bookmarks</a>  
+      <a href="contact.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📬 Contact Admin</a>  
+      <a href="donate.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">💖 Donate Me</a>  
+    </div>  
+  </section>
+
+<!-- 📄 Site Related Pages -->  <section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-10">  
+    <h2 class="text-xl font-semibold mb-4">📄 Important Links</h2>  
+    <div class="grid sm:grid-cols-2 gap-4">  
+      <a href="about.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">ℹ️ About Website</a>  
+      <a href="privacy.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔐 Privacy Policy</a>  
+      <a href="terms.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📜 Terms and Conditions</a>  
+    </div>  
+  </section>
 
     <!-- ✏️ Edit Account Form -->
     <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4 mb-6">
@@ -88,26 +108,6 @@
       </div>
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
     </form>
-
-   <!-- ⚡ Quick Actions -->  
-  <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">  
-    <h2 class="text-xl font-semibold mb-4">⚡ Quick Actions</h2>  
-    <div class="grid sm:grid-cols-2 gap-4">  
-      <a href="submit.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">✍️ Submit a Post</a>  
-      <a href="bookmarks.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔖 View Bookmarks</a>  
-      <a href="contact.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📬 Contact Admin</a>  
-      <a href="donate.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">💖 Donate Me</a>  
-    </div>  
-  </section>
-
-<!-- 📄 Site Related Pages -->  <section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-10">  
-    <h2 class="text-xl font-semibold mb-4">📄 Important Links</h2>  
-    <div class="grid sm:grid-cols-2 gap-4">  
-      <a href="about.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">ℹ️ About Website</a>  
-      <a href="privacy.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔐 Privacy Policy</a>  
-      <a href="terms.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📜 Terms and Conditions</a>  
-    </div>  
-  </section>
 
   <!-- ✅ Firebase + Profile Script -->
   <script type="module">
