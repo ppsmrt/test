@@ -5,13 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Dashboard - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Smooth Fade-In Animation */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    /* Hand Waving Animation */
+    @keyframes wave {
+      0% { transform: rotate(0deg); }
+      10% { transform: rotate(14deg); }
+      20% { transform: rotate(-8deg); }
+      30% { transform: rotate(14deg); }
+      40% { transform: rotate(-4deg); }
+      50% { transform: rotate(10deg); }
+      60% { transform: rotate(0deg); }
+      100% { transform: rotate(0deg); }
+    }
+    .animate-wave {
+      display: inline-block;
+      transform-origin: 70% 70%;
+      animation: wave 2s infinite;
+    }
+
+    /* Uniform Card Styling */
+    .card-style {
+      @apply bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100 h-full flex flex-col justify-center;
+    }
+    .card-label {
+      @apply text-gray-500 text-base;
+    }
+    .card-number {
+      @apply text-3xl font-bold mt-1;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-7xl mx-auto px-4 py-8 space-y-10">
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-10 fade-in">
 
     <!-- ===== WELCOME SECTION ===== -->
     <section class="flex items-center gap-4 bg-white shadow-md rounded-xl p-5 border border-gray-100">
@@ -22,7 +60,7 @@
       </div>
     </section>
 
-    <!-- ===== ALL DASHBOARD CARDS (Uniform Style) ===== -->
+    <!-- ===== DASHBOARD CARDS ===== -->
     <div class="grid grid-cols-2 gap-6">
       <div class="card-style">
         <p class="card-label">Published Posts</p>
@@ -67,7 +105,7 @@
     </div>
 
     <!-- ===== FULL-WIDTH PROFILE DETAILS ===== -->
-    <div class="bg-white w-full rounded-xl shadow-lg p-8 border border-gray-100">
+    <div class="bg-white w-full rounded-xl shadow-lg p-8 border border-gray-100 fade-in">
       <h2 class="text-2xl font-bold mb-8 text-gray-800 border-b pb-3">Profile Details</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="flex flex-col">
@@ -178,35 +216,6 @@
     commentsReceived.textContent = userData.commentsReceived || 0;
   });
 </script>
-
-<style>
-@keyframes wave {
-  0% { transform: rotate(0deg); }
-  10% { transform: rotate(14deg); }
-  20% { transform: rotate(-8deg); }
-  30% { transform: rotate(14deg); }
-  40% { transform: rotate(-4deg); }
-  50% { transform: rotate(10deg); }
-  60% { transform: rotate(0deg); }
-  100% { transform: rotate(0deg); }
-}
-.animate-wave {
-  display: inline-block;
-  transform-origin: 70% 70%;
-  animation: wave 2s infinite;
-}
-
-/* ✅ Uniform Card Style */
-.card-style {
-  @apply bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100 h-full flex flex-col justify-center;
-}
-.card-label {
-  @apply text-gray-500 text-base;
-}
-.card-number {
-  @apply text-3xl font-bold mt-1;
-}
-</style>
 
 <!-- ✅ Universal Header Loader -->
 <script type="module" src="header.js"></script>
