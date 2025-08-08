@@ -4,6 +4,11 @@ import {
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getDatabase,
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -18,29 +23,41 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getDatabase(app);
 
 const placeholder = document.getElementById("shared-header");
 const currentPath = window.location.pathname;
 const isHomePage = currentPath.endsWith("index.html") || currentPath === "/" || currentPath === "/test/";
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   let navContent = "";
 
   if (user) {
-    navContent = `
-      <nav class="flex gap-2 text-sm font-medium">
-        ${!isHomePage ? `
-          <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-            Home
-          </a>` : ""}
-        <a href="dashboard.html" class="px-4 py-1 rounded-full border border-green-600 text-green-600 bg-white hover:bg-green-50 transition">
-          Account
-        </a>
-        <button id="logout-btn" class="px-4 py-1 rounded-full bg-red-600 text-white hover:bg-red-700 transition">
-          Sign out
-        </button>
-      </nav>
-    `;
+    try {
+      const snap = await get(ref(db, "users/" + user.uid));
+      const role = snap.exists() ? snap.val().role : "user";
+      const accountLink =
+        role === "admin" || role === "manager"
+          ? "dashboard.html"
+          : "account.html";
+
+      navContent = `
+        <nav class="flex gap-2 text-sm font-medium">
+          ${!isHomePage ? `
+            <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
+              Home
+            </a>` : ""}
+          <a href="${accountLink}" class="px-4 py-1 rounded-full border border-green-600 text-green-600 bg-white hover:bg-green-50 transition">
+            Account
+          </a>
+          <button id="logout-btn" class="px-4 py-1 rounded-full bg-red-600 text-white hover:bg-red-700 transition">
+            Sign out
+          </button>
+        </nav>
+      `;
+    } catch (err) {
+      console.error("Error fetching user role:", err);
+    }
   } else {
     navContent = `
       <nav class="flex gap-2 text-sm font-medium">
