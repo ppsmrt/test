@@ -22,51 +22,47 @@
       </div>
     </section>
 
-    <!-- ===== TOP 4 DASHBOARD CARDS ===== -->
+    <!-- ===== ALL DASHBOARD CARDS (Uniform Style) ===== -->
     <div class="grid grid-cols-2 gap-6">
-      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100 h-full">
-        <p class="text-gray-500">Published Posts</p>
-        <h2 id="publishedCount" class="text-3xl font-bold text-blue-600">0</h2>
+      <div class="card-style">
+        <p class="card-label">Published Posts</p>
+        <h2 id="publishedCount" class="card-number text-blue-600">0</h2>
       </div>
-      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100 h-full">
-        <p class="text-gray-500">Pending Posts</p>
-        <h2 id="pendingCount" class="text-3xl font-bold text-yellow-600">0</h2>
+      <div class="card-style">
+        <p class="card-label">Pending Posts</p>
+        <h2 id="pendingCount" class="card-number text-yellow-600">0</h2>
       </div>
-      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100 h-full">
-        <p class="text-gray-500">Likes Given</p>
-        <h2 id="likesGiven" class="text-3xl font-bold text-green-600">0</h2>
+      <div class="card-style">
+        <p class="card-label">Likes Given</p>
+        <h2 id="likesGiven" class="card-number text-green-600">0</h2>
       </div>
-      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100 h-full">
-        <p class="text-gray-500">Comments Given</p>
-        <h2 id="commentsGiven" class="text-3xl font-bold text-purple-600">0</h2>
+      <div class="card-style">
+        <p class="card-label">Comments Given</p>
+        <h2 id="commentsGiven" class="card-number text-purple-600">0</h2>
       </div>
-    </div>
-
-    <!-- ===== SMALL STATS CARDS (6) ===== -->
-    <div class="grid grid-cols-2 gap-6">
-      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100 h-full">
-        <p class="text-gray-500">Likes Received</p>
-        <h3 id="likesReceived" class="text-2xl font-bold text-green-700">0</h3>
+      <div class="card-style">
+        <p class="card-label">Likes Received</p>
+        <h2 id="likesReceived" class="card-number text-green-700">0</h2>
       </div>
-      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100 h-full">
-        <p class="text-gray-500">Comments Received</p>
-        <h3 id="commentsReceived" class="text-2xl font-bold text-purple-700">0</h3>
+      <div class="card-style">
+        <p class="card-label">Comments Received</p>
+        <h2 id="commentsReceived" class="card-number text-purple-700">0</h2>
       </div>
-      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100 h-full">
-        <p class="text-gray-500">Followers</p>
-        <h3 class="text-2xl font-bold text-indigo-700">0</h3>
+      <div class="card-style">
+        <p class="card-label">Followers</p>
+        <h2 class="card-number text-indigo-700">0</h2>
       </div>
-      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100 h-full">
-        <p class="text-gray-500">Following</p>
-        <h3 class="text-2xl font-bold text-indigo-500">0</h3>
+      <div class="card-style">
+        <p class="card-label">Following</p>
+        <h2 class="card-number text-indigo-500">0</h2>
       </div>
-      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100 h-full">
-        <p class="text-gray-500">Saved Posts</p>
-        <h3 class="text-2xl font-bold text-pink-700">0</h3>
+      <div class="card-style">
+        <p class="card-label">Saved Posts</p>
+        <h2 class="card-number text-pink-700">0</h2>
       </div>
-      <div class="bg-white p-5 rounded-lg shadow-lg hover:shadow-xl transition border border-gray-100 h-full">
-        <p class="text-gray-500">Reports Made</p>
-        <h3 class="text-2xl font-bold text-red-700">0</h3>
+      <div class="card-style">
+        <p class="card-label">Reports Made</p>
+        <h2 class="card-number text-red-700">0</h2>
       </div>
     </div>
 
@@ -131,7 +127,6 @@
   const accountCreated = document.getElementById("accountCreated");
   const postCount = document.getElementById("postCount");
 
-  // Dashboard Elements
   const publishedCount = document.getElementById("publishedCount");
   const pendingCount = document.getElementById("pendingCount");
   const likesGiven = document.getElementById("likesGiven");
@@ -145,7 +140,6 @@
       return;
     }
 
-    // Fetch user profile
     const userRef = ref(db, "users/" + user.uid);
     const snap = await get(userRef);
     const userData = snap.exists() ? snap.val() : {};
@@ -162,26 +156,22 @@
     profileRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
     accountCreated.textContent = createdDate;
 
-    // Welcome message
     const hours = new Date().getHours();
     let greeting = "Good Morning";
     if (hours >= 12 && hours < 18) greeting = "Good Afternoon";
     else if (hours >= 18) greeting = "Good Evening";
     welcomeMessage.textContent = `Hai ${displayName}, ${greeting} and Welcome!`;
 
-    // Published posts
     const postsQuery = query(ref(db, "posts"), orderByChild("uid"), equalTo(user.uid));
     const postsSnap = await get(postsQuery);
     const totalPublished = postsSnap.exists() ? Object.keys(postsSnap.val()).length : 0;
     publishedCount.textContent = totalPublished;
     postCount.textContent = totalPublished;
 
-    // Pending posts
     const pendingQuery = query(ref(db, "pendingPosts"), orderByChild("uid"), equalTo(user.uid));
     const pendingSnap = await get(pendingQuery);
     pendingCount.textContent = pendingSnap.exists() ? Object.keys(pendingSnap.val()).length : 0;
 
-    // Example placeholders for likes & comments data
     likesGiven.textContent = userData.likesGiven || 0;
     commentsGiven.textContent = userData.commentsGiven || 0;
     likesReceived.textContent = userData.likesReceived || 0;
@@ -204,6 +194,17 @@
   display: inline-block;
   transform-origin: 70% 70%;
   animation: wave 2s infinite;
+}
+
+/* ✅ Uniform Card Style */
+.card-style {
+  @apply bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center border border-gray-100 h-full flex flex-col justify-center;
+}
+.card-label {
+  @apply text-gray-500 text-base;
+}
+.card-number {
+  @apply text-3xl font-bold mt-1;
 }
 </style>
 
