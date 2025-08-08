@@ -20,7 +20,6 @@
     <!-- 📊 Stats Section -->
     <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Website Stats</h2>
-      <!-- ✅ Always 2 per row even on mobile -->
       <div class="grid grid-cols-2 gap-6 w-full">
         <div class="bg-white shadow rounded-lg p-6 text-center">
           <p class="text-sm text-gray-500">Total Users</p>
@@ -41,7 +40,7 @@
       </div>
     </section>
 
-<!-- 🔔 Send Notification Section -->
+    <!-- 🔔 Send Notification Section -->
     <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Send Notification</h2>
       <div class="bg-white shadow rounded-lg p-6 space-y-4">
@@ -96,7 +95,7 @@
   <!-- ✅ Firebase + Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, get, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, get, update, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -110,7 +109,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-
     let currentPostId = null;
 
     async function loadStats() {
@@ -154,7 +152,6 @@
           if (data.role === "admin") return;
           if (addedUsers.has(user.key)) return;
           addedUsers.add(user.key);
-
           const row = document.createElement("tr");
           row.innerHTML = `
             <td class="p-3">${data.name || "No Name"}</td>
@@ -168,7 +165,6 @@
           `;
           tbody.appendChild(row);
         });
-
         document.querySelectorAll(".roleSelect").forEach(sel => {
           sel.addEventListener("change", async (e) => {
             const uid = e.target.dataset.id;
@@ -182,12 +178,14 @@
 
     async function loadPendingPosts() {
       const snap = await get(ref(db, "posts"));
+      const container = document.getElementById("pendingPostsList");
+      container.innerHTML = "";
       if (snap.exists()) {
-        const container = document.getElementById("pendingPostsList");
-        container.innerHTML = "";
+        let foundPending = false;
         snap.forEach(post => {
           const data = post.val();
-          if (data.status && data.status.toLowerCase() === "pending") {
+          if ((data.status || "").toLowerCase() === "pending") {
+            foundPending = true;
             const card = document.createElement("div");
             card.className = "bg-white shadow rounded-lg p-4 hover:shadow-lg transition cursor-pointer";
             card.innerHTML = `
@@ -205,6 +203,11 @@
             container.appendChild(card);
           }
         });
+        if (!foundPending) {
+          container.innerHTML = `<p class="text-gray-500">No pending posts found.</p>`;
+        }
+      } else {
+        container.innerHTML = `<p class="text-gray-500">No posts available.</p>`;
       }
     }
 
@@ -233,22 +236,14 @@
       }
     };
 
-    loadStats();
-    loadUsers();
-    loadPendingPosts();
-
-import { push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
     document.getElementById("sendNotifBtn").addEventListener("click", async () => {
       const title = document.getElementById("notifTitle").value.trim();
       const message = document.getElementById("notifMessage").value.trim();
       const limit = document.getElementById("notifLimit").value;
-
       if (!title || !message) {
         alert("Please enter both title and message.");
         return;
       }
-
       const newNotif = {
         title,
         message,
@@ -256,14 +251,15 @@ import { push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-databa
         timestamp: Date.now(),
         active: true
       };
-
       await push(ref(db, "notifications"), newNotif);
-
       alert("Notification sent successfully!");
       document.getElementById("notifTitle").value = "";
       document.getElementById("notifMessage").value = "";
     });
 
+    loadStats();
+    loadUsers();
+    loadPendingPosts();
   </script>
 
   <!-- ✅ Universal Header Loader -->
