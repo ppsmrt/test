@@ -260,6 +260,14 @@
     loadStats();
     loadUsers();
     loadPendingPosts();
+
+// 🔄 Auto-refresh stats, users, and pending posts every 30 seconds
+setInterval(() => {
+  loadStats();
+  loadUsers();
+  loadPendingPosts();
+}, 30000);
+
   </script>
 
   <!-- ✅ Universal Header Loader -->
