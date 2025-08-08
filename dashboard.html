@@ -41,6 +41,21 @@
       </div>
     </section>
 
+<!-- 🔔 Send Notification Section -->
+    <section class="w-full">
+      <h2 class="text-2xl font-bold mb-4">Send Notification</h2>
+      <div class="bg-white shadow rounded-lg p-6 space-y-4">
+        <input type="text" id="notifTitle" placeholder="Notification Title" class="w-full border rounded p-2">
+        <textarea id="notifMessage" placeholder="Notification Message" class="w-full border rounded p-2 h-24"></textarea>
+        <select id="notifLimit" class="w-full border rounded p-2">
+          <option value="oncePerDay">Show Once Per Day</option>
+          <option value="onceTotal">Show Once Only</option>
+          <option value="unlimited">Unlimited</option>
+        </select>
+        <button id="sendNotifBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Send Notification</button>
+      </div>
+    </section>
+
     <!-- 👥 Manage Users Section -->
     <section class="w-full">
       <h2 class="text-2xl font-bold mb-4">Manage Users</h2>
@@ -221,6 +236,34 @@
     loadStats();
     loadUsers();
     loadPendingPosts();
+
+import { push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    document.getElementById("sendNotifBtn").addEventListener("click", async () => {
+      const title = document.getElementById("notifTitle").value.trim();
+      const message = document.getElementById("notifMessage").value.trim();
+      const limit = document.getElementById("notifLimit").value;
+
+      if (!title || !message) {
+        alert("Please enter both title and message.");
+        return;
+      }
+
+      const newNotif = {
+        title,
+        message,
+        limit,
+        timestamp: Date.now(),
+        active: true
+      };
+
+      await push(ref(db, "notifications"), newNotif);
+
+      alert("Notification sent successfully!");
+      document.getElementById("notifTitle").value = "";
+      document.getElementById("notifMessage").value = "";
+    });
+
   </script>
 
   <!-- ✅ Universal Header Loader -->
