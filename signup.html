@@ -70,7 +70,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -97,11 +97,31 @@
       signupBtn.innerText = "Signing Up...";
 
       const name = document.getElementById("name").value.trim();
-      const username = document.getElementById("username").value.trim();
+      const username = document.getElementById("username").value.trim().toLowerCase();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
 
       try {
+        // 🚫 Restrict certain words
+        const restrictedWords = ["admin", "owner"];
+        if (restrictedWords.some(word => username.includes(word))) {
+          alert("❌ This username contains restricted words (admin/owner). Please choose another.");
+          signupBtn.disabled = false;
+          signupBtn.innerText = "Sign Up";
+          return;
+        }
+
+        // 🔍 Check if username already exists
+        const usernameRef = query(ref(db, "users"), orderByChild("username"), equalTo(username));
+        const snapshot = await get(usernameRef);
+        if (snapshot.exists()) {
+          alert("❌ Username already taken. Please choose another.");
+          signupBtn.disabled = false;
+          signupBtn.innerText = "Sign Up";
+          return;
+        }
+
+        // ✅ Create user
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
@@ -119,6 +139,7 @@
         setTimeout(() => {
           window.location.href = "login.html";
         }, 1500);
+
       } catch (error) {
         alert("Signup failed: " + error.message);
       } finally {
