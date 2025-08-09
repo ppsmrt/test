@@ -1,82 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account - TamilGeo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in { animation: fadeIn 0.5s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  <!-- Welcome Section -->
-  <div class="flex items-center justify-center min-h-screen bg-gray-100 p-6">
+    /* small friendly wave animation for the emoji */
+    @keyframes wave {
+      0% { transform: rotate(0deg); }
+      10% { transform: rotate(14deg); }
+      20% { transform: rotate(-8deg); }
+      30% { transform: rotate(14deg); }
+      40% { transform: rotate(-4deg); }
+      50% { transform: rotate(10deg); }
+      60% { transform: rotate(0deg); }
+      100% { transform: rotate(0deg); }
+    }
+    .wave-hand {
+      display: inline-block;
+      transform-origin: 70% 70%;
+      animation: wave 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
+
+  <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
+
+  <!-- Updated welcome section -->
+  <div class="flex items-center justify-center p-6">
     <div class="bg-white shadow-lg rounded-lg max-w-4xl w-full p-8">
       <h1 class="text-3xl font-bold text-center mb-6">
-        Hai, <span id="userNameDisplay" class="capitalize"></span>
+        <span class="wave-hand">👋</span> Hai, <span id="userNameDisplay" class="capitalize"></span>
       </h1>
-      <p class="text-center text-gray-600 mb-8">Welcome to your account dashboard</p>
+      <p class="text-center text-gray-600 mb-8">Welcome back, we hope the day is well</p>
       <div class="flex justify-center mb-6">
-        <img id="profilePic" src="" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover border-4 border-gray-300">
+        <!-- changed id to avoid duplicate "profilePic" -->
+        <img id="welcomeProfilePic" src="" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover border-4 border-gray-300">
       </div>
     </div>
   </div>
 
-  <!-- Account Form Section -->
-  <div class="max-w-4xl mx-auto mt-10 bg-white shadow-lg rounded-lg p-8">
-    <form id="accountForm" class="space-y-6">
+    <!-- 📌 Profile Card -->
+    <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
+      <div class="flex items-center space-x-4">
+        <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
+        <div>
+          <div class="flex items-center space-x-2">
+            <h2 id="displayName" class="text-xl font-semibold">Loading...</h2>
+            <span id="roleBadge" class="px-2 py-1 text-xs rounded-full text-white">Role</span>
+          </div>
+          <p id="username" class="text-gray-600 text-sm">Loading...</p>
+          <p id="bio" class="text-gray-500 text-sm italic mt-1">Loading bio...</p>
+        </div>
+      </div>
+      <p id="accountCreated" class="text-xs text-gray-500 mt-3"></p>
+      <p id="lastLogin" class="text-xs text-gray-500"></p>
+      <p id="postCount" class="text-xs text-gray-500"></p>
+    </div>
+
+<!-- 📊 Dashboard Stat Cards -->  
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>  
+  </div>  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Followers</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>  
+  </div>  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Likes</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>  
+  </div>  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Comments</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>  
+  </div>  
+</div>
+
+<!-- ⚡ Quick Actions -->      
+<section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">    
+  <h2 class="text-xl font-semibold mb-4">⚡ Quick Actions</h2>    
+  <div class="grid sm:grid-cols-2 gap-4">    
+    <a href="submit.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">✍️ Submit a Post</a>    
+    <a href="bookmarks.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔖 View Bookmarks</a>    
+    <a href="contact.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📬 Contact Admin</a>    
+    <a href="donate.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">💖 Donate Me</a>    
+  </div>    
+</section>  
+
+<!-- 📄 Site Related Pages -->  
+<section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6">    
+  <h2 class="text-xl font-semibold mb-4">📄 Important Links</h2>    
+  <div class="grid sm:grid-cols-2 gap-4">    
+    <a href="about.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">ℹ️ About Website</a>    
+    <a href="privacy.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔐 Privacy Policy</a>    
+    <a href="terms.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📜 Terms and Conditions</a>    
+  </div>
+</section>
+
+    <!-- 📌 Edit Account Form -->
+    <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4 mt-10">
+      <!-- Name -->
       <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Name</label>
-        <input type="text" id="nameInput" class="w-full p-2 border rounded" required>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
+        <input type="text" id="name" class="w-full p-2 border rounded" required>
       </div>
 
+      <!-- Username (Read Only) -->
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
+        <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly>
+        <p class="text-xs text-gray-500">Username cannot be changed. Contact admin for changes.</p>
+      </div>
+
+      <!-- Email (Read Only) -->
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Registered Email</label>
+        <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly>
+      </div>
+
+      <!-- Bio -->
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Bio</label>
-        <textarea id="bioField" rows="3" class="w-full p-2 border rounded"></textarea>
+        <textarea id="bioField" rows="3" class="w-full p-2 border rounded" placeholder="Write something about yourself..."></textarea>
       </div>
 
+      <!-- Profile Picture Upload -->
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Profile Picture</label>
         <input type="file" id="profilePicInput" accept="image/*" class="w-full p-2 border rounded">
+        <p class="text-xs text-gray-500">Upload a new profile picture (JPEG/PNG). The image will be compressed before storing in Firebase.</p>
+
+        <!-- Upload progress & status -->
+        <div class="mt-3">
+          <progress id="uploadProgress" value="0" max="100" class="w-full hidden"></progress>
+          <p id="uploadStatus" class="text-xs text-gray-600 mt-2"></p>
+        </div>
       </div>
 
-      <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-        Update Account
-      </button>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
     </form>
-  </div>
+  </main>
 
   <script type="module">
-    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
-    import { app } from "./firebase.js";
+    /* ✅ Only the encryption logic removed — compression + upload kept */
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+    };
+
+    const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
     const storage = getStorage(app);
 
-    const userNameDisplay = document.getElementById('userNameDisplay');
-    const nameInput = document.getElementById('nameInput');
-    const bioField = document.getElementById('bioField');
-    const profilePic = document.getElementById('profilePic');
-    const profilePicInput = document.getElementById('profilePicInput');
-    const accountForm = document.getElementById('accountForm');
+    const profilePic = document.getElementById("profilePic");
+    const welcomeProfilePic = document.getElementById("welcomeProfilePic");
+    const nameInput = document.getElementById("name");
+    const bioField = document.getElementById("bioField");
+    const usernameField = document.getElementById("usernameField");
+    const emailField = document.getElementById("emailField");
+    const userNameDisplay = document.getElementById("userNameDisplay");
+    const profilePicInput = document.getElementById("profilePicInput");
+    const uploadProgress = document.getElementById("uploadProgress");
+    const uploadStatus = document.getElementById("uploadStatus");
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        get(ref(db, "users/" + user.uid)).then(snapshot => {
-          if (snapshot.exists()) {
-            const data = snapshot.val();
-            userNameDisplay.textContent = data.name || "User";
-            nameInput.value = data.name || "";
-            bioField.value = data.bio || "";
-            if (data.profilePicture) profilePic.src = data.profilePicture;
-          }
-        });
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("Please log in to view your account.");
+        window.location.href = "/login.html";
+        return;
       }
+      try {
+        const snap = await get(ref(db, "users/" + user.uid));
+        if (snap.exists()) {
+          const data = snap.val();
+          // set both images if present
+          if (welcomeProfilePic) welcomeProfilePic.src = data.profilePicture || "https://via.placeholder.com/80";
+          if (profilePic) profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
+
+          nameInput.value = data.name || "";
+          bioField.value = data.bio || "";
+          usernameField.value = data.username || "";
+          emailField.value = user.email || "";
+          // put only the user's name into the small span, keep "Hai," static so the wave emoji stays
+          if (userNameDisplay) userNameDisplay.textContent = data.name || "User";
+        }
+      } catch (err) { console.error(err); }
     });
 
-    accountForm.addEventListener('submit', async (e) => {
+    async function compressImage(file, maxDim = 1024, quality = 0.8) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          let { width, height } = img;
+          const ratio = width / height;
+          if (width > maxDim || height > maxDim) {
+            if (ratio > 1) { width = maxDim; height = Math.round(maxDim / ratio); }
+            else { height = maxDim; width = Math.round(maxDim * ratio); }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+          canvas.toBlob((blob) => blob ? resolve(blob) : reject("Compression failed"), "image/jpeg", quality);
+        };
+        img.onerror = reject;
+        img.src = url;
+      });
+    }
+
+    async function uploadImage(path, blob, onProgress) {
+      const storageRef = sRef(storage, path);
+      return new Promise((resolve, reject) => {
+        const uploadTask = uploadBytesResumable(storageRef, blob);
+        uploadTask.on("state_changed",
+          (snap) => { if (onProgress) onProgress(Math.round((snap.bytesTransferred / snap.totalBytes) * 100)); },
+          reject,
+          async () => resolve(await getDownloadURL(uploadTask.snapshot.ref))
+        );
+      });
+    }
+
+    profilePicInput.addEventListener("change", () => {
+      const file = profilePicInput.files?.[0];
+      if (!file?.type.startsWith("image/")) { alert("Please select an image file."); profilePicInput.value = ""; return; }
+      const url = URL.createObjectURL(file);
+      // update both previews if present
+      if (welcomeProfilePic) welcomeProfilePic.src = url;
+      if (profilePic) profilePic.src = url;
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    });
+
+    document.getElementById("accountForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const user = auth.currentUser;
       if (!user) return;
@@ -87,19 +264,30 @@
 
       const file = profilePicInput.files?.[0];
       if (file) {
-        const storageRef = sRef(storage, `profilePictures/${user.uid}`);
-        await uploadBytesResumable(storageRef, file);
-        downloadURL = await getDownloadURL(storageRef);
+        try {
+          uploadStatus.textContent = "Compressing image...";
+          const compressedBlob = await compressImage(file);
+          uploadProgress.classList.remove("hidden");
+          uploadStatus.textContent = "Uploading...";
+          downloadURL = await uploadImage(`profilePictures/${user.uid}.jpg`, compressedBlob, (pct) => uploadProgress.value = pct);
+        } catch (err) {
+          console.error(err);
+          alert("❌ Failed to upload image.");
+          return;
+        }
       }
 
-      const updateData = { name: updatedName, bio: updatedBio };
-      if (downloadURL) updateData.profilePicture = downloadURL;
-
-      await update(ref(db, "users/" + user.uid), updateData);
-      await updateProfile(user, { displayName: updatedName, photoURL: downloadURL || user.photoURL });
-      alert("Account updated successfully!");
+      try {
+        const updateData = { name: updatedName, bio: updatedBio };
+        if (downloadURL) updateData.profilePicture = downloadURL;
+        await update(ref(db, "users/" + user.uid), updateData);
+        await updateProfile(user, { displayName: updatedName, photoURL: downloadURL || user.photoURL });
+        alert("✅ Account updated successfully!");
+      } catch (err) {
+        console.error(err);
+        alert("❌ Failed to update account.");
+      }
     });
   </script>
-
 </body>
 </html>
