@@ -27,14 +27,13 @@
       transition: all 0.3s ease;
       z-index: 10;
     }
-    /* Card flex layout for icon 90% height, name 10% */
     .card {
       display: flex;
       flex-direction: column;
-      height: 14rem; /* fixed card height */
+      height: 14rem;
       cursor: pointer;
-      background-color: #1f2937; /* Tailwind gray-800 */
-      border-radius: 0.5rem; /* rounded-lg */
+      background-color: #1f2937;
+      border-radius: 0.5rem;
       overflow: hidden;
       box-shadow: 0 2px 8px rgb(0 0 0 / 0.5);
       transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -43,17 +42,57 @@
       flex: 0 0 90%;
       object-fit: cover;
       width: 100%;
-      border-bottom: 1px solid #374151; /* Tailwind gray-700 */
+      border-bottom: 1px solid #374151;
     }
     .card .card-name {
       flex: 0 0 10%;
       text-align: center;
       padding: 0.3rem 0;
       font-weight: 600;
-      color: #d1d5db; /* Tailwind gray-300 */
+      color: #d1d5db;
       font-size: 0.875rem;
-      background-color: #111827; /* Tailwind gray-900 */
+      background-color: #111827;
       user-select: none;
+    }
+    /* Modal overlay styles */
+    #playerModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    #playerModal.active {
+      display: flex;
+    }
+    #playerModal video {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 0.5rem;
+      box-shadow: 0 0 25px #3b82f6;
+      background: black;
+    }
+    #playerModal .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #3b82f6;
+      border: none;
+      border-radius: 9999px;
+      width: 2.5rem;
+      height: 2.5rem;
+      color: white;
+      font-weight: bold;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 0 15px #3b82f6;
+      transition: background 0.3s ease;
+    }
+    #playerModal .close-btn:hover {
+      background: #2563eb;
     }
   </style>
 </head>
@@ -82,18 +121,14 @@
   </div>
 
   <main class="max-w-7xl mx-auto p-6 space-y-12">
-
-    <!-- Sections container will be dynamically injected -->
-
+    <!-- Sections dynamically injected -->
   </main>
 
-  <video 
-    id="videoPlayer" 
-    controls 
-    playsinline 
-    class="w-full max-w-4xl mt-12 mx-auto rounded-lg shadow-lg bg-black"
-    preload="metadata"
-  ></video>
+  <!-- Modal for video player -->
+  <div id="playerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="close-btn" aria-label="Close video player">&times;</button>
+    <video id="videoPlayer" controls playsinline preload="metadata"></video>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
@@ -134,6 +169,8 @@
     const searchInput = document.getElementById('searchInput');
     const regionSelect = document.getElementById('regionSelect');
     const sectionSelect = document.getElementById('sectionSelect');
+    const modal = document.getElementById('playerModal');
+    const closeBtn = modal.querySelector('.close-btn');
 
     function playStream(url) {
       if (Hls.isSupported()) {
@@ -154,12 +191,34 @@
       }
     }
 
+    function openModal(url) {
+      playStream(url);
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // prevent background scroll
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      if(window.hls) window.hls.destroy();
+      video.pause();
+      video.src = "";
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Always 3 columns even on mobile (portrait)
     function renderSections() {
       const searchTerm = searchInput.value.toLowerCase();
       const selectedRegion = regionSelect.value;
       const selectedSection = sectionSelect.value;
 
-      // Filter channels first
       let filtered = channels.filter(channel => {
         return (
           (!selectedRegion || channel.region === selectedRegion) &&
@@ -168,7 +227,6 @@
         );
       });
 
-      // Group channels by region for sections
       const grouped = filtered.reduce((acc, channel) => {
         let key = channel.region || 'Other';
         if (!acc[key]) acc[key] = [];
@@ -184,7 +242,7 @@
 
         sectionEl.innerHTML = `
           <h2 class="text-2xl font-semibold capitalize border-b border-gray-700 pb-2">${sectionName} Channels</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div class="grid grid-cols-3 gap-6">
             <!-- cards here -->
           </div>
         `;
@@ -197,7 +255,7 @@
             <img src="${channel.thumbnail}" alt="${channel.name}" />
             <div class="card-name">${channel.name}</div>
           `;
-          card.addEventListener('click', () => playStream(channel.stream));
+          card.addEventListener('click', () => openModal(channel.stream));
           grid.appendChild(card);
         });
 
