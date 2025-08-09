@@ -22,18 +22,51 @@
   <!-- ✅ Custom Styles -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Added CSS for section separators -->
+  <!-- Improved section split styling -->
   <style>
-    /* Style the separator div as section breaks */
-    article.prose > div.border-t-2.border-dashed {
-      margin-top: 3rem;
-      margin-bottom: 3rem;
-      border-color: #D1D5DB; /* Tailwind gray-300 */
+    /* Boxed layout for main container */
+    main#post-container {
+      max-width: 48rem; /* Tailwind max-w-4xl */
+      margin-left: auto;
+      margin-right: auto;
+      padding: 1.5rem; /* Tailwind p-6 */
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+      flex-grow: 1;
     }
 
-    /* Add spacing after separator to next sibling */
-    article.prose > div.border-t-2.border-dashed + * {
-      margin-top: 2rem;
+    /* Style the article prose container */
+    article.prose {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Each direct child except the separator is a "card" */
+    article.prose > *:not(.border-t-2) {
+      background-color: #f9fafb; /* Tailwind gray-50 */
+      padding: 1rem 1.25rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    }
+
+    /* Style the dashed separator line */
+    article.prose > div.border-t-2.border-dashed {
+      margin: 1.5rem 0;
+      border-top-color: #d1d5db; /* Tailwind gray-300 */
+      border-top-width: 2px;
+      border-style: dashed;
+    }
+
+    /* Reduce margin below card if followed by separator */
+    article.prose > *:not(.border-t-2) + div.border-t-2 {
+      margin-bottom: 0;
+    }
+
+    /* Reduce margin above card if preceded by separator */
+    div.border-t-2 + article.prose > *:not(.border-t-2) {
+      margin-top: 0;
     }
   </style>
 </head>
@@ -43,7 +76,7 @@
   <div id="shared-header"></div>
 
   <!-- ✅ Post Container with boxed layout -->
-  <main class="max-w-4xl mx-auto p-6 flex-grow bg-white rounded-lg shadow-md" id="post-container">
+  <main id="post-container">
     <p class="text-gray-500 italic">Loading post...</p>
   </main>
 
