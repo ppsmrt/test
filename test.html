@@ -32,21 +32,19 @@
   <div id="shared-header"></div>
 
   <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
-
-    <!-- ✅ Welcome Section (fixed username) -->
-    <div class="flex items-center justify-center p-6">
-      <div class="bg-white shadow-lg rounded-lg max-w-4xl w-full p-6">
-        <div class="flex items-center space-x-3">
-          <span class="wave-hand text-3xl text-yellow-500"><i class="fa-solid fa-hand"></i></span>
-          <h1 class="text-xl font-bold">
-            Hi, <span id="userNameDisplay" class="capitalize"></span>
-          </h1>
-        </div>
-        <p class="text-gray-600 mt-3">Welcome back, we hope the day is well</p>
+    
+   <!-- ✅ Welcome Section (full width match) -->
+   <div class="bg-white shadow-lg rounded-lg p-6 mb-6 w-full">
+      <div class="flex items-center space-x-3">
+        <span class="wave-hand text-3xl text-yellow-500"><i class="fa-solid fa-hand"></i></span>
+        <h1 class="text-xl font-bold">
+          Hi, <span id="userNameDisplay" class="capitalize"></span>
+        </h1>
       </div>
+      <p class="text-gray-600 mt-3">Welcome back, we hope the day is well</p>
     </div>
 
-    <!-- ✅ Profile Card (your approved design) -->
+    <!-- ✅ Profile Card -->
     <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
       <div class="flex items-center space-x-4">
         <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
@@ -59,6 +57,8 @@
           <p id="bio" class="text-gray-500 text-sm italic mt-1">Loading bio...</p>
         </div>
       </div>
+
+      <!-- ✅ Restored profile info rows -->
       <div class="mt-4 space-y-2 text-sm text-gray-500">
         <p class="flex items-center"><i class="fa-regular fa-calendar-days w-5 text-blue-500"></i> <span id="accountCreated">Account created: Loading...</span></p>
         <p class="flex items-center"><i class="fa-regular fa-clock w-5 text-green-500"></i> <span id="lastLogin">Last login: Loading...</span></p>
@@ -66,48 +66,48 @@
       </div>
     </div>
 
-    <!-- 📊 Dashboard Stat Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">  
-      <div class="bg-white p-6 rounded-lg shadow text-center">  
-        <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>  
-        <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>  
-      </div>  
-      <div class="bg-white p-6 rounded-lg shadow text-center">  
-        <h3 class="text-sm font-medium text-gray-500">Followers</h3>  
-        <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>  
-      </div>  
-      <div class="bg-white p-6 rounded-lg shadow text-center">  
-        <h3 class="text-sm font-medium text-gray-500">Likes</h3>  
-        <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>  
-      </div>  
-      <div class="bg-white p-6 rounded-lg shadow text-center">  
-        <h3 class="text-sm font-medium text-gray-500">Comments</h3>  
-        <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>  
-      </div>  
-    </div>
+<!-- 📊 Dashboard Stat Cards -->  
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>  
+  </div>  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Followers</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>  
+  </div>  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Likes</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>  
+  </div>  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Comments</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>  
+  </div>  
+</div>
 
-    <!-- ⚡ Quick Actions -->
-    <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">    
-      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>    
-      <div class="grid sm:grid-cols-2 gap-4 text-left">    
-        <a href="submit.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit a Post</a>    
-        <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> View Bookmarks</a>    
-        <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact Admin</a>    
-        <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate Me</a>    
-        <a href="posts.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
-      </div>    
-    </section>  
+<!-- ⚡ Quick Actions -->      
+<section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">    
+    <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>    
+    <div class="grid sm:grid-cols-2 gap-4 text-left">    
+      <a href="submit.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit a Post</a>    
+      <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> View Bookmarks</a>    
+      <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact Admin</a>    
+      <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate Me</a>    
+      <a href="posts.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
+    </div>    
+</section>  
 
-    <!-- 📄 Site Related Pages -->
-    <section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6 mb-6">    
-      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-link"></i> Important Links</h2>    
-      <div class="grid sm:grid-cols-2 gap-4 text-left">    
-        <a href="about.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About Website</a>    
-        <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>    
-        <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms and Conditions</a>    
-        <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>    
-      </div>
-    </section>
+<!-- 📄 Important Links -->  
+<section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6 mb-6">    
+  <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-link"></i> Important Links</h2>    
+  <div class="grid grid-cols-2 gap-4 text-left">    
+    <a href="about.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About Website</a>    
+    <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>    
+    <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms</a>    
+    <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>    
+  </div>
+</section>
 
     <!-- 📌 Edit Account Form -->
     <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4">
@@ -162,15 +162,7 @@
     const usernameField = document.getElementById("usernameField");
     const emailField = document.getElementById("emailField");
     const profilePicUpload = document.getElementById("profilePicUpload");
-
-    // Username fix elements
     const userNameDisplay = document.getElementById("userNameDisplay");
-    const displayName = document.getElementById("displayName");
-    const usernameEl = document.getElementById("username");
-    const bioEl = document.getElementById("bio");
-    const accountCreated = document.getElementById("accountCreated");
-    const lastLogin = document.getElementById("lastLogin");
-    const postCount = document.getElementById("postCount");
 
     let uploadedPicUrl = "";
 
@@ -188,27 +180,24 @@
         window.location.href = "/login.html";
         return;
       }
-
       const snap = await get(ref(db, "users/" + user.uid));
       if (snap.exists()) {
         const data = snap.val();
-
-        // Welcome username fix
-        userNameDisplay.textContent = data.name || user.displayName || "User";
-
-        // Profile card values
         profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
-        displayName.textContent = data.name || "No Name";
-        usernameEl.textContent = data.username || "No username";
-        bioEl.textContent = data.bio || "No bio available";
+        nameInput.value = data.name || "";
+        bioField.value = data.bio || "";
         usernameField.value = data.username || "";
         emailField.value = user.email || "";
-        nameInput.value = data.name || "";
+        userNameDisplay.textContent = data.name || "User";
+        document.getElementById("displayName").textContent = data.name || "No Name";
+        document.getElementById("username").textContent = data.username || "";
+        document.getElementById("bio").textContent = data.bio || "";
 
-        // Info rows
-        accountCreated.textContent = "Account created: " + (data.accountCreated || "Unknown");
-        lastLogin.textContent = "Last login: " + (data.lastLogin || "Unknown");
-        postCount.textContent = "Posts: " + (data.postCount || 0);
+        // ✅ Show account creation & last login
+        const createdDate = new Date(user.metadata.creationTime);
+        const lastLoginDate = new Date(user.metadata.lastSignInTime);
+        document.getElementById("accountCreated").textContent = `Account created: ${createdDate.toLocaleDateString()}`;
+        document.getElementById("lastLogin").textContent = `Last login: ${lastLoginDate.toLocaleDateString()}`;
       }
     });
 
@@ -226,6 +215,7 @@
     });
   </script>
 
+  <!-- ✅ Universal Header Loader -->
   <script type="module" src="header.js"></script>
   <footer id="footer" class="mt-auto"></footer>
   <script type="module" src="js/footer.js"></script>
