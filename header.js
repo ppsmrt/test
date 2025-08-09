@@ -1,67 +1,3 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getDatabase,
-  ref,
-  get
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-  authDomain: "tamilgeoapp.firebaseapp.com",
-  databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-  projectId: "tamilgeoapp",
-  storageBucket: "tamilgeoapp.appspot.com",
-  messagingSenderId: "1092623024431",
-  appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-const placeholder = document.getElementById("shared-header");
-const currentPath = window.location.pathname;
-const isHomePage = currentPath.endsWith("index.html") || currentPath === "/" || currentPath === "/test/";
-
-async function getUserRole(uid) {
-  try {
-    const userRef = ref(db, `users/${uid}`);
-    const snapshot = await get(userRef);
-    if (snapshot.exists()) {
-      return snapshot.val().role || "user";
-    }
-  } catch (err) {
-    console.error("Error fetching user role:", err);
-  }
-  return "user";
-}
-
-// Helper to load unread notifications count for current user
-async function getUnreadNotificationCount(userId) {
-  try {
-    const notifsSnap = await get(ref(db, "notifications"));
-    if (!notifsSnap.exists()) return 0;
-    const notifications = notifsSnap.val();
-    let count = 0;
-    for (const notif of Object.values(notifications)) {
-      if (notif.active) {
-        const dismissedBy = notif.dismissedBy || {};
-        if (!dismissedBy[userId]) count++;
-      }
-    }
-    return count;
-  } catch (err) {
-    console.error("Error fetching notifications:", err);
-    return 0;
-  }
-}
-
 onAuthStateChanged(auth, async (user) => {
   let navContent = "";
 
@@ -69,14 +5,15 @@ onAuthStateChanged(auth, async (user) => {
     const role = await getUserRole(user.uid);
     const accountPage = (role === "admin" || role === "manager") ? "dashboard.html" : "account.html";
 
-    // If current page is account.html -> show ONLY notification bell with count
-    if (currentPath.endsWith("account.html")) {
-      const unreadCount = await getUnreadNotificationCount(user.uid);
+    // Get unread notifications count
+    const unreadCount = await getUnreadNotificationCount(user.uid);
+    const shakeClass = unreadCount > 0 ? "shake" : "";
 
+    if (currentPath.endsWith("account.html")) {
       navContent = `
         <nav class="flex gap-2 text-sm font-medium items-center">
           <a href="notifications.html" aria-label="Notifications" class="relative text-gray-700 hover:text-gray-900 text-2xl">
-            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-bell ${shakeClass}"></i>
             <span id="notif-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 ${unreadCount === 0 ? 'hidden' : ''}">
               ${unreadCount}
             </span>
@@ -84,9 +21,6 @@ onAuthStateChanged(auth, async (user) => {
         </nav>
       `;
     } else {
-      // On other pages, full nav as before + notification bell with count
-      const unreadCount = await getUnreadNotificationCount(user.uid);
-
       navContent = `
         <nav class="flex gap-2 text-sm font-medium items-center">
           ${!isHomePage ? `
@@ -100,7 +34,7 @@ onAuthStateChanged(auth, async (user) => {
             Sign out
           </button>
           <a href="notifications.html" aria-label="Notifications" class="relative text-gray-700 hover:text-gray-900 text-2xl">
-            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-bell ${shakeClass}"></i>
             <span id="notif-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 ${unreadCount === 0 ? 'hidden' : ''}">
               ${unreadCount}
             </span>
