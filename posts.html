@@ -122,7 +122,8 @@
         try {
           const userSnap = await get(ref(db, "users/" + user.uid));
           if (userSnap.exists()) {
-            isAdmin = userSnap.val().isAdmin === true;
+            // *** Fixed here: check role instead of isAdmin ***
+            isAdmin = userSnap.val().role === 'admin';
             console.log("User is admin:", isAdmin);
           } else {
             console.log("No user data found for admin check");
