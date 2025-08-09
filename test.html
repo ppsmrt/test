@@ -34,7 +34,7 @@
 
   <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
     
-   <!-- ✅ Fixed welcome section -->
+   <!-- ✅ Welcome section -->
    <div class="flex items-center justify-center p-6">
      <div class="bg-white shadow-lg rounded-lg max-w-4xl w-full p-8">
        <div class="flex items-center justify-center gap-4 mb-6">
@@ -50,7 +50,7 @@
    </div>
 
     <!-- 📌 Profile Card -->
-    <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
+    <div id="profileCard" class="bg-white shadow-lg rounded-lg p-8 mb-6">
       <div class="flex items-center space-x-4">
         <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
         <div>
@@ -67,82 +67,75 @@
       <p id="postCount" class="text-xs text-gray-500"></p>
     </div>
 
-<!-- 📊 Dashboard Stat Cards -->  
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">  
-  <div class="bg-white p-6 rounded-lg shadow text-center">  
-    <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>  
-    <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>  
-  </div>  
-  <div class="bg-white p-6 rounded-lg shadow text-center">  
-    <h3 class="text-sm font-medium text-gray-500">Followers</h3>  
-    <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>  
-  </div>  
-  <div class="bg-white p-6 rounded-lg shadow text-center">  
-    <h3 class="text-sm font-medium text-gray-500">Likes</h3>  
-    <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>  
-  </div>  
-  <div class="bg-white p-6 rounded-lg shadow text-center">  
-    <h3 class="text-sm font-medium text-gray-500">Comments</h3>  
-    <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>  
-  </div>  
+<!-- 📊 Dashboard Stat Cards -->
+<div class="bg-white shadow-lg rounded-lg p-8 mb-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
+      <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>
+      <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>
+    </div>
+    <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
+      <h3 class="text-sm font-medium text-gray-500">Followers</h3>
+      <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>
+    </div>
+    <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
+      <h3 class="text-sm font-medium text-gray-500">Likes</h3>
+      <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>
+    </div>
+    <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
+      <h3 class="text-sm font-medium text-gray-500">Comments</h3>
+      <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>
+    </div>
+  </div>
 </div>
 
-<!-- ⚡ Quick Actions -->      <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">    
-    <h2 class="text-xl font-semibold mb-4">⚡ Quick Actions</h2>    
-    <div class="grid sm:grid-cols-2 gap-4">    
-      <a href="submit.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">✍️ Submit a Post</a>    
-      <a href="bookmarks.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔖 View Bookmarks</a>    
-      <a href="contact.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📬 Contact Admin</a>    
-      <a href="donate.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">💖 Donate Me</a>    
-    </div>    
-  </section>  
-
-<!-- 📄 Site Related Pages -->  
-<section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6">    
-  <h2 class="text-xl font-semibold mb-4">📄 Important Links</h2>    
-  <div class="grid sm:grid-cols-2 gap-4">    
-    <a href="about.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">ℹ️ About Website</a>    
-    <a href="privacy.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔐 Privacy Policy</a>    
-    <a href="terms.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📜 Terms and Conditions</a>    
+<!-- ⚡ Quick Actions -->
+<section id="user-actions" class="bg-white shadow-lg rounded-lg p-8 mb-6">
+  <h2 class="text-xl font-semibold mb-4">⚡ Quick Actions</h2>
+  <div class="grid sm:grid-cols-2 gap-4">
+    <a href="submit.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">✍️ Submit a Post</a>
+    <a href="bookmarks.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔖 View Bookmarks</a>
+    <a href="contact.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📬 Contact Admin</a>
+    <a href="donate.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">💖 Donate Me</a>
   </div>
 </section>
 
-    <!-- 📌 Edit Account Form -->
-    <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4">
-      <!-- Name -->
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
-        <input type="text" id="name" class="w-full p-2 border rounded" required>
-      </div>
+<!-- 📄 Site Related Pages -->
+<section id="site-pages" class="bg-white shadow-lg rounded-lg p-8 mb-6">
+  <h2 class="text-xl font-semibold mb-4">📄 Important Links</h2>
+  <div class="grid sm:grid-cols-2 gap-4">
+    <a href="about.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">ℹ️ About Website</a>
+    <a href="privacy.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔐 Privacy Policy</a>
+    <a href="terms.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📜 Terms and Conditions</a>
+  </div>
+</section>
 
-      <!-- Username (Read Only) -->
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
-        <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly>
-        <p class="text-xs text-gray-500">Username cannot be changed. Contact admin for changes.</p>
-      </div>
-
-      <!-- Email (Read Only) -->
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Registered Email</label>
-        <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly>
-      </div>
-
-      <!-- Bio -->
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Bio</label>
-        <textarea id="bioField" rows="3" class="w-full p-2 border rounded" placeholder="Write something about yourself..."></textarea>
-      </div>
-
-      <!-- Profile Picture Upload (Future) -->
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Profile Picture</label>
-        <input type="file" disabled class="w-full p-2 border rounded bg-gray-100 cursor-not-allowed">
-        <p class="text-xs text-gray-500">Profile picture upload will be available in the future.</p>
-      </div>
-
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
-    </form>
+<!-- 📌 Edit Account Form -->
+<form id="accountForm" class="bg-white shadow-lg rounded-lg p-8 space-y-4">
+  <div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
+    <input type="text" id="name" class="w-full p-2 border rounded" required>
+  </div>
+  <div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
+    <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly>
+    <p class="text-xs text-gray-500">Username cannot be changed. Contact admin for changes.</p>
+  </div>
+  <div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Registered Email</label>
+    <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly>
+  </div>
+  <div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Bio</label>
+    <textarea id="bioField" rows="3" class="w-full p-2 border rounded" placeholder="Write something about yourself..."></textarea>
+  </div>
+  <div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Profile Picture</label>
+    <input type="file" disabled class="w-full p-2 border rounded bg-gray-100 cursor-not-allowed">
+    <p class="text-xs text-gray-500">Profile picture upload will be available in the future.</p>
+  </div>
+  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
+</form>
   </main>
 
   <script type="module">
