@@ -34,16 +34,17 @@
 
   <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
     
-   <!-- ✅ Fixed welcome section -->
+   <!-- ✅ Welcome section (made same style & spacing as other cards) -->
    <div class="flex items-center justify-center p-6">
-     <div class="bg-white shadow-lg rounded-lg max-w-4xl w-full p-8">
-       <div class="flex items-center justify-center gap-4 mb-6">
-         <span class="wave-hand text-4xl">👋</span>
+     <div class="bg-white shadow-lg rounded-lg max-w-4xl w-full p-8 mb-6">
+       <div class="flex items-center gap-4">
+         <span class="wave-hand text-3xl">👋</span>
          <div>
-           <h1 class="text-3xl font-bold capitalize">
+           <!-- Reduced heading size to match other cards -->
+           <h1 class="text-xl font-bold capitalize leading-tight">
              Hi, <span id="userNameDisplay"></span>
            </h1>
-           <p class="text-gray-600">Welcome back, we hope the day is well</p>
+           <p class="text-sm text-gray-600 mt-1">Welcome back, we hope the day is well</p>
          </div>
        </div>
      </div>
@@ -89,7 +90,7 @@
   </div>
 </div>
 
-<!-- ⚡ Quick Actions -->
+<!-- ⚡ Quick Actions (4 buttons as original) -->
 <section id="user-actions" class="bg-white shadow-lg rounded-lg p-8 mb-6">
   <h2 class="text-xl font-semibold mb-4">⚡ Quick Actions</h2>
   <div class="grid sm:grid-cols-2 gap-4">
@@ -110,8 +111,8 @@
   </div>
 </section>
 
-    <!-- 📌 Edit Account Form -->
-    <form id="accountForm" class="bg-white p-8 rounded shadow space-y-4 mb-6">
+    <!-- 📌 Edit Account Form (mb-6 added to ensure gap) -->
+    <form id="accountForm" class="bg-white shadow-lg rounded-lg p-8 space-y-4 mb-6">
       <!-- Name -->
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
@@ -151,8 +152,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -186,13 +187,12 @@
 
     let selectedImageFile = null;
 
-    // Keep profile image preview when user selects a file
+    // preview selected image locally
     profilePicInput.addEventListener("change", (e) => {
       const f = e.target.files[0];
       if (f) {
         selectedImageFile = f;
-        const url = URL.createObjectURL(f);
-        profilePic.src = url;
+        profilePic.src = URL.createObjectURL(f);
       } else {
         selectedImageFile = null;
       }
@@ -271,7 +271,6 @@
         false,
         ["deriveKey"]
       );
-      // NOTE: fixed salt for simple derivation - if you'd like per-user salt, store it in DB.
       const salt = encoder.encode("tamilgeo_salt_v1");
       const key = await crypto.subtle.deriveKey(
         {
@@ -290,10 +289,9 @@
 
     // encrypt a Blob using AES-GCM, return a Blob where first 12 bytes are IV then ciphertext
     async function encryptBlobWithKey(blob, key) {
-      const iv = crypto.getRandomValues(new Uint8Array(12)); // AES-GCM recommended IV size
+      const iv = crypto.getRandomValues(new Uint8Array(12));
       const data = await blob.arrayBuffer();
       const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, data);
-      // concatenate iv + encrypted
       const ivAndEncrypted = new Uint8Array(iv.byteLength + encrypted.byteLength);
       ivAndEncrypted.set(iv, 0);
       ivAndEncrypted.set(new Uint8Array(encrypted), iv.byteLength);
@@ -333,7 +331,6 @@
             postCountEl.textContent = "Posts published: " + count;
           }
         } else {
-          // If no user data node, still fill basic fields
           displayNameEl.textContent = user.displayName || "No Name";
           userNameDisplay.textContent = user.displayName || "User";
           usernameField.value = user.email ? user.email.split('@')[0] : "";
@@ -360,29 +357,29 @@
       }
 
       try {
-        // If user selected an image, compress + encrypt + upload
         let profilePictureURL = null;
         if (selectedImageFile) {
+          // compress
           const compressedBlob = await compressImage(selectedImageFile);
-          // derive key from uid
+          // derive key & encrypt
           const aesKey = await deriveKeyFromUid(user.uid);
           const encryptedBlob = await encryptBlobWithKey(compressedBlob, aesKey);
 
           // upload encrypted blob to storage
-          const storageReference = storageRef(storage, `profilePictures/${user.uid}.enc`);
+          const storageReference = sRef(storage, `profilePictures/${user.uid}.enc`);
           await uploadBytes(storageReference, encryptedBlob);
           profilePictureURL = await getDownloadURL(storageReference);
         }
 
-        // Update Realtime Database with name, bio and profilePicture (if uploaded)
+        // update realtime db
         const updates = { name: updatedName, bio: updatedBio };
         if (profilePictureURL) updates.profilePicture = profilePictureURL;
         await update(ref(db, "users/" + user.uid), updates);
 
-        // Update Firebase Auth displayName for consistency
+        // update auth display name
         await updateProfile(user, { displayName: updatedName });
 
-        // reload page after saving
+        // reload to reflect changes
         location.reload();
       } catch (err) {
         console.error(err);
