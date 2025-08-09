@@ -12,7 +12,6 @@
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    integrity="sha512-MC6E5vbeSFRYxuVXWaJjXKQn5SC2eYyEUZ+cfYY4gXavwhC2EeUlDRt7rkKHlf6IikIfZngjRvmhYlZ4m+Oc7Q=="
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
@@ -52,23 +51,26 @@
 
     let isAdmin = false;
 
-    // Functions to handle edit and delete (add your logic here)
+    // Edit post handler (you can replace alert with your own UI/modal)
     window.editPost = (postId, title, content) => {
       alert(`Edit post: ${postId}\nTitle: ${title}\nContent: ${content}`);
-      // Add your edit logic here (e.g., open a modal with form)
+      // TODO: Add your edit logic here (e.g., open a modal with a form)
     };
 
+    // Delete post handler with UI refresh after deletion
     window.deletePost = async (postId) => {
       if (confirm("Are you sure you want to delete this post?")) {
         try {
           await remove(ref(db, 'posts/' + postId));
           alert("Post deleted!");
+          loadPosts(); // Refresh the post list after deletion
         } catch (error) {
           alert("Error deleting post: " + error.message);
         }
       }
     };
 
+    // Load posts from Firebase and render approved posts sorted by date
     function loadPosts() {
       onValue(postsRef, (snapshot) => {
         let postsArray = [];
@@ -79,8 +81,8 @@
           postsArray.push(post);
         });
 
-        // Filter approved posts and sort by newest
-        postsArray = postsArray.filter(post => post.approved === true);
+        // Fix here: filter by status "approved" (not approved === true)
+        postsArray = postsArray.filter(post => post.status === "approved");
         postsArray.sort((a, b) => b.date - a.date);
 
         container.innerHTML = postsArray.map(post => `
@@ -99,7 +101,7 @@
               ${isAdmin ? `
                 <div class="mt-3 flex gap-2">
                   <button 
-                    onclick="editPost('${post.id}', decodeURIComponent('${encodeURIComponent(post.title)}'), decodeURIComponent('${encodeURIComponent(post.content || '')}'))" 
+                    onclick="editPost('${post.id}', \`${post.title.replace(/`/g, '\\`')}\`, \`${(post.content || '').replace(/`/g, '\\`')}\`)" 
                     class="bg-yellow-500 text-white px-3 py-1 rounded text-sm flex items-center gap-1">
                     <i class="fa fa-edit"></i> Edit
                   </button>
@@ -116,17 +118,15 @@
       });
     }
 
-    // Wait for auth state and check admin status
+    // Wait for auth state and check admin role, then load posts
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
           const userSnap = await get(ref(db, "users/" + user.uid));
           if (userSnap.exists()) {
-            // *** Fixed here: check role instead of isAdmin ***
             isAdmin = userSnap.val().role === 'admin';
             console.log("User is admin:", isAdmin);
           } else {
-            console.log("No user data found for admin check");
             isAdmin = false;
           }
         } catch (e) {
@@ -134,7 +134,6 @@
           isAdmin = false;
         }
       } else {
-        console.log("No user logged in");
         isAdmin = false;
       }
       loadPosts();
