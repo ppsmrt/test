@@ -22,7 +22,6 @@
   <!-- ✅ Custom Styles -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Improved section split styling with reduced spacing -->
   <style>
     /* Boxed layout for main container */
     main#post-container {
@@ -40,40 +39,23 @@
     article.prose {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem; /* Reduced gap to tighten space */
+      gap: 0.75rem;
     }
 
-    /* Each direct child except the separator is a "card" */
-    article.prose > *:not(.border-t-2) {
+    /* Only wrap actual content blocks in boxes */
+    article.prose > div.content-block {
       background-color: #f9fafb; /* Tailwind gray-50 */
       padding: 1rem 1.25rem;
       border-radius: 0.5rem;
       box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-      margin: 0; /* Remove default margins inside */
+      margin: 0; /* remove default margins */
     }
 
-    /* Style the dashed separator line */
-    article.prose > div.border-t-2.border-dashed {
-      margin: 0.25rem 0; /* Much smaller margin */
-      border-top-color: #d1d5db; /* Tailwind gray-300 */
-      border-top-width: 2px;
-      border-style: dashed;
-      height: 0; /* Ensure it doesn't create extra height */
-    }
-
-    /* Hide empty separator divs */
-    article.prose > div.border-t-2.border-dashed:empty {
-      display: none;
-    }
-
-    /* Remove margin bottom of card if followed by separator */
-    article.prose > *:not(.border-t-2) + div.border-t-2 {
-      margin-bottom: 0;
-    }
-
-    /* Remove margin top of card if preceded by separator */
-    div.border-t-2 + article.prose > *:not(.border-t-2) {
-      margin-top: 0;
+    /* Style for separator line (hr replacement) */
+    article.prose > div.separator {
+      margin: 0.25rem 0;
+      border-top: 2px dashed #d1d5db; /* Tailwind gray-300 */
+      height: 0;
     }
   </style>
 </head>
@@ -82,7 +64,7 @@
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <!-- ✅ Post Container with boxed layout -->
+  <!-- ✅ Post Container -->
   <main id="post-container">
     <p class="text-gray-500 italic">Loading post...</p>
   </main>
@@ -97,7 +79,6 @@
   <!-- ✅ Shared Footer -->
   <footer id="footer" class="mt-10"></footer>
 
-  <!-- ✅ Firebase & Blog Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getDatabase, ref, onValue, set, push, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -135,10 +116,25 @@
           ? `<div class="aspect-video mb-4 rounded-md overflow-hidden"><img src="${post.jetpack_featured_media_url}" class="w-full h-full object-cover" alt="Featured Image"></div>`
           : "";
 
-        const contentStyled = post.content.rendered
+        // Process content: split by <hr> replaced with <div class="separator"></div>
+        // Then wrap content chunks (non empty) in div.content-block
+        let rawContent = post.content.rendered;
+
+        // Replace blockquotes and code styles as before
+        rawContent = rawContent
           .replace(/<blockquote>(.*?)<\/blockquote>/gs, '<blockquote class="border-l-4 border-green-600 bg-green-50 text-green-800 italic pl-4 py-2 my-4 rounded-md">$1</blockquote>')
-          .replace(/<hr\s*\/?>/g, '<div class="my-8 border-t-2 border-dashed border-gray-300"></div>')
           .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm mt-4 mb-4">$1</pre>');
+
+        // Split by <hr>, replaced with separator div
+        const parts = rawContent.split(/<hr\s*\/?>/i);
+
+        // Filter out empty parts, trim spaces
+        const filteredParts = parts.map(p => p.trim()).filter(p => p.length > 0);
+
+        // Compose article inner HTML: each content chunk wrapped in div.content-block with prose classes
+        const articleHtml = filteredParts.map(p => {
+          return `<div class="content-block prose prose-green prose-lg max-w-none leading-relaxed">${p}</div>`;
+        }).join('<div class="separator"></div>');
 
         const daysAgo = formatDaysAgo(post.date);
         const pageUrl = encodeURIComponent(window.location.href);
@@ -152,8 +148,8 @@
               👤 TamilGeo &nbsp;|&nbsp; 🗓️ ${daysAgo}
             </div>
 
-            <article class="prose prose-green prose-lg max-w-none leading-relaxed">
-              ${contentStyled}
+            <article>
+              ${articleHtml}
             </article>
 
             <div class="mt-8 flex flex-wrap items-center gap-3">
