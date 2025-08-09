@@ -142,11 +142,22 @@
       </div>
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
     </form>
+
+    <!-- Added Sign Out and Delete Account Buttons -->
+    <div class="grid grid-cols-2 gap-4 mt-10 mb-10">
+      <button id="signOutBtn" class="bg-gradient-to-r from-green-400 to-green-700 text-white font-semibold py-3 rounded-lg shadow hover:from-green-500 hover:to-green-800 transition w-full flex items-center justify-center gap-2">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+      </button>
+      <button id="deleteAccountBtn" class="bg-gradient-to-r from-red-400 to-red-700 text-white font-semibold py-3 rounded-lg shadow hover:from-red-500 hover:to-red-800 transition w-full flex items-center justify-center gap-2">
+        <i class="fa-solid fa-trash"></i> Delete Account
+      </button>
+    </div>
+
   </main>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
@@ -302,11 +313,6 @@
         alert("Failed to update profile.");
       }
     });
-  </script>
 
-  <!-- ✅ Universal Header Loader -->
-  <script type="module" src="header.js"></script>
-  <footer id="footer" class="mt-auto"></footer>
-  <script type="module" src="js/footer.js"></script>
-</body>
-</html>
+    // Sign Out button event
+    document.getElementById("signOutBtn
