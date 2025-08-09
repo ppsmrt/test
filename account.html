@@ -44,6 +44,16 @@
       <p class="text-gray-600 mt-3">Welcome back, we hope the day is well</p>
     </div>
 
+    <!-- 🔔 Notifications Section -->
+    <section id="notificationsSection" class="mb-6">
+      <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-bell"></i> Notifications
+      </h2>
+      <div id="notificationsList" class="space-y-4">
+        <!-- Notifications will appear here -->
+      </div>
+    </section>
+
     <!-- ✅ Profile Card -->
     <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
       <div class="flex items-center space-x-4">
@@ -174,6 +184,62 @@
       profilePic.src = uploadedPicUrl; // Instant preview
     });
 
+    async function loadNotifications(userId) {
+      const notifList = document.getElementById("notificationsList");
+      notifList.innerHTML = "Loading notifications...";
+      
+      try {
+        const notifsSnap = await get(ref(db, "notifications"));
+        if (!notifsSnap.exists()) {
+          notifList.innerHTML = "<p class='text-gray-500'>No notifications found.</p>";
+          return;
+        }
+
+        const notifications = notifsSnap.val();
+        notifList.innerHTML = "";
+
+        let anyVisible = false;
+        for (const [notifId, notif] of Object.entries(notifications)) {
+          if (!notif.active) continue;
+
+          const dismissedBy = notif.dismissedBy || {};
+          if (dismissedBy[userId]) continue;
+
+          anyVisible = true;
+          const card = document.createElement("div");
+          card.className = "bg-blue-100 border border-blue-300 rounded-lg p-4 relative";
+
+          card.innerHTML = `
+            <button aria-label="Dismiss notification" class="absolute top-2 right-2 text-blue-600 hover:text-blue-900 font-bold text-xl">&times;</button>
+            <h3 class="font-semibold text-blue-900">${notif.title}</h3>
+            <p class="text-blue-800 mt-1 whitespace-pre-wrap">${notif.message}</p>
+          `;
+
+          card.querySelector("button").addEventListener("click", async () => {
+            try {
+              await update(ref(db, \`notifications/\${notifId}/dismissedBy/\${userId}\`), true);
+              card.remove();
+              if (notifList.children.length === 0) {
+                notifList.innerHTML = "<p class='text-gray-500'>No notifications found.</p>";
+              }
+            } catch (error) {
+              alert("Error dismissing notification.");
+              console.error(error);
+            }
+          });
+
+          notifList.appendChild(card);
+        }
+
+        if (!anyVisible) {
+          notifList.innerHTML = "<p class='text-gray-500'>No notifications to show.</p>";
+        }
+      } catch (error) {
+        notifList.innerHTML = "<p class='text-red-500'>Failed to load notifications.</p>";
+        console.error(error);
+      }
+    }
+
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         alert("Please log in to view your account.");
@@ -193,11 +259,14 @@
         document.getElementById("username").textContent = "@" + (data.username || "");
         document.getElementById("bio").textContent = data.bio || "";
 
-        // ✅ Show account creation & last login
+        // Show account creation & last login
         const createdDate = new Date(user.metadata.creationTime);
         const lastLoginDate = new Date(user.metadata.lastSignInTime);
-        document.getElementById("accountCreated").textContent = `Account created: ${createdDate.toLocaleDateString()}`;
-        document.getElementById("lastLogin").textContent = `Last login: ${lastLoginDate.toLocaleDateString()}`;
+        document.getElementById("accountCreated").textContent = \`Account created: \${createdDate.toLocaleDateString()}\`;
+        document.getElementById("lastLogin").textContent = \`Last login: \${lastLoginDate.toLocaleDateString()}\`;
+
+        // Load notifications for this user
+        await loadNotifications(user.uid);
       }
     });
 
