@@ -3,142 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Account - TamilGeo</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <style>
-    .fade-in { animation: fadeIn 0.5s ease-in-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes wave {
-      0% { transform: rotate(0deg); }
-      10% { transform: rotate(14deg); }
-      20% { transform: rotate(-8deg); }
-      30% { transform: rotate(14deg); }
-      40% { transform: rotate(-4deg); }
-      50% { transform: rotate(10deg); }
-      60% { transform: rotate(0deg); }
-      100% { transform: rotate(0deg); }
+  <title>TamilGeo - Post</title>
+
+  <!-- ✅ Tailwind CSS + Typography -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {}
+      },
+      plugins: []
     }
-    .wave-hand {
-      display: inline-block;
-      transform-origin: 70% 70%;
-      animation: wave 2s ease-in-out infinite;
+  </script>
+
+  <!-- ✅ Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- ✅ Custom Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Added CSS for section separators -->
+  <style>
+    /* Style the separator div as section breaks */
+    article.prose > div.border-t-2.border-dashed {
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+      border-color: #D1D5DB; /* Tailwind gray-300 */
+    }
+
+    /* Add spacing after separator to next sibling */
+    article.prose > div.border-t-2.border-dashed + * {
+      margin-top: 2rem;
     }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
-    
-    <!-- ✅ Welcome Section -->
-    <div class="bg-white shadow-lg rounded-lg p-6 mb-6 w-full">
-      <div class="flex items-center space-x-3">
-        <span class="wave-hand text-3xl text-yellow-500"><i class="fa-solid fa-hand"></i></span>
-        <h1 class="text-xl font-bold">
-          Hi, <span id="userNameDisplay" class="capitalize"></span>
-        </h1>
-      </div>
-      <p class="text-gray-600 mt-3">Welcome back, we hope the day is well</p>
-    </div>
-
-    <!-- ✅ Profile Card -->
-    <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
-      <div class="flex items-center space-x-4">
-        <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border" />
-        <div>
-          <div class="flex items-center space-x-2">
-            <h2 id="displayName" class="text-xl font-semibold">Loading...</h2>
-          </div>
-          <p id="username" class="text-gray-600 text-sm">@username</p>
-          <p id="bio" class="text-gray-500 text-sm italic mt-1">Loading bio...</p>
-        </div>
-      </div>
-
-      <!-- ✅ Profile info rows -->
-      <div class="mt-4 space-y-2 text-sm text-gray-500">
-        <p class="flex items-center"><i class="fa-regular fa-calendar-days w-5 text-blue-500"></i> <span id="accountCreated">Account created: Loading...</span></p>
-        <p class="flex items-center"><i class="fa-regular fa-clock w-5 text-green-500"></i> <span id="lastLogin">Last login: Loading...</span></p>
-        <p class="flex items-center"><i class="fa-solid fa-file-lines w-5 text-purple-500"></i> <span id="postCount">Posts: 0</span></p>
-      </div>
-    </div>
-
-    <!-- 📊 Dashboard Stat Cards -->
-    <div class="grid grid-cols-2 gap-4 mb-6">
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Followers</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Likes</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Comments</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>
-      </div>
-    </div>
-
-    <!-- ⚡ Quick Actions -->
-    <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">
-      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>
-      <div class="grid grid-cols-2 gap-4 text-left">
-        <a href="submit.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit a Post</a>
-        <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> View Bookmarks</a>
-        <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact Admin</a>
-        <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate Me</a>
-        <a href="posts.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
-      </div>
-    </section>
-
-    <!-- 📄 Important Links -->
-    <section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-link"></i> Important Links</h2>
-      <div class="grid grid-cols-2 gap-4 text-left">
-        <a href="about.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About Website</a>
-        <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>
-        <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms</a>
-        <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>
-      </div>
-    </section>
-
-    <!-- 📌 Edit Account Form -->
-    <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4">
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
-        <input type="text" id="name" class="w-full p-2 border rounded" required />
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
-        <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly />
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Registered Email</label>
-        <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly />
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Bio</label>
-        <textarea id="bioField" rows="3" class="w-full p-2 border rounded"></textarea>
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Profile Picture</label>
-        <input type="file" id="profilePicUpload" class="w-full p-2 border rounded" accept="image/*" />
-      </div>
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
-    </form>
+  <!-- ✅ Post Container with boxed layout -->
+  <main class="max-w-4xl mx-auto p-6 flex-grow bg-white rounded-lg shadow-md" id="post-container">
+    <p class="text-gray-500 italic">Loading post...</p>
   </main>
 
+  <!-- ✅ Back to Top Button -->
+  <div class="fixed bottom-4 right-4">
+    <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition">
+      ↑ Top
+    </button>
+  </div>
+
+  <!-- ✅ Shared Footer -->
+  <footer id="footer" class="mt-10"></footer>
+
+  <!-- ✅ Firebase & Blog Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+    import { getDatabase, ref, onValue, set, push, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -151,88 +73,166 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getDatabase(app);
-    const storage = getStorage(app);
 
-    const profilePic = document.getElementById("profilePic");
-    const nameInput = document.getElementById("name");
-    const bioField = document.getElementById("bioField");
-    const usernameField = document.getElementById("usernameField");
-    const emailField = document.getElementById("emailField");
-    const profilePicUpload = document.getElementById("profilePicUpload");
-    const userNameDisplay = document.getElementById("userNameDisplay");
+    const postId = new URLSearchParams(window.location.search).get("id");
+    const container = document.getElementById("post-container");
 
-    let uploadedPicUrl = "";
+    if (!postId) {
+      container.innerHTML = "<p class='text-red-500'>Invalid Post ID.</p>";
+      throw new Error("Missing post ID");
+    }
 
-    profilePicUpload.addEventListener("change", async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (!file.type.startsWith("image/")) {
-        alert("Please upload a valid image file.");
-        return;
-      }
-      const storageRef = sRef(storage, "profilePictures/" + auth.currentUser.uid + ".jpg");
-      await uploadBytes(storageRef, file);
-      uploadedPicUrl = await getDownloadURL(storageRef);
-      profilePic.src = uploadedPicUrl; // Instant preview
-    });
+    const postURL = `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts/${postId}`;
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        alert("Please log in to view your account.");
-        window.location.href = "/login.html";
-        return;
-      }
-      const snap = await get(ref(db, "users/" + user.uid));
-      if (snap.exists()) {
-        const data = snap.val();
-        profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
-        nameInput.value = data.name || "";
-        bioField.value = data.bio || "";
-        usernameField.value = data.username || "";
-        emailField.value = user.email || "";
-        userNameDisplay.textContent = data.name || "User";
-        document.getElementById("displayName").textContent = data.name || "No Name";
-        document.getElementById("username").textContent = "@" + (data.username || "");
-        document.getElementById("bio").textContent = data.bio || "";
+    fetch(postURL)
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch post");
+        return res.json();
+      })
+      .then(post => {
+        const featuredImage = post.jetpack_featured_media_url
+          ? `<div class="aspect-video mb-4 rounded-md overflow-hidden"><img src="${post.jetpack_featured_media_url}" class="w-full h-full object-cover" alt="Featured Image"></div>`
+          : "";
 
-        // Update uploadedPicUrl to existing so we don't lose it if no new pic is uploaded
-        uploadedPicUrl = data.profilePicture || "";
+        const contentStyled = post.content.rendered
+          .replace(/<blockquote>(.*?)<\/blockquote>/gs, '<blockquote class="border-l-4 border-green-600 bg-green-50 text-green-800 italic pl-4 py-2 my-4 rounded-md">$1</blockquote>')
+          .replace(/<hr\s*\/?>/g, '<div class="my-8 border-t-2 border-dashed border-gray-300"></div>')
+          .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm mt-4 mb-4">$1</pre>');
 
-        // ✅ Show account creation & last login
-        const createdDate = new Date(user.metadata.creationTime);
-        const lastLoginDate = new Date(user.metadata.lastSignInTime);
-        document.getElementById("accountCreated").textContent = `Account created: ${createdDate.toLocaleDateString()}`;
-        document.getElementById("lastLogin").textContent = `Last login: ${lastLoginDate.toLocaleDateString()}`;
-      }
-    });
+        const daysAgo = formatDaysAgo(post.date);
+        const pageUrl = encodeURIComponent(window.location.href);
+        const postTitle = encodeURIComponent(post.title.rendered);
 
-    document.getElementById("accountForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
+        container.innerHTML = `
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            ${featuredImage}
+            <h1 class="text-3xl font-bold mb-3 text-green-700">${post.title.rendered}</h1>
+            <div class="text-sm text-gray-500 mb-6">
+              👤 TamilGeo &nbsp;|&nbsp; 🗓️ ${daysAgo}
+            </div>
 
-      const newProfilePicture = uploadedPicUrl || profilePic.src;
+            <article class="prose prose-green prose-lg max-w-none leading-relaxed">
+              ${contentStyled}
+            </article>
 
-      // Update user data in database
-      await update(ref(db, "users/" + user.uid), { 
-        name: nameInput.value.trim(), 
-        bio: bioField.value.trim(), 
-        profilePicture: newProfilePicture
+            <div class="mt-8 flex flex-wrap items-center gap-3">
+              <button id="like-btn" class="bg-pink-500 text-white px-3 py-1 rounded-full hover:bg-pink-600">
+                ♥ Like (<span id="like-count">0</span>)
+              </button>
+              <a href="https://wa.me/?text=${postTitle}%20${pageUrl}" target="_blank" class="bg-green-500 text-white px-3 py-1 rounded-full hover:bg-green-600">
+                <i class="fab fa-whatsapp"></i>
+              </a>
+              <a href="https://www.facebook.com/sharer/sharer.php?u=${pageUrl}" target="_blank" class="bg-blue-700 text-white px-3 py-1 rounded-full hover:bg-blue-800">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="https://twitter.com/intent/tweet?text=${postTitle}&url=${pageUrl}" target="_blank" class="bg-blue-400 text-white px-3 py-1 rounded-full hover:bg-blue-500">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </div>
+
+            <div class="mt-10">
+              <h2 class="font-semibold text-xl text-gray-800 mb-4">💬 Leave a Comment</h2>
+              <form id="comment-form" class="space-y-3">
+                <input type="text" id="comment-name" placeholder="Your Name" class="w-full p-2 border border-gray-300 rounded" required />
+                <input type="email" id="comment-email" placeholder="Your Email" class="w-full p-2 border border-gray-300 rounded" required />
+                <textarea id="comment-box" placeholder="Write a comment..." class="w-full p-2 border border-gray-300 rounded" required></textarea>
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Post Comment</button>
+              </form>
+
+              <div id="comments" class="mt-6 space-y-4"></div>
+            </div>
+          </div>
+        `;
+
+        setupFirebase();
+      })
+      .catch(err => {
+        console.error(err);
+        container.innerHTML = "<p class='text-red-600 font-semibold'>Post not found or failed to load.</p>";
       });
 
-      // Update auth profile
-      await updateProfile(user, { displayName: nameInput.value.trim(), photoURL: newProfilePicture });
+    function formatDaysAgo(dateStr) {
+      const postDate = new Date(dateStr);
+      const now = new Date();
+      const diffDays = Math.floor((now - postDate) / (1000 * 60 * 60 * 24));
+      if (diffDays === 0) return "Today";
+      if (diffDays === 1) return "1 day ago";
+      return `${diffDays} days ago`;
+    }
 
-      // Reload the page to reflect changes (you can also update the DOM manually if preferred)
-      location.reload();
-    });
+    function formatTimestamp(ts) {
+      const date = new Date(ts);
+      return date.toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+      }) + " · " + date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    function setupFirebase() {
+      const likeBtn = document.getElementById("like-btn");
+      const likeCountSpan = document.getElementById("like-count");
+      const commentForm = document.getElementById("comment-form");
+      const commentsDiv = document.getElementById("comments");
+
+      const likesRef = ref(db, `likes/post_${postId}`);
+      const commentsRef = ref(db, `comments/post_${postId}`);
+
+      onValue(likesRef, snapshot => {
+        likeCountSpan.textContent = snapshot.val() || 0;
+      });
+
+      likeBtn.addEventListener("click", () => {
+        get(likesRef).then(snapshot => {
+          const currentLikes = snapshot.val() || 0;
+          set(likesRef, currentLikes + 1);
+        });
+      });
+
+      onValue(commentsRef, snapshot => {
+        commentsDiv.innerHTML = "";
+        const data = snapshot.val();
+        if (data) {
+          Object.values(data).forEach(comment => {
+            const time = comment.timestamp ? formatTimestamp(comment.timestamp) : "Just now";
+            commentsDiv.innerHTML += `
+              <div class="bg-gray-50 p-3 border border-gray-200 rounded">
+                <div class="flex justify-between items-center text-sm">
+                  <span class="font-semibold text-green-700">${comment.name}</span>
+                  <span class="text-gray-500">${time}</span>
+                </div>
+                <div class="text-sm mt-1 text-gray-800">${comment.message}</div>
+              </div>`;
+          });
+        }
+      });
+
+      commentForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const name = document.getElementById("comment-name").value.trim();
+        const email = document.getElementById("comment-email").value.trim();
+        const message = document.getElementById("comment-box").value.trim();
+
+        if (name && email && message) {
+          push(commentsRef, {
+            name,
+            email,
+            message,
+            timestamp: Date.now()
+          });
+          commentForm.reset();
+        }
+      });
+    }
   </script>
 
-  <!-- ✅ Universal Header Loader -->
+  <!-- ✅ Load Shared Header and Footer -->
   <script type="module" src="header.js"></script>
-  <footer id="footer" class="mt-auto"></footer>
   <script type="module" src="js/footer.js"></script>
 </body>
 </html>
