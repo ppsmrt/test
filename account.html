@@ -45,7 +45,7 @@
     </div>
 
     <!-- 🔔 Notifications Section -->
-    <section id="notificationsSection" class="mb-6">
+    <section id="notificationsSection" class="mb-6 bg-white shadow rounded-lg p-6">
       <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
         <i class="fa-solid fa-bell"></i> Notifications
       </h2>
@@ -207,12 +207,13 @@
 
           anyVisible = true;
           const card = document.createElement("div");
-          card.className = "bg-blue-100 border border-blue-300 rounded-lg p-4 relative";
+          // Updated card style to match other white cards with shadow etc
+          card.className = "bg-white shadow rounded-lg p-6 mb-4 relative";
 
           card.innerHTML = `
-            <button aria-label="Dismiss notification" class="absolute top-2 right-2 text-blue-600 hover:text-blue-900 font-bold text-xl">&times;</button>
-            <h3 class="font-semibold text-blue-900">${notif.title}</h3>
-            <p class="text-blue-800 mt-1 whitespace-pre-wrap">${notif.message}</p>
+            <button aria-label="Dismiss notification" class="absolute top-2 right-2 text-gray-500 hover:text-gray-900 font-bold text-xl">&times;</button>
+            <h3 class="font-semibold text-gray-900">${notif.title}</h3>
+            <p class="text-gray-700 mt-1 whitespace-pre-wrap">${notif.message}</p>
           `;
 
           card.querySelector("button").addEventListener("click", async () => {
@@ -246,27 +247,33 @@
         window.location.href = "/login.html";
         return;
       }
-      const snap = await get(ref(db, "users/" + user.uid));
-      if (snap.exists()) {
-        const data = snap.val();
-        profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
-        nameInput.value = data.name || "";
-        bioField.value = data.bio || "";
-        usernameField.value = data.username || "";
-        emailField.value = user.email || "";
-        userNameDisplay.textContent = data.name || "User";
-        document.getElementById("displayName").textContent = data.name || "No Name";
-        document.getElementById("username").textContent = "@" + (data.username || "");
-        document.getElementById("bio").textContent = data.bio || "";
+      try {
+        const snap = await get(ref(db, "users/" + user.uid));
+        if (snap.exists()) {
+          const data = snap.val();
+          console.log("User data:", data);
 
-        // Show account creation & last login
-        const createdDate = new Date(user.metadata.creationTime);
-        const lastLoginDate = new Date(user.metadata.lastSignInTime);
-        document.getElementById("accountCreated").textContent = \`Account created: \${createdDate.toLocaleDateString()}\`;
-        document.getElementById("lastLogin").textContent = \`Last login: \${lastLoginDate.toLocaleDateString()}\`;
+          profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
+          nameInput.value = data.name || "";
+          bioField.value = data.bio || "";
+          usernameField.value = data.username || "";
+          emailField.value = user.email || "";
+          userNameDisplay.textContent = data.name || "User";
+          document.getElementById("displayName").textContent = data.name || "No Name";
+          document.getElementById("username").textContent = "@" + (data.username || "");
+          document.getElementById("bio").textContent = data.bio || "";
 
-        // Load notifications for this user
-        await loadNotifications(user.uid);
+          const createdDate = new Date(user.metadata.creationTime);
+          const lastLoginDate = new Date(user.metadata.lastSignInTime);
+          document.getElementById("accountCreated").textContent = `Account created: ${createdDate.toLocaleDateString()}`;
+          document.getElementById("lastLogin").textContent = `Last login: ${lastLoginDate.toLocaleDateString()}`;
+
+          await loadNotifications(user.uid);
+        } else {
+          console.log("No user data found in database!");
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
       }
     });
 
