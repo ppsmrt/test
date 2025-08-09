@@ -21,14 +21,29 @@
 
   <!-- ✅ Custom Styles -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Added CSS for section separators -->
+  <style>
+    /* Style the separator div as section breaks */
+    article.prose > div.border-t-2.border-dashed {
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+      border-color: #D1D5DB; /* Tailwind gray-300 */
+    }
+
+    /* Add spacing after separator to next sibling */
+    article.prose > div.border-t-2.border-dashed + * {
+      margin-top: 2rem;
+    }
+  </style>
 </head>
 
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <!-- ✅ Post Container -->
-  <main class="max-w-3xl mx-auto p-4 flex-grow" id="post-container">
+  <!-- ✅ Post Container with boxed layout -->
+  <main class="max-w-4xl mx-auto p-6 flex-grow bg-white rounded-lg shadow-md" id="post-container">
     <p class="text-gray-500 italic">Loading post...</p>
   </main>
 
