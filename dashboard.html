@@ -95,7 +95,7 @@
   <!-- ✅ Firebase + Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, get, update, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, get, update, remove, set, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -116,6 +116,7 @@
     async function loadStats() {
       const usersSnap = await get(ref(db, "users"));
       const postsSnap = await get(ref(db, "posts"));
+      const pendingSnap = await get(ref(db, "pendingPosts"));
 
       if (usersSnap.exists()) {
         let userCount = 0;
@@ -131,15 +132,18 @@
 
       if (postsSnap.exists()) {
         let totalPosts = 0;
-        let pendingPosts = 0;
-        postsSnap.forEach(post => {
-          totalPosts++;
-          if (post.val().status && post.val().status.toLowerCase() === "pending") {
-            pendingPosts++;
-          }
-        });
+        postsSnap.forEach(() => totalPosts++);
         document.getElementById("totalPosts").textContent = totalPosts;
+      } else {
+        document.getElementById("totalPosts").textContent = 0;
+      }
+
+      if (pendingSnap.exists()) {
+        let pendingPosts = 0;
+        pendingSnap.forEach(() => pendingPosts++);
         document.getElementById("pendingPosts").textContent = pendingPosts;
+      } else {
+        document.getElementById("pendingPosts").textContent = 0;
       }
     }
 
@@ -179,37 +183,30 @@
     }
 
     async function loadPendingPosts() {
-      const snap = await get(ref(db, "posts"));
+      const snap = await get(ref(db, "pendingPosts"));
       const container = document.getElementById("pendingPostsList");
       container.innerHTML = "";
       if (snap.exists()) {
-        let foundPending = false;
         snap.forEach(post => {
           const data = post.val();
-          if ((data.status || "").toLowerCase() === "pending") {
-            foundPending = true;
-            const card = document.createElement("div");
-            card.className = "bg-white shadow rounded-lg p-4 hover:shadow-lg transition cursor-pointer";
-            card.innerHTML = `
-              <h4 class="font-bold text-lg">${data.title || "Untitled"}</h4>
-              <p class="text-gray-600 text-sm truncate">${data.content || ""}</p>
-              <p class="text-xs text-gray-500 mt-1">By: ${data.authorName || "Unknown"}</p>
-            `;
-            card.addEventListener("click", () => {
-              currentPostId = post.key;
-              document.getElementById("modalTitle").textContent = data.title || "Untitled";
-              document.getElementById("modalContent").textContent = data.content || "";
-              document.getElementById("postModal").classList.remove("hidden");
-              document.getElementById("postModal").classList.add("flex");
-            });
-            container.appendChild(card);
-          }
+          const card = document.createElement("div");
+          card.className = "bg-white shadow rounded-lg p-4 hover:shadow-lg transition cursor-pointer";
+          card.innerHTML = `
+            <h4 class="font-bold text-lg">${data.title || "Untitled"}</h4>
+            <p class="text-gray-600 text-sm truncate">${data.content || ""}</p>
+            <p class="text-xs text-gray-500 mt-1">By: ${data.author || "Unknown"}</p>
+          `;
+          card.addEventListener("click", () => {
+            currentPostId = post.key;
+            document.getElementById("modalTitle").textContent = data.title || "Untitled";
+            document.getElementById("modalContent").textContent = data.content || "";
+            document.getElementById("postModal").classList.remove("hidden");
+            document.getElementById("postModal").classList.add("flex");
+          });
+          container.appendChild(card);
         });
-        if (!foundPending) {
-          container.innerHTML = `<p class="text-gray-500">No pending posts found.</p>`;
-        }
       } else {
-        container.innerHTML = `<p class="text-gray-500">No posts available.</p>`;
+        container.innerHTML = `<p class="text-gray-500">No pending posts found.</p>`;
       }
     }
 
@@ -220,21 +217,40 @@
 
     window.approvePost = async function() {
       if (currentPostId) {
-        await update(ref(db, "posts/" + currentPostId), { status: "approved" });
-        closeModal();
-        loadStats();
-        loadPendingPosts();
-        alert("Post approved successfully");
+        try {
+          const postRef = ref(db, "pendingPosts/" + currentPostId);
+          const postSnap = await get(postRef);
+          if (postSnap.exists()) {
+            const postData = postSnap.val();
+            postData.status = "approved";
+            await set(ref(db, "posts/" + currentPostId), postData);
+            await remove(postRef);
+            alert("Post approved successfully");
+            closeModal();
+            loadStats();
+            loadPendingPosts();
+          } else {
+            alert("Post not found!");
+          }
+        } catch (error) {
+          console.error(error);
+          alert("Error approving post.");
+        }
       }
     };
 
     window.rejectPost = async function() {
       if (currentPostId) {
-        await remove(ref(db, "posts/" + currentPostId));
-        closeModal();
-        loadStats();
-        loadPendingPosts();
-        alert("Post rejected and removed");
+        try {
+          await remove(ref(db, "pendingPosts/" + currentPostId));
+          alert("Post rejected and removed");
+          closeModal();
+          loadStats();
+          loadPendingPosts();
+        } catch (error) {
+          console.error(error);
+          alert("Error rejecting post.");
+        }
       }
     };
 
