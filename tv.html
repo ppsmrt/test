@@ -11,7 +11,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
-    /* Custom scrollbar for horizontal scroll on mobile */
     .cards-container::-webkit-scrollbar {
       height: 8px;
     }
@@ -22,12 +21,39 @@
       background-color: #3b82f6; /* Tailwind blue-500 */
       border-radius: 20px;
     }
-    /* Card hover glow */
     .card:hover {
       box-shadow: 0 0 15px #3b82f6, 0 0 30px #60a5fa;
       transform: translateY(-6px);
       transition: all 0.3s ease;
       z-index: 10;
+    }
+    /* Card flex layout for icon 90% height, name 10% */
+    .card {
+      display: flex;
+      flex-direction: column;
+      height: 14rem; /* fixed card height */
+      cursor: pointer;
+      background-color: #1f2937; /* Tailwind gray-800 */
+      border-radius: 0.5rem; /* rounded-lg */
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.5);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .card img {
+      flex: 0 0 90%;
+      object-fit: cover;
+      width: 100%;
+      border-bottom: 1px solid #374151; /* Tailwind gray-700 */
+    }
+    .card .card-name {
+      flex: 0 0 10%;
+      text-align: center;
+      padding: 0.3rem 0;
+      font-weight: 600;
+      color: #d1d5db; /* Tailwind gray-300 */
+      font-size: 0.875rem;
+      background-color: #111827; /* Tailwind gray-900 */
+      user-select: none;
     }
   </style>
 </head>
@@ -55,50 +81,42 @@
     </select>
   </div>
 
-  <main class="max-w-7xl mx-auto p-6">
-    <div 
-      id="cardsContainer" 
-      class="cards-container grid grid-cols-4 gap-6 overflow-x-auto snap-x snap-mandatory
-      scroll-smooth
-      [&::-webkit-scrollbar]:block
-      sm:grid-cols-4 sm:overflow-visible"
-      style="scroll-padding-inline:1.5rem"
-    >
-      <!-- Channel cards injected here -->
-    </div>
+  <main class="max-w-7xl mx-auto p-6 space-y-12">
 
-    <video 
-      id="videoPlayer" 
-      controls 
-      playsinline 
-      class="w-full max-w-4xl mt-12 mx-auto rounded-lg shadow-lg bg-black"
-      preload="metadata"
-    ></video>
+    <!-- Sections container will be dynamically injected -->
+
   </main>
 
-  <!-- HLS.js -->
+  <video 
+    id="videoPlayer" 
+    controls 
+    playsinline 
+    class="w-full max-w-4xl mt-12 mx-auto rounded-lg shadow-lg bg-black"
+    preload="metadata"
+  ></video>
+
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
   <script>
     const channels = [
       {
-        name: "Marutham",
-        thumbnail: "https://tataprime.wordpress.com/wp-content/uploads/2024/03/20240303_2108146971581320837669712.png",
-        stream: "",
-        region: "tamil",
-        section: "Music"
+        name: "Channel 1",
+        thumbnail: "https://via.placeholder.com/300x140?text=Channel+1",
+        stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+        region: "asia",
+        section: "news"
       },
       {
-        name: "Marutham",
-        thumbnail: "https://tataprime.wordpress.com/wp-content/uploads/2024/03/20240303_2108146971581320837669712.png",
-        stream: "https://mntv.livebox.co.in/musichls/live.m3u8#f181ec827f184e1daff23f18bab3d8ffc3f7c0f8513222199e654a7107a322d2",
+        name: "Channel 2",
+        thumbnail: "https://via.placeholder.com/300x140?text=Channel+2",
+        stream: "https://test-streams.mux.dev/test_001/stream.m3u8",
         region: "europe",
         section: "sports"
       },
       {
-        name: "Marutham",
-        thumbnail: "https://tataprime.wordpress.com/wp-content/uploads/2024/03/20240303_2108146971581320837669712.png",
-        stream: "https://mntv.livebox.co.in/musichls/live.m3u8#f181ec827f184e1daff23f18bab3d8ffc3f7c0f8513222199e654a7107a322d2",
+        name: "Channel 3",
+        thumbnail: "https://via.placeholder.com/300x140?text=Channel+3",
+        stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
         region: "asia",
         section: "sports"
       },
@@ -111,28 +129,11 @@
       }
     ];
 
-    const cardsContainer = document.getElementById('cardsContainer');
+    const mainContainer = document.querySelector('main');
     const video = document.getElementById('videoPlayer');
     const searchInput = document.getElementById('searchInput');
     const regionSelect = document.getElementById('regionSelect');
     const sectionSelect = document.getElementById('sectionSelect');
-
-    function renderCards(filterFn = () => true) {
-      cardsContainer.innerHTML = '';
-      channels.filter(filterFn).forEach(channel => {
-        const card = document.createElement('div');
-        card.className = 'card rounded-lg bg-gray-800 shadow-md cursor-pointer flex flex-col overflow-hidden transition-transform duration-300 snap-center';
-        card.innerHTML = `
-          <img src="${channel.thumbnail}" alt="${channel.name}" class="w-full h-36 object-cover" />
-          <div class="p-4 flex flex-col flex-grow">
-            <h3 class="text-lg font-semibold mb-3">${channel.name}</h3>
-            <button class="btn btn-primary mt-auto">Play</button>
-          </div>
-        `;
-        card.querySelector('button').addEventListener('click', () => playStream(channel.stream));
-        cardsContainer.appendChild(card);
-      });
-    }
 
     function playStream(url) {
       if (Hls.isSupported()) {
@@ -153,25 +154,62 @@
       }
     }
 
-    function filterChannels() {
+    function renderSections() {
       const searchTerm = searchInput.value.toLowerCase();
       const selectedRegion = regionSelect.value;
       const selectedSection = sectionSelect.value;
 
-      renderCards(channel => {
+      // Filter channels first
+      let filtered = channels.filter(channel => {
         return (
           (!selectedRegion || channel.region === selectedRegion) &&
           (!selectedSection || channel.section === selectedSection) &&
           channel.name.toLowerCase().includes(searchTerm)
         );
       });
+
+      // Group channels by region for sections
+      const grouped = filtered.reduce((acc, channel) => {
+        let key = channel.region || 'Other';
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(channel);
+        return acc;
+      }, {});
+
+      mainContainer.innerHTML = '';
+
+      Object.entries(grouped).forEach(([sectionName, channelsList]) => {
+        const sectionEl = document.createElement('section');
+        sectionEl.className = 'space-y-4';
+
+        sectionEl.innerHTML = `
+          <h2 class="text-2xl font-semibold capitalize border-b border-gray-700 pb-2">${sectionName} Channels</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <!-- cards here -->
+          </div>
+        `;
+
+        const grid = sectionEl.querySelector('div');
+        channelsList.forEach(channel => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <img src="${channel.thumbnail}" alt="${channel.name}" />
+            <div class="card-name">${channel.name}</div>
+          `;
+          card.addEventListener('click', () => playStream(channel.stream));
+          grid.appendChild(card);
+        });
+
+        mainContainer.appendChild(sectionEl);
+      });
     }
 
-    searchInput.addEventListener('input', filterChannels);
-    regionSelect.addEventListener('change', filterChannels);
-    sectionSelect.addEventListener('change', filterChannels);
+    searchInput.addEventListener('input', renderSections);
+    regionSelect.addEventListener('change', renderSections);
+    sectionSelect.addEventListener('change', renderSections);
 
-    renderCards();
+    renderSections();
   </script>
 
 </body>
