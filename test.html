@@ -28,14 +28,13 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
-  <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
   <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
     
-    <!-- Updated welcome section -->
+    <!-- Welcome Section -->
     <div class="flex items-center justify-center p-6">
-      <div class="bg-white shadow-lg rounded-lg max-w-4xl w-full p-6">
+      <div class="bg-white shadow-lg rounded-lg w-full p-6">
         <div class="flex items-center space-x-3">
           <span class="wave-hand text-3xl text-yellow-500"><i class="fa-solid fa-hand"></i></span>
           <h1 class="text-xl font-bold">
@@ -46,7 +45,7 @@
       </div>
     </div>
 
-    <!-- 📌 Profile Card -->
+    <!-- Profile Card -->
     <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
       <div class="flex items-center space-x-4">
         <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
@@ -59,17 +58,13 @@
           <p id="bio" class="text-gray-500 text-sm italic mt-1">Loading bio...</p>
         </div>
       </div>
-
-      <!-- Restored profile info rows -->
-      <div class="mt-4 space-y-2 text-sm text-gray-500">
-        <p class="flex items-center"><i class="fa-regular fa-calendar-days w-5 text-blue-500"></i> <span id="accountCreated">Account created: Loading...</span></p>
-        <p class="flex items-center"><i class="fa-regular fa-clock w-5 text-green-500"></i> <span id="lastLogin">Last login: Loading...</span></p>
-        <p class="flex items-center"><i class="fa-solid fa-file-lines w-5 text-purple-500"></i> <span id="postCount">Posts: 0</span></p>
-      </div>
+      <p id="accountCreated" class="text-xs text-gray-500 mt-3"></p>
+      <p id="lastLogin" class="text-xs text-gray-500"></p>
+      <p id="postCount" class="text-xs text-gray-500"></p>
     </div>
 
-    <!-- 📊 Dashboard Stat Cards -->  
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">  
+    <!-- Dashboard Stat Cards -->  
+    <div class="grid grid-cols-2 gap-6 mb-6">  
       <div class="bg-white p-6 rounded-lg shadow text-center">  
         <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>  
         <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>  
@@ -88,30 +83,30 @@
       </div>  
     </div>
 
-    <!-- ⚡ Quick Actions -->      
+    <!-- Quick Actions -->
     <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">    
-        <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>    
-        <div class="grid sm:grid-cols-2 gap-4 text-left">    
-          <a href="submit.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit a Post</a>    
-          <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> View Bookmarks</a>    
-          <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact Admin</a>    
-          <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate Me</a>    
-          <a href="posts.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
-        </div>    
+      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>    
+      <div class="grid grid-cols-2 gap-4 text-left">    
+        <a href="submit.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit a Post</a>    
+        <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> View Bookmarks</a>    
+        <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact Admin</a>    
+        <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate Me</a>    
+        <a href="posts.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
+      </div>    
     </section>  
 
-    <!-- 📄 Site Related Pages -->  
+    <!-- Important Links -->
     <section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6 mb-6">    
       <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-link"></i> Important Links</h2>    
-      <div class="grid sm:grid-cols-2 gap-4 text-left">    
-        <a href="about.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About Website</a>    
-        <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>    
-        <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms and Conditions</a>    
-        <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>    
+      <div class="grid grid-cols-2 gap-4 text-left">    
+        <a href="about.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About Website</a>    
+        <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>    
+        <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms and Conditions</a>    
+        <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>    
       </div>
     </section>
 
-    <!-- 📌 Edit Account Form -->
+    <!-- Edit Account Form -->
     <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4">
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
@@ -184,4 +179,34 @@
       const snap = await get(ref(db, "users/" + user.uid));
       if (snap.exists()) {
         const data = snap.val();
-        profilePic.src = data.profilePicture || "https://via.placeholder.com/80
+        profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
+        nameInput.value = data.name || "";
+        bioField.value = data.bio || "";
+        usernameField.value = data.username || "";
+        emailField.value = user.email || "";
+        document.getElementById("displayName").innerText = data.name || "";
+        document.getElementById("accountCreated").innerText = "Account Created: " + (data.createdAt || "");
+        document.getElementById("lastLogin").innerText = "Last Login: " + (data.lastLogin || "");
+        document.getElementById("postCount").innerText = "Posts: " + (data.postCount || 0);
+      }
+    });
+
+    document.getElementById("accountForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+      await update(ref(db, "users/" + user.uid), { 
+        name: nameInput.value, 
+        bio: bioField.value, 
+        profilePicture: uploadedPicUrl || profilePic.src
+      });
+      await updateProfile(user, { displayName: nameInput.value, photoURL: uploadedPicUrl || profilePic.src });
+      window.location.reload(true);
+    });
+  </script>
+
+  <script type="module" src="header.js"></script>
+  <footer id="footer" class="mt-auto"></footer>
+  <script type="module" src="js/footer.js"></script>
+</body>
+</html>
