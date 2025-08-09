@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Account - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     .fade-in { animation: fadeIn 0.5s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    /* small friendly wave animation for the emoji */
     @keyframes wave {
       0% { transform: rotate(0deg); }
       10% { transform: rotate(14deg); }
@@ -34,24 +33,21 @@
 
   <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
     
-   <!-- ✅ Welcome section (made same style & spacing as other cards) -->
-   <div class="flex items-center justify-center p-6">
-     <div class="bg-white shadow-lg rounded-lg max-w-4xl w-full p-8 mb-6">
-       <div class="flex items-center gap-4">
-         <span class="wave-hand text-3xl">👋</span>
-         <div>
-           <!-- Reduced heading size to match other cards -->
-           <h1 class="text-xl font-bold capitalize leading-tight">
-             Hi, <span id="userNameDisplay"></span>
-           </h1>
-           <p class="text-sm text-gray-600 mt-1">Welcome back, we hope the day is well</p>
-         </div>
-       </div>
-     </div>
-   </div>
+   <!-- Updated welcome section -->
+  <div class="flex items-center justify-center p-6">
+    <div class="bg-white shadow-lg rounded-lg max-w-4xl w-full p-6">
+      <div class="flex items-center justify-between">
+        <span class="wave-hand text-3xl"><i class="fa-solid fa-hand-wave"></i></span>
+        <h1 class="text-xl font-bold text-center">
+          Hi, <span id="userNameDisplay" class="capitalize"></span>
+        </h1>
+      </div>
+      <p class="text-center text-gray-600 mt-3">Welcome back, we hope the day is well</p>
+    </div>
+  </div>
 
     <!-- 📌 Profile Card -->
-    <div id="profileCard" class="bg-white shadow-lg rounded-lg p-8 mb-6">
+    <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
       <div class="flex items-center space-x-4">
         <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
         <div>
@@ -68,83 +64,71 @@
       <p id="postCount" class="text-xs text-gray-500"></p>
     </div>
 
-<!-- 📊 Dashboard Stat Cards -->
-<div class="bg-white shadow-lg rounded-lg p-8 mb-6">
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
-      <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>
-      <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>
-    </div>
-    <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
-      <h3 class="text-sm font-medium text-gray-500">Followers</h3>
-      <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>
-    </div>
-    <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
-      <h3 class="text-sm font-medium text-gray-500">Likes</h3>
-      <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>
-    </div>
-    <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
-      <h3 class="text-sm font-medium text-gray-500">Comments</h3>
-      <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>
-    </div>
-  </div>
+<!-- 📊 Dashboard Stat Cards -->  
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>  
+  </div>  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Followers</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>  
+  </div>  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Likes</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>  
+  </div>  
+  <div class="bg-white p-6 rounded-lg shadow text-center">  
+    <h3 class="text-sm font-medium text-gray-500">Comments</h3>  
+    <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>  
+  </div>  
 </div>
 
-<!-- ⚡ Quick Actions (4 buttons as original) -->
-<section id="user-actions" class="bg-white shadow-lg rounded-lg p-8 mb-6">
-  <h2 class="text-xl font-semibold mb-4">⚡ Quick Actions</h2>
-  <div class="grid sm:grid-cols-2 gap-4">
-    <a href="submit.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">✍️ Submit a Post</a>
-    <a href="bookmarks.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔖 View Bookmarks</a>
-    <a href="contact.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📬 Contact Admin</a>
-    <a href="donate.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">💖 Donate Me</a>
+<!-- ⚡ Quick Actions -->      
+<section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">    
+    <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>    
+    <div class="grid sm:grid-cols-2 gap-4">    
+      <a href="submit.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit a Post</a>    
+      <a href="bookmarks.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> View Bookmarks</a>    
+      <a href="contact.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact Admin</a>    
+      <a href="donate.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate Me</a>    
+      <a href="posts.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
+    </div>    
+</section>  
+
+<!-- 📄 Site Related Pages -->  
+<section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6 mb-6">    
+  <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-link"></i> Important Links</h2>    
+  <div class="grid sm:grid-cols-2 gap-4">    
+    <a href="about.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About Website</a>    
+    <a href="privacy.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>    
+    <a href="terms.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms and Conditions</a>    
+    <a href="disclaimer.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>    
   </div>
 </section>
 
-<!-- 📄 Site Related Pages -->
-<section id="site-pages" class="bg-white shadow-lg rounded-lg p-8 mb-6">
-  <h2 class="text-xl font-semibold mb-4">📄 Important Links</h2>
-  <div class="grid sm:grid-cols-2 gap-4">
-    <a href="about.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">ℹ️ About Website</a>
-    <a href="privacy.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">🔐 Privacy Policy</a>
-    <a href="terms.html" class="block border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 text-center px-4 py-3 rounded-lg shadow-sm transition">📜 Terms and Conditions</a>
-  </div>
-</section>
-
-    <!-- 📌 Edit Account Form (mb-6 added to ensure gap) -->
-    <form id="accountForm" class="bg-white shadow-lg rounded-lg p-8 space-y-4 mb-6">
-      <!-- Name -->
+    <!-- 📌 Edit Account Form -->
+    <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4">
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
         <input type="text" id="name" class="w-full p-2 border rounded" required>
       </div>
-
-      <!-- Username (Read Only) -->
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
         <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly>
-        <p class="text-xs text-gray-500">Username cannot be changed. Contact admin for changes.</p>
       </div>
-
-      <!-- Email (Read Only) -->
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Registered Email</label>
         <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly>
       </div>
-
-      <!-- Bio -->
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Bio</label>
-        <textarea id="bioField" rows="3" class="w-full p-2 border rounded" placeholder="Write something about yourself..."></textarea>
+        <textarea id="bioField" rows="3" class="w-full p-2 border rounded"></textarea>
       </div>
-
-      <!-- Profile Picture Upload (Enabled) -->
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Profile Picture</label>
-        <input type="file" id="profilePicInput" accept="image/*" class="w-full p-2 border rounded">
-        <p class="text-xs text-gray-500">Upload will compress & encrypt the image before saving.</p>
+        <input type="file" id="profilePicUpload" class="w-full p-2 border rounded">
       </div>
-
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
     </form>
   </main>
@@ -171,132 +155,21 @@
     const storage = getStorage(app);
 
     const profilePic = document.getElementById("profilePic");
-    const displayNameEl = document.getElementById("displayName");
-    const usernameEl = document.getElementById("username");
-    const bioEl = document.getElementById("bio");
-    const roleBadge = document.getElementById("roleBadge");
     const nameInput = document.getElementById("name");
     const bioField = document.getElementById("bioField");
     const usernameField = document.getElementById("usernameField");
     const emailField = document.getElementById("emailField");
-    const accountCreatedEl = document.getElementById("accountCreated");
-    const lastLoginEl = document.getElementById("lastLogin");
-    const postCountEl = document.getElementById("postCount");
-    const userNameDisplay = document.getElementById("userNameDisplay");
-    const profilePicInput = document.getElementById("profilePicInput");
+    const profilePicUpload = document.getElementById("profilePicUpload");
 
-    let selectedImageFile = null;
+    let uploadedPicUrl = "";
 
-    // preview selected image locally
-    profilePicInput.addEventListener("change", (e) => {
-      const f = e.target.files[0];
-      if (f) {
-        selectedImageFile = f;
-        profilePic.src = URL.createObjectURL(f);
-      } else {
-        selectedImageFile = null;
-      }
+    profilePicUpload.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const storageRef = sRef(storage, "profilePictures/" + auth.currentUser.uid + ".jpg");
+      await uploadBytes(storageRef, file);
+      uploadedPicUrl = await getDownloadURL(storageRef);
     });
-
-    function setRoleBadge(role) {
-      switch (role) {
-        case "user":
-          roleBadge.textContent = "User";
-          roleBadge.className = "px-2 py-1 text-xs rounded-full text-white bg-gray-400";
-          break;
-        case "editor":
-          roleBadge.textContent = "Editor";
-          roleBadge.className = "px-2 py-1 text-xs rounded-full text-white bg-orange-700";
-          break;
-        case "manager":
-          roleBadge.textContent = "Manager";
-          roleBadge.className = "px-2 py-1 text-xs rounded-full text-white bg-yellow-500";
-          break;
-        case "admin":
-          roleBadge.textContent = "Admin";
-          roleBadge.className = "px-2 py-1 text-xs rounded-full text-white bg-blue-900";
-          break;
-        default:
-          roleBadge.textContent = "User";
-          roleBadge.className = "px-2 py-1 text-xs rounded-full text-white bg-gray-400";
-      }
-    }
-
-    // compress image to jpeg blob (max 800px on longest side, quality 0.75)
-    async function compressImage(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          const img = new Image();
-          img.onload = () => {
-            const maxSize = 800;
-            let width = img.width;
-            let height = img.height;
-            if (width > height) {
-              if (width > maxSize) {
-                height = Math.round((height * maxSize) / width);
-                width = maxSize;
-              }
-            } else {
-              if (height > maxSize) {
-                width = Math.round((width * maxSize) / height);
-                height = maxSize;
-              }
-            }
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            canvas.toBlob((blob) => {
-              if (blob) resolve(blob);
-              else reject(new Error("Canvas toBlob failed"));
-            }, 'image/jpeg', 0.75);
-          };
-          img.onerror = reject;
-          img.src = ev.target.result;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // derive AES-GCM key from user's UID using PBKDF2 (simple derivation so key can be re-derived)
-    async function deriveKeyFromUid(uid) {
-      const encoder = new TextEncoder();
-      const passwordKey = await crypto.subtle.importKey(
-        "raw",
-        encoder.encode(uid),
-        { name: "PBKDF2" },
-        false,
-        ["deriveKey"]
-      );
-      const salt = encoder.encode("tamilgeo_salt_v1");
-      const key = await crypto.subtle.deriveKey(
-        {
-          name: "PBKDF2",
-          salt: salt,
-          iterations: 100000,
-          hash: "SHA-256"
-        },
-        passwordKey,
-        { name: "AES-GCM", length: 256 },
-        false,
-        ["encrypt", "decrypt"]
-      );
-      return key;
-    }
-
-    // encrypt a Blob using AES-GCM, return a Blob where first 12 bytes are IV then ciphertext
-    async function encryptBlobWithKey(blob, key) {
-      const iv = crypto.getRandomValues(new Uint8Array(12));
-      const data = await blob.arrayBuffer();
-      const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, data);
-      const ivAndEncrypted = new Uint8Array(iv.byteLength + encrypted.byteLength);
-      ivAndEncrypted.set(iv, 0);
-      ivAndEncrypted.set(new Uint8Array(encrypted), iv.byteLength);
-      return new Blob([ivAndEncrypted], { type: "application/octet-stream" });
-    }
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -304,43 +177,14 @@
         window.location.href = "/login.html";
         return;
       }
-
-      try {
-        const snap = await get(ref(db, "users/" + user.uid));
-        if (snap.exists()) {
-          const data = snap.val();
-          profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
-          displayNameEl.textContent = data.name || "No Name";
-          userNameDisplay.textContent = data.name || "User";
-          usernameEl.textContent = "@" + (data.username || "unknown");
-          bioEl.textContent = data.bio || "No bio added yet.";
-          nameInput.value = data.name || "";
-          bioField.value = data.bio || "";
-          usernameField.value = data.username || "";
-          emailField.value = user.email || "";
-          accountCreatedEl.textContent = "Account created on: " + new Date(data.createdAt || user.metadata.creationTime).toLocaleDateString();
-          lastLoginEl.textContent = "Last login: " + new Date(user.metadata.lastSignInTime).toLocaleString();
-          setRoleBadge(data.role || "user");
-
-          const postsSnap = await get(ref(db, "posts"));
-          if (postsSnap.exists()) {
-            let count = 0;
-            postsSnap.forEach(post => {
-              if (post.val().authorId === user.uid) count++;
-            });
-            postCountEl.textContent = "Posts published: " + count;
-          }
-        } else {
-          displayNameEl.textContent = user.displayName || "No Name";
-          userNameDisplay.textContent = user.displayName || "User";
-          usernameField.value = user.email ? user.email.split('@')[0] : "";
-          usernameEl.textContent = user.email ? ("@" + user.email.split('@')[0]) : "";
-          emailField.value = user.email || "";
-          accountCreatedEl.textContent = "Account created on: " + new Date(user.metadata.creationTime).toLocaleDateString();
-          lastLoginEl.textContent = "Last login: " + new Date(user.metadata.lastSignInTime).toLocaleString();
-        }
-      } catch (err) {
-        console.error(err);
+      const snap = await get(ref(db, "users/" + user.uid));
+      if (snap.exists()) {
+        const data = snap.val();
+        profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
+        nameInput.value = data.name || "";
+        bioField.value = data.bio || "";
+        usernameField.value = data.username || "";
+        emailField.value = user.email || "";
       }
     });
 
@@ -348,50 +192,18 @@
       e.preventDefault();
       const user = auth.currentUser;
       if (!user) return;
-
-      const updatedName = nameInput.value.trim();
-      const updatedBio = bioField.value.trim();
-      if (!updatedName) {
-        alert("Name cannot be empty.");
-        return;
-      }
-
-      try {
-        let profilePictureURL = null;
-        if (selectedImageFile) {
-          // compress
-          const compressedBlob = await compressImage(selectedImageFile);
-          // derive key & encrypt
-          const aesKey = await deriveKeyFromUid(user.uid);
-          const encryptedBlob = await encryptBlobWithKey(compressedBlob, aesKey);
-
-          // upload encrypted blob to storage
-          const storageReference = sRef(storage, `profilePictures/${user.uid}.enc`);
-          await uploadBytes(storageReference, encryptedBlob);
-          profilePictureURL = await getDownloadURL(storageReference);
-        }
-
-        // update realtime db
-        const updates = { name: updatedName, bio: updatedBio };
-        if (profilePictureURL) updates.profilePicture = profilePictureURL;
-        await update(ref(db, "users/" + user.uid), updates);
-
-        // update auth display name
-        await updateProfile(user, { displayName: updatedName });
-
-        // reload to reflect changes
-        location.reload();
-      } catch (err) {
-        console.error(err);
-        alert("❌ Failed to update account.");
-      }
+      await update(ref(db, "users/" + user.uid), { 
+        name: nameInput.value, 
+        bio: bioField.value, 
+        profilePicture: uploadedPicUrl || profilePic.src
+      });
+      await updateProfile(user, { displayName: nameInput.value, photoURL: uploadedPicUrl || profilePic.src });
+      location.reload();
     });
   </script>
 
   <!-- ✅ Universal Header Loader -->
   <script type="module" src="header.js"></script>
-
-  <!-- ✅ Footer -->
   <footer id="footer" class="mt-auto"></footer>
   <script type="module" src="js/footer.js"></script>
 </body>
