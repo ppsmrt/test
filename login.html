@@ -2,69 +2,129 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TamilGeo • Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - TamilGeo</title>
+
+  <!-- ✅ Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- ✅ Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- ✅ Custom CSS -->
   <style>
-    :root{--grad:linear-gradient(135deg,#6366f1,#8b5cf6);}
-    body{font-family:Inter,system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;}
-    .ios-card{border-radius:1.75rem;background:#fff;box-shadow:0 8px 30px rgba(17,24,39,.08)}
-    .ios-input{border:1px solid #e5e7eb;border-radius:1rem;padding:.85rem 1rem;width:100%;outline:0;transition:.2s}
-    .ios-input:focus{border-color:#6366f1;box-shadow:0 0 0 4px rgba(99,102,241,.18)}
-    .ios-btn{background:var(--grad);color:#fff;font-weight:700;border-radius:1rem;padding:.9rem 1rem;transition:.2s}
-    .ios-btn:hover{opacity:.95}
-    .ghost{border:1px solid #e5e7eb;background:#fff}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #f7faff, #eef2f8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .ios-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      transition: all 0.3s ease;
+    }
+
+    .ios-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    }
+
+    .ios-input {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      font-size: 0.95rem;
+      transition: 0.3s ease;
+    }
+
+    .ios-input:focus {
+      border-color: #4f46e5;
+      background: #fff;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+    }
+
+    .btn-gradient {
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 16px;
+      padding: 0.85rem;
+      width: 100%;
+      font-size: 1rem;
+      box-shadow: 0 8px 16px rgba(79,70,229,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .btn-gradient:hover {
+      opacity: 0.9;
+      transform: scale(1.03);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin: 1.5rem 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .divider::before {
+      margin-right: .75rem;
+    }
+    .divider::after {
+      margin-left: .75rem;
+    }
   </style>
 </head>
-<body class="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 flex items-center justify-center px-4">
-
-  <main class="ios-card w-full max-w-sm p-7 space-y-6">
-    <header class="space-y-2">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white" style="background:var(--grad)">
-            <span class="font-extrabold">TG</span>
-          </div>
-          <span class="font-bold text-gray-900">TamilGeo</span>
-        </div>
-        <a href="signup.html" class="text-sm text-indigo-600 font-semibold hover:underline">Sign up</a>
-      </div>
-      <h1 class="text-2xl font-extrabold text-gray-900">Welcome back 👋</h1>
-      <p class="text-gray-500">Sign in to continue</p>
-    </header>
+<body>
+  
+  <!-- ✅ iOS Login Card -->
+  <div class="ios-card">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">Welcome back 👋</h2>
+    <p class="text-center text-gray-500 mb-6">Sign in to continue</p>
 
     <form id="login-form" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-        <input id="username" type="text" class="ios-input" placeholder="yourname" required />
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-        <input id="password" type="password" class="ios-input" placeholder="••••••••" required />
-      </div>
-      <button type="submit" class="ios-btn w-full">Login</button>
-      <div class="flex justify-between text-sm">
-        <a class="text-indigo-600 hover:underline" href="#">Forgot password?</a>
-        <a class="text-gray-500 hover:underline" href="signup.html">Create account</a>
-      </div>
+      <input type="text" id="username" placeholder="Username" class="ios-input" required />
+      <input type="password" id="password" placeholder="Password" class="ios-input" required />
+
+      <button type="submit" class="btn-gradient">Login</button>
     </form>
 
-    <div class="flex items-center gap-3">
-      <div class="h-px bg-gray-200 flex-1"></div>
-      <span class="text-gray-400 text-sm">or</span>
-      <div class="h-px bg-gray-200 flex-1"></div>
+    <div class="divider">Or continue with</div>
+
+    <div class="flex gap-3">
+      <button class="flex-1 bg-gray-100 py-2 rounded-xl hover:bg-gray-200 transition">
+        <img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" class="w-5 h-5 mx-auto" alt="Google" />
+      </button>
+      <button class="flex-1 bg-gray-100 py-2 rounded-xl hover:bg-gray-200 transition">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="w-5 h-5 mx-auto" alt="Facebook" />
+      </button>
     </div>
 
-    <div class="grid grid-cols-3 gap-3">
-      <button class="ghost rounded-xl py-2.5 font-semibold">Google</button>
-      <button class="ghost rounded-xl py-2.5 font-semibold">Apple</button>
-      <button class="ghost rounded-xl py-2.5 font-semibold">Facebook</button>
-    </div>
+    <p class="text-center text-sm text-gray-500 mt-6">
+      Don’t have an account? 
+      <a href="signup.html" class="text-blue-600 font-medium hover:underline">Sign Up</a>
+    </p>
+  </div>
 
-    <p class="text-xs text-center text-gray-400">By continuing you agree to our Terms & Privacy.</p>
-  </main>
-
+  <!-- ✅ Firebase Login Script -->
   <script type="module" src="assets/js/login.js"></script>
+
 </body>
 </html>
