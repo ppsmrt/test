@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TamilGeo • For You</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--grad:linear-gradient(135deg,#6366f1,#8b5cf6)}
+    body{font-family:Inter,system-ui}
+    .card{background:#fff;border-radius:1.25rem;box-shadow:0 8px 30px rgba(17,24,39,.06)}
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <header class="sticky top-0 z-10 bg-slate-50/80 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl text-white flex items-center justify-center" style="background:var(--grad)"><b>TG</b></div>
+        <h1 class="font-extrabold text-xl">For You</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <input id="search" placeholder="Search articles" class="px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-400 outline-0"/>
+        <a href="new-post.html" class="px-4 py-2 rounded-xl text-white font-semibold" style="background:var(--grad)">New Post</a>
+        <a href="profile.html" class="px-3 py-2 rounded-xl border border-slate-200">Profile</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- demo cards -->
+    <article class="card p-4">
+      <img src="https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?q=80&w=1200&auto=format&fit=crop" class="rounded-xl mb-3" alt="">
+      <div class="text-xs text-indigo-600 font-bold">ENTERTAINMENT</div>
+      <h3 class="text-lg font-bold mt-1">Robot attraction in Seoul for tourists</h3>
+      <p class="text-sm text-slate-500 mt-1">The standard lorem ipsum passage used since the 1500s…</p>
+      <div class="flex items-center justify-between mt-3">
+        <div class="flex items-center gap-2 text-sm text-slate-500">
+          <img class="w-6 h-6 rounded-full" src="https://i.pravatar.cc/48" alt="">
+          <span>Andy Waruna</span>
+        </div>
+        <button class="px-3 py-1.5 rounded-lg text-white text-sm" style="background:var(--grad)">Read</button>
+      </div>
+    </article>
+
+    <!-- Duplicate the article block or load dynamically later -->
+  </main>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
